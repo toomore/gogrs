@@ -15,19 +15,19 @@ type StockOption struct {
 	date      time.Time
 }
 
-func GenStockUrl(params StockOption) string {
+func (stock StockOption) GenStockUrl() string {
 	return fmt.Sprintf(
 		"%sstock/api/getStockInfo.jsp?ex_ch=%s_%s.tw_%s&json=1&delay=0&_=%d",
 		TWSEURL,
 		"tse",
-		params.no,
+		stock.no,
 		fmt.Sprintf(
 			"%d%02d%02d",
-			params.date.Year(),
-			int(params.date.Month()),
-			params.date.Day(),
+			stock.date.Year(),
+			int(stock.date.Month()),
+			stock.date.Day(),
 		),
-		params.timestamp,
+		stock.timestamp,
 	)
 }
 
@@ -51,5 +51,5 @@ func main() {
 		date:      time.Date(2014, time.August, 11, 0, 0, 0, 0, time.Local),
 	}
 	fmt.Println(option)
-	fmt.Println(GenStockUrl(option))
+	fmt.Println(option.GenStockUrl())
 }
