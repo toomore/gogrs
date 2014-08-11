@@ -12,10 +12,23 @@ const TWSEURL string = "http://mis.tse.com.tw/"
 type StockOption struct {
 	no        string
 	timestamp int64
+	date      time.Time
 }
 
 func GenStockUrl(params StockOption) string {
-	return fmt.Sprintf("%sstock/api/getStockInfo.jsp?ex_ch=%s_%s.tw_%s&json=1&delay=0&_=%d", TWSEURL, "tse", params.no, "20140811", params.timestamp)
+	return fmt.Sprintf(
+		"%sstock/api/getStockInfo.jsp?ex_ch=%s_%s.tw_%s&json=1&delay=0&_=%d",
+		TWSEURL,
+		"tse",
+		params.no,
+		fmt.Sprintf(
+			"%d%02d%02d",
+			params.date.Year(),
+			int(params.date.Month()),
+			params.date.Day(),
+		),
+		params.timestamp,
+	)
 }
 
 type jsonBlob struct {
@@ -32,7 +45,11 @@ func main() {
 	//json.Unmarshal(resp_data, &json_blob)
 	//fmt.Printf("%+v", json_blob)
 	//fmt.Println(json_blob.Args["name"], TWSEURL)
-	option := StockOption{no: "2618", timestamp: time.Now().Unix()}
+	option := StockOption{
+		no:        "2618",
+		timestamp: time.Now().Unix(),
+		date:      time.Date(2014, time.August, 11, 0, 0, 0, 0, time.Local),
+	}
 	fmt.Println(option)
 	fmt.Println(GenStockUrl(option))
 }
