@@ -1,7 +1,9 @@
 package main
 
 import (
+	"encoding/json"
 	"fmt"
+	"net/http"
 	"time"
 )
 
@@ -31,25 +33,43 @@ func (stock StockOption) GenStockUrl() string {
 	)
 }
 
+func (stock StockOption) GetData() (value stockBlob) {
+	url := stock.GenStockUrl()
+	resp, _ := http.Get(url)
+	defer resp.Body.Close()
+	json.NewDecoder(resp.Body).Decode(&value)
+	return
+}
+
 type jsonBlob struct {
 	Args    map[string]interface{}
 	Headers map[string]interface{}
 }
 
+type QueryTimeBlob struct {
+	sysTime           string
+	sessionLatestTime int
+	sysDate           string
+}
+
+type stockBlob struct {
+	Rtcode    string
+	UserDelay int
+	Rtmessage string
+	Referer   string
+	MsgArray  []map[string]string
+	QueryTime map[string]interface{}
+}
+
 func main() {
-	//url := "http://httpbin.org/get?name=Toomore"
-	//resp, _ := http.Get(url)
-	//defer resp.Body.Close()
-	//resp_data, _ := ioutil.ReadAll(resp.Body)
-	//var json_blob jsonBlob
-	//json.Unmarshal(resp_data, &json_blob)
-	//fmt.Printf("%+v", json_blob)
-	//fmt.Println(json_blob.Args["name"], TWSEURL)
-	option := StockOption{
+	stock := StockOption{
 		no:        "2618",
 		timestamp: time.Now().Unix(),
 		date:      time.Date(2014, time.August, 11, 0, 0, 0, 0, time.Local),
 	}
-	fmt.Println(option)
-	fmt.Println(option.GenStockUrl())
+	fmt.Println(stock.GenStockUrl())
+	store_data := stock.GetData()
+	fmt.Printf("%+v\n", store_data)
+	fmt.Printf("%+v\n", store_data.QueryTime)
+	fmt.Printf("%s\n", store_data.QueryTime["sysTime"])
 }
