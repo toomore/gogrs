@@ -17,6 +17,15 @@ type StockOption struct {
 	date      time.Time
 }
 
+type stockBlob struct {
+	Rtcode    string
+	UserDelay int
+	Rtmessage string
+	Referer   string
+	MsgArray  []map[string]string
+	QueryTime map[string]interface{}
+}
+
 func (stock StockOption) GenStockUrl() string {
 	return fmt.Sprintf(
 		"%sstock/api/getStockInfo.jsp?ex_ch=%s_%s.tw_%s&json=1&delay=0&_=%d",
@@ -39,24 +48,4 @@ func (stock StockOption) GetData() (value stockBlob) {
 	defer resp.Body.Close()
 	json.NewDecoder(resp.Body).Decode(&value)
 	return
-}
-
-type jsonBlob struct {
-	Args    map[string]interface{}
-	Headers map[string]interface{}
-}
-
-type QueryTimeBlob struct {
-	sysTime           string
-	sessionLatestTime int
-	sysDate           string
-}
-
-type stockBlob struct {
-	Rtcode    string
-	UserDelay int
-	Rtmessage string
-	Referer   string
-	MsgArray  []map[string]string
-	QueryTime map[string]interface{}
 }
