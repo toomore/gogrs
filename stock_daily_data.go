@@ -1,5 +1,5 @@
 // To get TWSE daily CSV files.
-package main
+package gogrs
 
 import (
 	"fmt"

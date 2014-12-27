@@ -1,4 +1,4 @@
-package main
+package gogrs
 
 const (
 	TWSEURL  string = "http://mis.tse.com.tw/"
