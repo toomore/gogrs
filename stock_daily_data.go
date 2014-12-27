@@ -22,35 +22,35 @@ func (d *DailyData) Round() {
 	d.date = time.Date(year, month-1, day, 0, 0, 0, 0, time.UTC)
 }
 
-func main() {
-	d := &DailyData{
-		stock_no: "2618",
-		date:     time.Now(),
-	}
-
-	fmt.Println(d.Url())
-	d.Round()
-	fmt.Println(d.Url())
-	d.Round()
-	fmt.Println(d.Url())
-	d.Round()
-	fmt.Println(d.Url())
-	d.Round()
-	fmt.Println(d.Url())
-	d.Round()
-	fmt.Println(d.Url())
-	d.Round()
-	fmt.Println(d.Url())
-	d.Round()
-	fmt.Println(d.Url())
-	d.Round()
-	fmt.Println(d.Url())
-	d.Round()
-	fmt.Println(d.Url())
-	d.Round()
-	fmt.Println(d.Url())
-	d.Round()
-	fmt.Println(d.Url())
-	d.Round()
-	fmt.Println(d.Url())
-}
+//func main() {
+//	d := &DailyData{
+//		stock_no: "2618",
+//		date:     time.Now(),
+//	}
+//
+//	fmt.Println(d.Url())
+//	d.Round()
+//	fmt.Println(d.Url())
+//	d.Round()
+//	fmt.Println(d.Url())
+//	d.Round()
+//	fmt.Println(d.Url())
+//	d.Round()
+//	fmt.Println(d.Url())
+//	d.Round()
+//	fmt.Println(d.Url())
+//	d.Round()
+//	fmt.Println(d.Url())
+//	d.Round()
+//	fmt.Println(d.Url())
+//	d.Round()
+//	fmt.Println(d.Url())
+//	d.Round()
+//	fmt.Println(d.Url())
+//	d.Round()
+//	fmt.Println(d.Url())
+//	d.Round()
+//	fmt.Println(d.Url())
+//	d.Round()
+//	fmt.Println(d.Url())
+//}
