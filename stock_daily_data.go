@@ -5,12 +5,22 @@ import (
 	"time"
 )
 
-func DailyDataUrl(stock string) (url string) {
-	t := time.Now()
-	url = fmt.Sprintf(TWSECSV, t.Year(), t.Month(), stock, t.UnixNano())
+type DailyData struct {
+	stock_no string
+	date     time.Time
+}
+
+func (d DailyData) Url() (url string) {
+	url = fmt.Sprintf(TWSECSV, d.date.Year(), d.date.Month(), d.stock_no, d.date.UnixNano())
 	return
 }
 
 func main() {
-	fmt.Println(DailyDataUrl("2618"))
+	d := &DailyData{
+		stock_no: "2618",
+		date:     time.Now(),
+	}
+
+	fmt.Println(d.Url())
+
 }
