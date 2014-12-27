@@ -1,3 +1,4 @@
+// To get TWSE daily CSV files.
 package main
 
 import (
