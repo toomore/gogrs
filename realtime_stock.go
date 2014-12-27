@@ -7,8 +7,6 @@ import (
 	"time"
 )
 
-const TWSEURL string = "http://mis.tse.com.tw/"
-
 //STOCKPATH = '/stock/api/getStockInfo.jsp?ex_ch=%(exchange)s_%(no)s.tw_%(date)s&json=1&delay=%(delay)s&_=%(timestamp)s'
 
 type StockOption struct {
