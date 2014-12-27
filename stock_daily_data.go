@@ -10,8 +10,8 @@ type DailyData struct {
 	date     time.Time
 }
 
-func (d *DailyData) Url() string {
-	return fmt.Sprintf(TWSECSV, d.date.Year(), d.date.Month(), d.stock_no, d.date.UnixNano())
+func (d DailyData) Url() string {
+	return fmt.Sprintf(TWSECSV, d.date.Year(), d.date.Month(), d.stock_no, RandInt())
 }
 
 func (d *DailyData) Round() {
