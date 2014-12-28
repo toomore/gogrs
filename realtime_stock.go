@@ -10,9 +10,9 @@ import (
 //STOCKPATH = '/stock/api/getStockInfo.jsp?ex_ch=%(exchange)s_%(no)s.tw_%(date)s&json=1&delay=%(delay)s&_=%(timestamp)s'
 
 type StockOption struct {
-	no        string
-	timestamp int64
-	date      time.Time
+	No        string
+	Timestamp int64
+	Date      time.Time
 }
 
 type stockBlob struct {
@@ -29,14 +29,14 @@ func (stock StockOption) GenStockUrl() string {
 		"%sstock/api/getStockInfo.jsp?ex_ch=%s_%s.tw_%s&json=1&delay=0&_=%d",
 		TWSEURL,
 		"tse",
-		stock.no,
+		stock.No,
 		fmt.Sprintf(
 			"%d%02d%02d",
-			stock.date.Year(),
-			int(stock.date.Month()),
-			stock.date.Day(),
+			stock.Date.Year(),
+			int(stock.Date.Month()),
+			stock.Date.Day(),
 		),
-		stock.timestamp,
+		stock.Timestamp,
 	)
 }
 
