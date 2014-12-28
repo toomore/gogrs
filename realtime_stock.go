@@ -25,25 +25,30 @@ type stockBlob struct {
 }
 
 func (stock StockOption) GenStockUrl() string {
-	return fmt.Sprintf(
-		"%sstock/api/getStockInfo.jsp?ex_ch=%s_%s.tw_%s&json=1&delay=0&_=%d",
-		TWSEURL,
-		"tse",
-		stock.No,
-		fmt.Sprintf(
-			"%d%02d%02d",
-			stock.Date.Year(),
-			int(stock.Date.Month()),
-			stock.Date.Day(),
-		),
-		stock.Timestamp,
-	)
+	return fmt.Sprintf("%s%s", TWSEURL,
+		fmt.Sprintf(TWSEREAL,
+			"tse",
+			stock.No,
+			fmt.Sprintf(
+				"%d%02d%02d",
+				stock.Date.Year(),
+				int(stock.Date.Month()),
+				stock.Date.Day(),
+			),
+			stock.Timestamp,
+		))
 }
 
 func (stock StockOption) GetData() (value stockBlob) {
 	url := stock.GenStockUrl()
-	resp, _ := http.Get(url)
-	defer resp.Body.Close()
-	json.NewDecoder(resp.Body).Decode(&value)
+	fmt.Println(url)
+	resp, err := http.Get(url)
+	if err != nil {
+		fmt.Printf("[ERROR] %s\n", err)
+	} else {
+		fmt.Println(resp)
+		defer resp.Body.Close()
+		json.NewDecoder(resp.Body).Decode(&value)
+	}
 	return
 }
