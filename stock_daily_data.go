@@ -30,19 +30,19 @@ func (d *DailyData) Round() {
 // Get stock csv data.
 func (d DailyData) GetData() ([][]string, error) {
 	urlpath := fmt.Sprintf("%s%s", TWSEHOST, d.URL())
-	csv_data, err := http.Get(urlpath)
+	csvFiles, err := http.Get(urlpath)
 	if err != nil {
 		fmt.Println("[err] >>> ", err)
 		return nil, err
 	}
-	defer csv_data.Body.Close()
-	data, _ := ioutil.ReadAll(csv_data.Body)
-	data_content := strings.Split(string(data), "\n")
-	for i := range data_content {
-		data_content[i] = strings.TrimSpace(data_content[i])
+	defer csvFiles.Body.Close()
+	data, _ := ioutil.ReadAll(csvFiles.Body)
+	csvArrayContent := strings.Split(string(data), "\n")
+	for i := range csvArrayContent {
+		csvArrayContent[i] = strings.TrimSpace(csvArrayContent[i])
 	}
-	csv_reader := csv.NewReader(strings.NewReader(strings.Join(data_content[2:], "\n")))
-	return csv_reader.ReadAll()
+	csvReader := csv.NewReader(strings.NewReader(strings.Join(csvArrayContent[2:], "\n")))
+	return csvReader.ReadAll()
 }
 
 //func main() {
