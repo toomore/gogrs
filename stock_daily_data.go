@@ -27,6 +27,7 @@ func (d *DailyData) Round() {
 	d.Date = time.Date(year, month-1, day, 0, 0, 0, 0, time.UTC)
 }
 
+// Get stock csv data.
 func (d DailyData) GetData() ([][]string, error) {
 	urlpath := fmt.Sprintf("%s%s", TWSEHOST, d.Url())
 	csv_data, err := http.Get(urlpath)
