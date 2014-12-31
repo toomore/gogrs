@@ -22,8 +22,8 @@ func (d DailyData) URL() string {
 
 // Round will do sub one month.
 func (d *DailyData) Round() {
-	year, month, day := d.Date.Date()
-	d.Date = time.Date(year, month-1, day, 0, 0, 0, 0, time.UTC)
+	year, month, _ := d.Date.Date()
+	d.Date = time.Date(year, month-1, 1, 0, 0, 0, 0, time.UTC)
 }
 
 // GetData return csv data in array.
