@@ -14,13 +14,18 @@ type DailyData struct {
 
 // To render url for csv.
 func (d DailyData) Url() string {
-	return fmt.Sprintf(TWSECSV, d.Date.Year(), d.Date.Month(), d.No, RandInt())
+	return fmt.Sprintf(TWSECSV, d.Date.Year(), d.Date.Month(), d.Date.Year(), d.Date.Month(), d.No, RandInt())
 }
 
 // Sub one month.
 func (d *DailyData) Round() {
 	year, month, day := d.Date.Date()
 	d.Date = time.Date(year, month-1, day, 0, 0, 0, 0, time.UTC)
+}
+
+func (d DailyData) GetData() string {
+	urlpath := fmt.Sprintf("%s%s", TWSEHOST, d.Url())
+	return urlpath
 }
 
 //func main() {
