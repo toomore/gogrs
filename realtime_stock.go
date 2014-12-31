@@ -9,13 +9,15 @@ import (
 
 //STOCKPATH = '/stock/api/getStockInfo.jsp?ex_ch=%(exchange)s_%(no)s.tw_%(date)s&json=1&delay=%(delay)s&_=%(timestamp)s'
 
+// StockRealTime start with No, Timestamp, Date.
 type StockRealTime struct {
 	No        string
 	Timestamp int64
 	Date      time.Time
 }
 
-type stockBlob struct {
+// StockBlob return map data.
+type StockBlob struct {
 	Rtcode    string
 	UserDelay int
 	Rtmessage string
@@ -24,7 +26,8 @@ type stockBlob struct {
 	QueryTime map[string]interface{}
 }
 
-func (stock StockRealTime) GenStockURL() string {
+// URL return realtime url path.
+func (stock StockRealTime) URL() string {
 	return fmt.Sprintf("%s%s", TWSEURL,
 		fmt.Sprintf(TWSEREAL,
 			"tse",
@@ -39,8 +42,9 @@ func (stock StockRealTime) GenStockURL() string {
 		))
 }
 
-func (stock StockRealTime) GetData() (value stockBlob) {
-	url := stock.GenStockURL()
+// GetData return stock realtime map data.
+func (stock StockRealTime) GetData() (value StockBlob) {
+	url := stock.URL()
 	fmt.Println(url)
 	resp, err := http.Get(url)
 	if err != nil {
