@@ -12,7 +12,7 @@ func assertType(t *testing.T, t1 interface{}, t2 interface{}) {
 	}
 }
 
-func TestUrl(t *testing.T) {
+func TestURL(t *testing.T) {
 	d := &DailyData{
 		No:   "2618",
 		Date: time.Now(),

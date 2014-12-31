@@ -24,7 +24,7 @@ type stockBlob struct {
 	QueryTime map[string]interface{}
 }
 
-func (stock StockOption) GenStockUrl() string {
+func (stock StockOption) GenStockURL() string {
 	return fmt.Sprintf("%s%s", TWSEURL,
 		fmt.Sprintf(TWSEREAL,
 			"tse",
@@ -40,7 +40,7 @@ func (stock StockOption) GenStockUrl() string {
 }
 
 func (stock StockOption) GetData() (value stockBlob) {
-	url := stock.GenStockUrl()
+	url := stock.GenStockURL()
 	fmt.Println(url)
 	resp, err := http.Get(url)
 	if err != nil {
