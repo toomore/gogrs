@@ -7,7 +7,7 @@ package gogrs
 //)
 //
 //func main() {
-//	stock := StockOption{
+//	stock := StockRealTime{
 //		No:        "2618",
 //		Timestamp: time.Now().Unix(),
 //		Date:      time.Date(2014, time.August, 11, 0, 0, 0, 0, time.Local),
