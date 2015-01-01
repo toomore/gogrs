@@ -52,6 +52,29 @@ func ExampleDailyData() {
 	fmt.Println(stock_data)
 }
 
+func ExampleDailyData_Round() {
+	d := DailyData{
+		No:   "2618",
+		Date: time.Date(2014, 12, 26, 0, 0, 0, 0, time.Local),
+	}
+	fmt.Println(d)
+
+	stock_data, _ := d.GetData()
+	fmt.Println(stock_data)
+
+	fmt.Println(d.URL()) // 2014/12
+
+	d.Round()
+	fmt.Println(d.URL()) // 2014/11
+	stock_data, _ = d.GetData()
+	fmt.Println(stock_data)
+
+	d.Round()
+	fmt.Println(d.URL()) // 2014/10
+	stock_data, _ = d.GetData()
+	fmt.Println(stock_data)
+}
+
 func ExampleStockRealTime() {
 	r := StockRealTime{
 		No:        "2618",
