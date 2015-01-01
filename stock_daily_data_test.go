@@ -28,8 +28,8 @@ func ExampleDailyData() {
 	}
 	fmt.Println(d)
 
-	stock_data, _ := d.GetData()
-	fmt.Println(stock_data)
+	stockData, _ := d.GetData()
+	fmt.Println(stockData)
 }
 
 func ExampleDailyData_Round() {
@@ -39,20 +39,20 @@ func ExampleDailyData_Round() {
 	}
 	fmt.Println(d)
 
-	stock_data, _ := d.GetData()
-	fmt.Println(stock_data)
+	stockData, _ := d.GetData()
+	fmt.Println(stockData)
 
 	fmt.Println(d.URL()) // 2014/12
 
 	d.Round()
 	fmt.Println(d.URL()) // 2014/11
-	stock_data, _ = d.GetData()
-	fmt.Println(stock_data)
+	stockData, _ = d.GetData()
+	fmt.Println(stockData)
 
 	d.Round()
 	fmt.Println(d.URL()) // 2014/10
-	stock_data, _ = d.GetData()
-	fmt.Println(stock_data)
+	stockData, _ = d.GetData()
+	fmt.Println(stockData)
 }
 
 func ExampleStockRealTime() {
