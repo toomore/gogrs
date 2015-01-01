@@ -51,3 +51,14 @@ func ExampleDailyData() {
 	stock_data, _ = d.GetData()
 	fmt.Println(stock_data)
 }
+
+func ExampleStockRealTime() {
+	r := StockRealTime{
+		No:        "2618",
+		Timestamp: time.Now().Unix(),
+		Date:      time.Date(2014, 12, 26, 0, 0, 0, 0, time.Local),
+	}
+
+	data := r.GetData()
+	fmt.Printf("%v", data)
+}
