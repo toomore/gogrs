@@ -2,6 +2,7 @@ package gogrs
 
 import (
 	"encoding/csv"
+	"errors"
 	"fmt"
 	"io/ioutil"
 	"net/http"
@@ -40,8 +41,11 @@ func (d DailyData) GetData() ([][]string, error) {
 	for i := range csvArrayContent {
 		csvArrayContent[i] = strings.TrimSpace(csvArrayContent[i])
 	}
-	csvReader := csv.NewReader(strings.NewReader(strings.Join(csvArrayContent[2:], "\n")))
-	return csvReader.ReadAll()
+	if len(csvArrayContent) > 2 {
+		csvReader := csv.NewReader(strings.NewReader(strings.Join(csvArrayContent[2:], "\n")))
+		return csvReader.ReadAll()
+	}
+	return nil, errors.New("Not enough data.")
 }
 
 //func main() {
