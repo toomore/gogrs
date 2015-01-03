@@ -32,6 +32,22 @@ func ExampleDailyData() {
 	fmt.Println(stockData)
 }
 
+func ExampleDailyData_GetData_notEnoughData() {
+	year, month, _ := time.Now().Date()
+	d := DailyData{
+		No:   "2618",
+		Date: time.Date(year, month+1, 1, 0, 0, 0, 0, time.Local),
+	}
+
+	stockData, err := d.GetData()
+	if err != nil {
+		fmt.Println(err)
+	} else {
+		fmt.Println(stockData)
+	}
+	//Output: Not enough data.
+}
+
 func ExampleDailyData_Round() {
 	d := DailyData{
 		No:   "2618",
