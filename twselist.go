@@ -10,6 +10,7 @@ import (
 	"time"
 )
 
+// TWSEList is to get TWSE list.
 type TWSEList struct {
 	Date time.Time
 }
@@ -19,10 +20,12 @@ func (l TWSEList) baseURL() string {
 	return fmt.Sprintf("%s%s", TWSEHOST, fmt.Sprintf(TWSELISTCSV, year, month, year, month, day))
 }
 
+// URL is to render urlpath.
 func (l TWSEList) URL(strNo string) string {
 	return fmt.Sprintf(l.baseURL(), strNo)
 }
 
+// GetData is to get csv data.
 func (l TWSEList) GetData(strNo string) ([][]string, error) {
 	data, _ := http.Get(l.URL(strNo))
 	defer data.Body.Close()
