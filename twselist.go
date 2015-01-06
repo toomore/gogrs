@@ -8,6 +8,8 @@ import (
 	"net/http"
 	"strings"
 	"time"
+
+	iconv "github.com/djimenez/iconv-go"
 )
 
 // TWSECLASS is a class list of TWSE.
@@ -76,8 +78,9 @@ func (l TWSEList) URL(strNo string) string {
 func (l TWSEList) GetData(strNo string) ([][]string, error) {
 	data, _ := http.Get(l.URL(strNo))
 	defer data.Body.Close()
-	dataContent, _ := ioutil.ReadAll(data.Body)
-	csvArrayContent := strings.Split(string(dataContent), "\n")
+	dataContentBig5, _ := ioutil.ReadAll(data.Body)
+	dataContent, _ := iconv.ConvertString(string(dataContentBig5), "big5", "utf-8")
+	csvArrayContent := strings.Split(dataContent, "\n")
 	if len(csvArrayContent) > 5 {
 		//for i := range csvArrayContent {
 		//	fmt.Println(i, csvArrayContent[i])
