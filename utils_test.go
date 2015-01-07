@@ -7,8 +7,3 @@ func BenchmarkRanInt(t *testing.B) {
 		RandInt()
 	}
 }
-func BenchmarkRanCryptInt(t *testing.B) {
-	for i := 0; i < t.N; i++ {
-		RandCryptInt()
-	}
-}
