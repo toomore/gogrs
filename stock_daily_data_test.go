@@ -81,9 +81,3 @@ func ExampleStockRealTime() {
 	data := r.GetData()
 	fmt.Printf("%v", data)
 }
-
-func BenchmarkRanInt(t *testing.B) {
-	for i := 0; i < t.N; i++ {
-		RandInt()
-	}
-}
