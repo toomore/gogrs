@@ -47,36 +47,3 @@ func (d DailyData) GetData() ([][]string, error) {
 	}
 	return nil, errors.New("Not enough data.")
 }
-
-//func main() {
-//	d := &DailyData{
-//		No: "2618",
-//		Date:     time.Now(),
-//	}
-//
-//	fmt.Println(d.URL())
-//	d.Round()
-//	fmt.Println(d.URL())
-//	d.Round()
-//	fmt.Println(d.URL())
-//	d.Round()
-//	fmt.Println(d.URL())
-//	d.Round()
-//	fmt.Println(d.URL())
-//	d.Round()
-//	fmt.Println(d.URL())
-//	d.Round()
-//	fmt.Println(d.URL())
-//	d.Round()
-//	fmt.Println(d.URL())
-//	d.Round()
-//	fmt.Println(d.URL())
-//	d.Round()
-//	fmt.Println(d.URL())
-//	d.Round()
-//	fmt.Println(d.URL())
-//	d.Round()
-//	fmt.Println(d.URL())
-//	d.Round()
-//	fmt.Println(d.URL())
-//}
