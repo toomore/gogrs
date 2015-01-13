@@ -2,8 +2,8 @@ package gogrs
 
 // TWSE base url.
 const (
-	TWSEURL     string = "http://mis.tse.com.tw/"
-	TWSEHOST    string = "http://www.twse.com.tw/"
+	TWSEURL     string = "http://mis.tse.com.tw"
+	TWSEHOST    string = "http://www.twse.com.tw"
 	TWSEOTCCSV  string = "/ch/stock/aftertrading/daily_trading_info/st43_download.php?d=%d/%02d&stkno=%s&r=%d"
 	TWSECSV     string = "/ch/trading/exchange/STOCK_DAY/STOCK_DAY_print.php?genpage=genpage/Report%d%02d/%d%02d_F3_1_8_%s.php&type=csv&r=%d"
 	TWSELISTCSV string = "/ch/trading/exchange/MI_INDEX/MI_INDEX2_print.php?genpage=genpage/Report%d%02d/A112%d%02d%02d%s.php&type=csv"

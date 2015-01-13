@@ -11,7 +11,7 @@ func ExampleTWSEList_URL() {
 		Date: time.Date(2014, 12, 26, 0, 0, 0, 0, time.Local),
 	}
 	fmt.Println(l.URL("15"))
-	// Output: http://www.twse.com.tw//ch/trading/exchange/MI_INDEX/MI_INDEX2_print.php?genpage=genpage/Report201412/A1122014122615.php&type=csv
+	// Output: http://www.twse.com.tw/ch/trading/exchange/MI_INDEX/MI_INDEX2_print.php?genpage=genpage/Report201412/A1122014122615.php&type=csv
 }
 func TestTWSEList_GetData_notEnoughData(*testing.T) {
 	year, month, day := time.Now().Date()
