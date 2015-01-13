@@ -18,7 +18,8 @@ type DailyData struct {
 
 // URL return stock csv url path.
 func (d DailyData) URL() string {
-	return fmt.Sprintf(TWSECSV, d.Date.Year(), d.Date.Month(), d.Date.Year(), d.Date.Month(), d.No, RandInt())
+	path := fmt.Sprintf(TWSECSV, d.Date.Year(), d.Date.Month(), d.Date.Year(), d.Date.Month(), d.No, RandInt())
+	return fmt.Sprintf("%s%s", TWSEHOST, path)
 }
 
 // Round will do sub one month.
@@ -29,8 +30,7 @@ func (d *DailyData) Round() {
 
 // GetData return csv data in array.
 func (d DailyData) GetData() ([][]string, error) {
-	urlpath := fmt.Sprintf("%s%s", TWSEHOST, d.URL())
-	csvFiles, err := http.Get(urlpath)
+	csvFiles, err := http.Get(d.URL())
 	if err != nil {
 		fmt.Println("[err] >>> ", err)
 		return nil, err
