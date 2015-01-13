@@ -4,6 +4,10 @@ go:
     - 1.4
     - tip
 
+os:
+    - linux
+    - osx
+
 script:
     - go get golang.org/x/tools/cmd/cover
     - go test -v -cover ./...
