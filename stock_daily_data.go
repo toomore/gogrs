@@ -6,6 +6,8 @@ import (
 	"fmt"
 	"io/ioutil"
 	"net/http"
+	"regexp"
+	"strconv"
 	"strings"
 	"time"
 )
@@ -46,4 +48,18 @@ func (d DailyData) GetData() ([][]string, error) {
 		return csvReader.ReadAll()
 	}
 	return nil, errors.New("Not enough data.")
+}
+
+func (d DailyData) GetDataMap() map[time.Time]interface{} {
+	data := make(map[time.Time]interface{})
+	dailyData, _ := d.GetData()
+	reg := regexp.MustCompile(`[\d]{2,}`)
+	for _, v := range dailyData {
+		p := reg.FindAllString(v[0], -1)
+		year, _ := strconv.Atoi(p[0])
+		mon, _ := strconv.Atoi(p[1])
+		day, _ := strconv.Atoi(p[2])
+		data[time.Date(year+1911, time.Month(mon), day, 0, 0, 0, 0, time.Local)] = v
+	}
+	return data
 }
