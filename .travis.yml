@@ -5,4 +5,5 @@ go:
     - tip
 
 script:
-    - go test -v -cover
+    - go get golang.org/x/tools/cmd/cover
+    - go test -v -cover ./...
