@@ -12,10 +12,14 @@ import (
 	"time"
 )
 
+type memData map[int64]bool
+
 // DailyData start with stock no, date.
 type DailyData struct {
-	No   string
-	Date time.Time
+	No      string
+	Date    time.Time
+	RawData [][]string
+	hasData memData
 }
 
 // URL return stock csv url path.
@@ -31,7 +35,7 @@ func (d *DailyData) Round() {
 }
 
 // GetData return csv data in array.
-func (d DailyData) GetData() ([][]string, error) {
+func (d *DailyData) GetData() ([][]string, error) {
 	csvFiles, err := http.Get(d.URL())
 	if err != nil {
 		fmt.Println("[err] >>> ", err)
@@ -45,7 +49,15 @@ func (d DailyData) GetData() ([][]string, error) {
 	}
 	if len(csvArrayContent) > 2 {
 		csvReader := csv.NewReader(strings.NewReader(strings.Join(csvArrayContent[2:], "\n")))
-		return csvReader.ReadAll()
+		allData, err := csvReader.ReadAll()
+		if d.hasData == nil {
+			d.hasData = make(memData)
+		}
+		if !d.hasData[d.Date.Unix()] {
+			d.RawData = append(allData, d.RawData...)
+			d.hasData[d.Date.Unix()] = true
+		}
+		return allData, err
 	}
 	return nil, errors.New("Not enough data.")
 }
