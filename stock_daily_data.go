@@ -12,7 +12,7 @@ import (
 	"time"
 )
 
-type memData map[int64]bool
+type memData map[int64][][]string
 
 // DailyData start with stock no, date.
 type DailyData struct {
@@ -36,30 +36,31 @@ func (d *DailyData) Round() {
 
 // GetData return csv data in array.
 func (d *DailyData) GetData() ([][]string, error) {
-	csvFiles, err := http.Get(d.URL())
-	if err != nil {
-		fmt.Println("[err] >>> ", err)
-		return nil, err
+	if d.hasData == nil {
+		d.hasData = make(memData)
 	}
-	defer csvFiles.Body.Close()
-	data, _ := ioutil.ReadAll(csvFiles.Body)
-	csvArrayContent := strings.Split(string(data), "\n")
-	for i := range csvArrayContent {
-		csvArrayContent[i] = strings.TrimSpace(csvArrayContent[i])
-	}
-	if len(csvArrayContent) > 2 {
-		csvReader := csv.NewReader(strings.NewReader(strings.Join(csvArrayContent[2:], "\n")))
-		allData, err := csvReader.ReadAll()
-		if d.hasData == nil {
-			d.hasData = make(memData)
+	if len(d.hasData[d.Date.Unix()]) == 0 {
+		csvFiles, err := http.Get(d.URL())
+		if err != nil {
+			fmt.Println("[err] >>> ", err)
+			return nil, err
 		}
-		if !d.hasData[d.Date.Unix()] {
+		defer csvFiles.Body.Close()
+		data, _ := ioutil.ReadAll(csvFiles.Body)
+		csvArrayContent := strings.Split(string(data), "\n")
+		for i := range csvArrayContent {
+			csvArrayContent[i] = strings.TrimSpace(csvArrayContent[i])
+		}
+		if len(csvArrayContent) > 2 {
+			csvReader := csv.NewReader(strings.NewReader(strings.Join(csvArrayContent[2:], "\n")))
+			allData, err := csvReader.ReadAll()
 			d.RawData = append(allData, d.RawData...)
-			d.hasData[d.Date.Unix()] = true
+			d.hasData[d.Date.Unix()] = allData
+			return allData, err
 		}
-		return allData, err
+		return nil, errors.New("Not enough data.")
 	}
-	return nil, errors.New("Not enough data.")
+	return d.hasData[d.Date.Unix()], nil
 }
 
 func (d DailyData) GetDataMap() map[time.Time]interface{} {
