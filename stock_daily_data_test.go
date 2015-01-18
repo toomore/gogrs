@@ -40,6 +40,7 @@ func TestDailyData_GetData(*testing.T) {
 	fmt.Println(d)
 
 	stockData, _ := d.GetData()
+	d.GetData() // Test Cache.
 	fmt.Println(stockData)
 }
 
