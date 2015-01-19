@@ -76,3 +76,18 @@ func (d DailyData) GetDataMap() map[time.Time]interface{} {
 	}
 	return data
 }
+
+type FmtDailyData struct {
+	Date       time.Time
+	Volume     uint32
+	TotalPrice uint32
+	Open       float32
+	High       float32
+	Low        float32
+	Price      float32
+	Range      float32
+	Totalsale  uint32
+}
+
+func (d DailyData) FormatDailyData() {
+}
