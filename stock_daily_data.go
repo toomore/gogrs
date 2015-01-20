@@ -117,8 +117,8 @@ func (d DailyData) FormatDailyData() {
 		price, _ := strconv.ParseFloat(v[6], 64)
 		d.Price = price
 
-		range_, _ := strconv.ParseFloat(v[7], 64)
-		d.Range = range_
+		rangeData, _ := strconv.ParseFloat(v[7], 64)
+		d.Range = rangeData
 
 		totalsale, _ := strconv.ParseUint(strings.Replace(v[8], ",", "", -1), 10, 64)
 		d.Totalsale = totalsale
