@@ -66,13 +66,8 @@ func (d *DailyData) GetData() ([][]string, error) {
 func (d DailyData) GetDataMap() map[time.Time]interface{} {
 	data := make(map[time.Time]interface{})
 	dailyData, _ := d.GetData()
-	reg := regexp.MustCompile(`[\d]{2,}`)
 	for _, v := range dailyData {
-		p := reg.FindAllString(v[0], -1)
-		year, _ := strconv.Atoi(p[0])
-		mon, _ := strconv.Atoi(p[1])
-		day, _ := strconv.Atoi(p[2])
-		data[time.Date(year+1911, time.Month(mon), day, 0, 0, 0, 0, time.Local)] = v
+		data[parseDate(v[0])] = v
 	}
 	return data
 }
@@ -102,6 +97,8 @@ func parseDate(strDate string) time.Time {
 func (d DailyData) FormatDailyData() {
 	for _, v := range d.RawData {
 		var d FmtDailyData
+		d.Date = parseDate(v[0])
+
 		volume, _ := strconv.ParseUint(strings.Replace(v[1], ",", "", -1), 10, 32)
 		d.Volume = volume
 
