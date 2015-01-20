@@ -63,7 +63,8 @@ func (d *DailyData) GetData() ([][]string, error) {
 	return d.hasData[d.Date.Unix()], nil
 }
 
-func (d DailyData) GetDataMap() map[time.Time]interface{} {
+// GetDataByTimeMap return a map by key of time.Time
+func (d DailyData) GetDataByTimeMap() map[time.Time]interface{} {
 	data := make(map[time.Time]interface{})
 	dailyData, _ := d.GetData()
 	for _, v := range dailyData {
@@ -72,6 +73,7 @@ func (d DailyData) GetDataMap() map[time.Time]interface{} {
 	return data
 }
 
+// FmtDailyData is struct for daily data format.
 type FmtDailyData struct {
 	Date       time.Time
 	Volume     uint64
@@ -94,6 +96,7 @@ func parseDate(strDate string) time.Time {
 	return time.Date(year+1911, time.Month(mon), day, 0, 0, 0, 0, time.Local)
 }
 
+// FormatDailyData is format daily data.
 func (d DailyData) FormatDailyData() {
 	for _, v := range d.RawData {
 		var d FmtDailyData
