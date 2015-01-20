@@ -89,6 +89,16 @@ type FmtDailyData struct {
 	Totalsale  uint64
 }
 
+var dateReg = regexp.MustCompile(`[\d]{2,}`)
+
+func parseDate(strDate string) time.Time {
+	p := dateReg.FindAllString(strDate, -1)
+	year, _ := strconv.Atoi(p[0])
+	mon, _ := strconv.Atoi(p[1])
+	day, _ := strconv.Atoi(p[2])
+	return time.Date(year+1911, time.Month(mon), day, 0, 0, 0, 0, time.Local)
+}
+
 func (d DailyData) FormatDailyData() {
 	for _, v := range d.RawData {
 		var d FmtDailyData
