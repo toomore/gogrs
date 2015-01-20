@@ -79,15 +79,43 @@ func (d DailyData) GetDataMap() map[time.Time]interface{} {
 
 type FmtDailyData struct {
 	Date       time.Time
-	Volume     uint32
-	TotalPrice uint32
-	Open       float32
-	High       float32
-	Low        float32
-	Price      float32
-	Range      float32
-	Totalsale  uint32
+	Volume     uint64
+	TotalPrice uint64
+	Open       float64
+	High       float64
+	Low        float64
+	Price      float64
+	Range      float64
+	Totalsale  uint64
 }
 
 func (d DailyData) FormatDailyData() {
+	for _, v := range d.RawData {
+		var d FmtDailyData
+		volume, _ := strconv.ParseUint(strings.Replace(v[1], ",", "", -1), 10, 32)
+		d.Volume = volume
+
+		totalprice, _ := strconv.ParseUint(strings.Replace(v[2], ",", "", -1), 10, 32)
+		d.TotalPrice = totalprice
+
+		open, _ := strconv.ParseFloat(v[3], 64)
+		d.Open = open
+
+		high, _ := strconv.ParseFloat(v[4], 64)
+		d.High = high
+
+		low, _ := strconv.ParseFloat(v[5], 64)
+		d.Low = low
+
+		price, _ := strconv.ParseFloat(v[6], 64)
+		d.Price = price
+
+		range_, _ := strconv.ParseFloat(v[7], 64)
+		d.Range = range_
+
+		totalsale, _ := strconv.ParseUint(strings.Replace(v[8], ",", "", -1), 10, 64)
+		d.Totalsale = totalsale
+
+		fmt.Println(d)
+	}
 }
