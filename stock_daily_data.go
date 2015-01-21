@@ -97,35 +97,37 @@ func parseDate(strDate string) time.Time {
 }
 
 // FormatDailyData is format daily data.
-func (d DailyData) FormatDailyData() {
-	for _, v := range d.RawData {
-		var d FmtDailyData
-		d.Date = parseDate(v[0])
+func (d DailyData) FormatDailyData() []FmtDailyData {
+	result := make([]FmtDailyData, len(d.RawData))
+	var loopd FmtDailyData
+	for i, v := range d.RawData {
+		loopd.Date = parseDate(v[0])
 
 		volume, _ := strconv.ParseUint(strings.Replace(v[1], ",", "", -1), 10, 32)
-		d.Volume = volume
+		loopd.Volume = volume
 
 		totalprice, _ := strconv.ParseUint(strings.Replace(v[2], ",", "", -1), 10, 32)
-		d.TotalPrice = totalprice
+		loopd.TotalPrice = totalprice
 
 		open, _ := strconv.ParseFloat(v[3], 64)
-		d.Open = open
+		loopd.Open = open
 
 		high, _ := strconv.ParseFloat(v[4], 64)
-		d.High = high
+		loopd.High = high
 
 		low, _ := strconv.ParseFloat(v[5], 64)
-		d.Low = low
+		loopd.Low = low
 
 		price, _ := strconv.ParseFloat(v[6], 64)
-		d.Price = price
+		loopd.Price = price
 
 		rangeData, _ := strconv.ParseFloat(v[7], 64)
-		d.Range = rangeData
+		loopd.Range = rangeData
 
 		totalsale, _ := strconv.ParseUint(strings.Replace(v[8], ",", "", -1), 10, 64)
-		d.Totalsale = totalsale
+		loopd.Totalsale = totalsale
 
-		fmt.Println(d)
+		result[i] = loopd
 	}
+	return result
 }
