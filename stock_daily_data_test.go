@@ -44,6 +44,16 @@ func TestDailyData_GetData(*testing.T) {
 	fmt.Println(stockData)
 }
 
+func BenchmarkGetData(b *testing.B) {
+	d := DailyData{
+		No:   "2618",
+		Date: time.Date(2014, 12, 26, 0, 0, 0, 0, time.Local),
+	}
+	for i := 0; i <= b.N; i++ {
+		d.GetData()
+	}
+}
+
 func ExampleDailyData_GetData_notEnoughData() {
 	year, month, _ := time.Now().Date()
 	d := DailyData{
