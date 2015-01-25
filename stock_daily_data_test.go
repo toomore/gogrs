@@ -97,3 +97,12 @@ func TestDailyData_GetDataByTimeMap(*testing.T) {
 	}
 	fmt.Println(d.GetDataByTimeMap())
 }
+
+func TestDailyData_FormatDailyData(*testing.T) {
+	d := DailyData{
+		No:   "2618",
+		Date: time.Date(2014, 12, 26, 0, 0, 0, 0, time.Local),
+	}
+	d.GetData()
+	fmt.Println(d.FormatDailyData())
+}
