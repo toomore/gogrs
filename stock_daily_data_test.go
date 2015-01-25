@@ -89,3 +89,11 @@ func TestDailyData_Round(*testing.T) {
 	}
 	d.Round()
 }
+
+func TestDailyData_GetDataByTimeMap(*testing.T) {
+	d := DailyData{
+		No:   "2618",
+		Date: time.Date(2014, 12, 26, 0, 0, 0, 0, time.Local),
+	}
+	fmt.Println(d.GetDataByTimeMap())
+}
