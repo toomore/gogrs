@@ -16,6 +16,7 @@ func RandInt() int64 {
 
 var dateReg = regexp.MustCompile(`[\d]{2,}`)
 
+// ParseDate is to parse "104/01/13" format.
 func ParseDate(strDate string) time.Time {
 	p := dateReg.FindAllString(strDate, -1)
 	year, _ := strconv.Atoi(p[0])
