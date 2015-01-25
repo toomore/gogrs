@@ -89,14 +89,3 @@ func TestDailyData_Round(*testing.T) {
 	}
 	d.Round()
 }
-
-func ExampleStockRealTime() {
-	r := StockRealTime{
-		No:        "2618",
-		Timestamp: time.Now().Unix(),
-		Date:      time.Date(2014, 12, 26, 0, 0, 0, 0, time.Local),
-	}
-
-	data, _ := r.GetData()
-	fmt.Printf("%v", data)
-}
