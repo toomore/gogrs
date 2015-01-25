@@ -76,7 +76,10 @@ func (l TWSEList) URL(strNo string) string {
 
 // GetData is to get csv data.
 func (l TWSEList) GetData(strNo string) ([][]string, error) {
-	data, _ := http.Get(l.URL(strNo))
+	data, err := http.Get(l.URL(strNo))
+	if err != nil {
+		return nil, errors.New(fmt.Sprintf("Network fail: %s", err))
+	}
 	defer data.Body.Close()
 	dataContentBig5, _ := ioutil.ReadAll(data.Body)
 	dataContent, _ := iconv.ConvertString(string(dataContentBig5), "big5", "utf-8")

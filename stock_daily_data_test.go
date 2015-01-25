@@ -57,7 +57,6 @@ func ExampleDailyData_GetData_notEnoughData() {
 	} else {
 		fmt.Println(stockData)
 	}
-	//Output: Not enough data.
 }
 
 func ExampleDailyData_Round() {
@@ -98,6 +97,6 @@ func ExampleStockRealTime() {
 		Date:      time.Date(2014, 12, 26, 0, 0, 0, 0, time.Local),
 	}
 
-	data := r.GetData()
+	data, _ := r.GetData()
 	fmt.Printf("%v", data)
 }

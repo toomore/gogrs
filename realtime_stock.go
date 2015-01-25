@@ -2,6 +2,7 @@ package gogrs
 
 import (
 	"encoding/json"
+	"errors"
 	"fmt"
 	"net/http"
 	"time"
@@ -43,16 +44,16 @@ func (stock StockRealTime) URL() string {
 }
 
 // GetData return stock realtime map data.
-func (stock StockRealTime) GetData() (value StockBlob) {
+func (stock StockRealTime) GetData() (StockBlob, error) {
+	var value StockBlob
 	url := stock.URL()
-	fmt.Println(url)
 	resp, err := http.Get(url)
 	if err != nil {
-		fmt.Printf("[ERROR] %s\n", err)
+		return value, errors.New(fmt.Sprintf("Network fail: %s", err))
 	} else {
 		fmt.Println(resp)
 		defer resp.Body.Close()
 		json.NewDecoder(resp.Body).Decode(&value)
 	}
-	return
+	return value, nil
 }
