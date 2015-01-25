@@ -50,10 +50,8 @@ func (stock StockRealTime) GetData() (StockBlob, error) {
 	resp, err := http.Get(url)
 	if err != nil {
 		return value, errors.New(fmt.Sprintf("Network fail: %s", err))
-	} else {
-		fmt.Println(resp)
-		defer resp.Body.Close()
-		json.NewDecoder(resp.Body).Decode(&value)
 	}
+	defer resp.Body.Close()
+	json.NewDecoder(resp.Body).Decode(&value)
 	return value, nil
 }
