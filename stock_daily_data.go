@@ -6,7 +6,6 @@ import (
 	"fmt"
 	"io/ioutil"
 	"net/http"
-	"regexp"
 	"strconv"
 	"strings"
 	"time"
@@ -68,7 +67,7 @@ func (d DailyData) GetDataByTimeMap() map[time.Time]interface{} {
 	data := make(map[time.Time]interface{})
 	dailyData, _ := d.GetData()
 	for _, v := range dailyData {
-		data[parseDate(v[0])] = v
+		data[ParseDate(v[0])] = v
 	}
 	return data
 }
@@ -86,22 +85,12 @@ type FmtDailyData struct {
 	Totalsale  uint64
 }
 
-var dateReg = regexp.MustCompile(`[\d]{2,}`)
-
-func parseDate(strDate string) time.Time {
-	p := dateReg.FindAllString(strDate, -1)
-	year, _ := strconv.Atoi(p[0])
-	mon, _ := strconv.Atoi(p[1])
-	day, _ := strconv.Atoi(p[2])
-	return time.Date(year+1911, time.Month(mon), day, 0, 0, 0, 0, time.Local)
-}
-
 // FormatDailyData is format daily data.
 func (d DailyData) FormatDailyData() []FmtDailyData {
 	result := make([]FmtDailyData, len(d.RawData))
 	var loopd FmtDailyData
 	for i, v := range d.RawData {
-		loopd.Date = parseDate(v[0])
+		loopd.Date = ParseDate(v[0])
 
 		volume, _ := strconv.ParseUint(strings.Replace(v[1], ",", "", -1), 10, 32)
 		loopd.Volume = volume
