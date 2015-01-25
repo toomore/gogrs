@@ -2,7 +2,6 @@ package gogrs
 
 import (
 	"encoding/json"
-	"errors"
 	"fmt"
 	"net/http"
 	"time"
@@ -49,7 +48,7 @@ func (stock StockRealTime) GetData() (StockBlob, error) {
 	url := stock.URL()
 	resp, err := http.Get(url)
 	if err != nil {
-		return value, errors.New(fmt.Sprintf("Network fail: %s", err))
+		return value, fmt.Errorf("Network fail: %s", err)
 	}
 	defer resp.Body.Close()
 	json.NewDecoder(resp.Body).Decode(&value)

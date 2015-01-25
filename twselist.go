@@ -78,7 +78,7 @@ func (l TWSEList) URL(strNo string) string {
 func (l TWSEList) GetData(strNo string) ([][]string, error) {
 	data, err := http.Get(l.URL(strNo))
 	if err != nil {
-		return nil, errors.New(fmt.Sprintf("Network fail: %s", err))
+		return nil, fmt.Errorf("Network fail: %s", err)
 	}
 	defer data.Body.Close()
 	dataContentBig5, _ := ioutil.ReadAll(data.Body)

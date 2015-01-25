@@ -41,7 +41,7 @@ func (d *DailyData) GetData() ([][]string, error) {
 	if len(d.hasData[d.Date.Unix()]) == 0 {
 		csvFiles, err := http.Get(d.URL())
 		if err != nil {
-			return nil, errors.New(fmt.Sprintf("Network fail: %s", err))
+			return nil, fmt.Errorf("Network fail: %s", err)
 		}
 		defer csvFiles.Body.Close()
 		data, _ := ioutil.ReadAll(csvFiles.Body)
