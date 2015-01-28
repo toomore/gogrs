@@ -98,6 +98,7 @@ func TestDailyData_Round(*testing.T) {
 		Date: time.Date(2014, 12, 26, 0, 0, 0, 0, time.Local),
 	}
 	d.Round()
+	fmt.Println(d.URL())
 }
 
 func TestDailyData_GetDataByTimeMap(*testing.T) {

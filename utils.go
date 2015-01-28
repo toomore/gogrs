@@ -3,6 +3,7 @@ package gogrs
 import (
 	"crypto/rand"
 	"math/big"
+	//"math/rand"
 	"regexp"
 	"strconv"
 	"time"
@@ -13,6 +14,11 @@ func RandInt() int64 {
 	result, _ := rand.Int(rand.Reader, big.NewInt(102400))
 	return result.Int64()
 }
+
+//func RandInt() int64 {
+//	r := rand.New(rand.NewSource(time.Now().UnixNano()))
+//	return r.Int63n(100000)
+//}
 
 var dateReg = regexp.MustCompile(`[\d]{2,}`)
 
