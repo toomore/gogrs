@@ -71,11 +71,20 @@ func (d DailyData) GetDataByTimeMap() map[time.Time]interface{} {
 	return data
 }
 
-func (d DailyData) GetColsList(colsNo int) []interface{} {
-	var result []interface{}
-	result = make([]interface{}, len(d.RawData))
+func (d DailyData) getColsList(colsNo int) []string {
+	var result []string
+	result = make([]string, len(d.RawData))
 	for i, value := range d.RawData {
 		result[i] = value[colsNo]
+	}
+	return result
+}
+
+func (d DailyData) GetVolumeList() []uint64 {
+	var result []uint64
+	result = make([]uint64, len(d.RawData))
+	for i, v := range d.getColsList(1) {
+		result[i], _ = strconv.ParseUint(strings.Replace(v, ",", "", -1), 10, 64)
 	}
 	return result
 }
