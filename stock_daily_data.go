@@ -71,6 +71,15 @@ func (d DailyData) GetDataByTimeMap() map[time.Time]interface{} {
 	return data
 }
 
+func (d DailyData) GetColsList(colsNo int) []interface{} {
+	var result []interface{}
+	result = make([]interface{}, len(d.RawData))
+	for i, value := range d.RawData {
+		result[i] = value[colsNo]
+	}
+	return result
+}
+
 // FmtDailyData is struct for daily data format.
 type FmtDailyData struct {
 	Date       time.Time
