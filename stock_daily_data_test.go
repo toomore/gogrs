@@ -65,6 +65,17 @@ func BenchmarkGetVolumeList(b *testing.B) {
 	}
 }
 
+func BenchmarkGetPrice(b *testing.B) {
+	d := DailyData{
+		No:   "2618",
+		Date: time.Date(2015, 3, 27, 0, 0, 0, 0, time.Local),
+	}
+	d.GetData()
+	for i := 0; i <= b.N; i++ {
+		d.GetPriceList()
+	}
+}
+
 func ExampleDailyData_GetData_notEnoughData() {
 	year, month, _ := time.Now().Date()
 	d := DailyData{
