@@ -89,6 +89,15 @@ func (d DailyData) GetVolumeList() []uint64 {
 	return result
 }
 
+func (d DailyData) GetPriceList() []float64 {
+	var result []float64
+	result = make([]float64, len(d.RawData))
+	for i, v := range d.getColsList(6) {
+		result[i], _ = strconv.ParseFloat(v, 64)
+	}
+	return result
+}
+
 // FmtDailyData is struct for daily data format.
 type FmtDailyData struct {
 	Date       time.Time
