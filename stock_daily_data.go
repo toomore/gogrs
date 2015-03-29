@@ -97,12 +97,23 @@ func (d DailyData) GetPriceList() []float64 {
 	}
 	return result
 }
+
 func (d DailyData) MA(days int) []float64 {
 	var result []float64
 	var priceList = d.GetPriceList()
 	result = make([]float64, len(priceList)-days+1)
 	for i, _ := range priceList[days-1:] {
 		result[i] = AvgFlast64(priceList[i : i+days])
+	}
+	return result
+}
+
+func (d DailyData) MAV(days int) []uint64 {
+	var result []uint64
+	var volumeList = d.GetVolumeList()
+	result = make([]uint64, len(volumeList)-days+1)
+	for i, _ := range volumeList[days-1:] {
+		result[i] = AvgUint64(volumeList[i : i+days])
 	}
 	return result
 }

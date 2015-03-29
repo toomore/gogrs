@@ -42,3 +42,15 @@ func SumFloat64(data []float64) float64 {
 func AvgFlast64(data []float64) float64 {
 	return float64(int(SumFloat64(data)*100)/len(data)) / 100
 }
+
+func SumUint64(data []uint64) uint64 {
+	var result uint64
+	for _, v := range data {
+		result += v
+	}
+	return result
+}
+
+func AvgUint64(data []uint64) uint64 {
+	return SumUint64(data) / uint64(len(data))
+}
