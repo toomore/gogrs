@@ -92,14 +92,14 @@ func (d DailyData) GetVolumeList() []uint64 {
 // FmtDailyData is struct for daily data format.
 type FmtDailyData struct {
 	Date       time.Time
-	Volume     uint64
-	TotalPrice uint64
-	Open       float64
-	High       float64
-	Low        float64
-	Price      float64
-	Range      float64
-	Totalsale  uint64
+	Volume     uint64  //成交股數
+	TotalPrice uint64  //成交金額
+	Open       float64 //開盤價
+	High       float64 //最高價
+	Low        float64 //最低價
+	Price      float64 //收盤價
+	Range      float64 //漲跌價差
+	Totalsale  uint64  //成交筆數
 }
 
 // FormatDailyData is format daily data.
