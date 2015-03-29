@@ -7,3 +7,17 @@ func BenchmarkRanInt(t *testing.B) {
 		RandInt()
 	}
 }
+
+func BenchmarkSumFloat64(t *testing.B) {
+	var sample = []float64{20.2, 20.3, 100.25, 100.75}
+	for i := 0; i < t.N; i++ {
+		SumFloat64(sample)
+	}
+}
+
+func BenchmarkAvgFloat64(t *testing.B) {
+	var sample = []float64{20.2, 20.3, 100.25, 100.75}
+	for i := 0; i < t.N; i++ {
+		AvgFlast64(sample)
+	}
+}
