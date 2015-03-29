@@ -97,6 +97,15 @@ func (d DailyData) GetPriceList() []float64 {
 	}
 	return result
 }
+func (d DailyData) MA(days int) []float64 {
+	var result []float64
+	var priceList = d.GetPriceList()
+	result = make([]float64, len(priceList)-days+1)
+	for i, _ := range priceList[days-1:] {
+		result[i] = AvgFlast64(priceList[i : i+days])
+	}
+	return result
+}
 
 // FmtDailyData is struct for daily data format.
 type FmtDailyData struct {

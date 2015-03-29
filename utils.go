@@ -30,3 +30,15 @@ func ParseDate(strDate string) time.Time {
 	day, _ := strconv.Atoi(p[2])
 	return time.Date(year+1911, time.Month(mon), day, 0, 0, 0, 0, time.Local)
 }
+
+func SumFloat64(data []float64) float64 {
+	var result float64
+	for _, v := range data {
+		result += v
+	}
+	return result
+}
+
+func AvgFlast64(data []float64) float64 {
+	return float64(int(SumFloat64(data)*100)/len(data)) / 100
+}
