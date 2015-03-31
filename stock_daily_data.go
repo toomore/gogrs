@@ -80,6 +80,15 @@ func (d DailyData) getColsList(colsNo int) []string {
 	return result
 }
 
+func (d DailyData) getColsListFloat64(colsNo int) []float64 {
+	var result []float64
+	result = make([]float64, len(d.RawData))
+	for i, v := range d.getColsList(colsNo) {
+		result[i], _ = strconv.ParseFloat(v, 64)
+	}
+	return result
+}
+
 func (d DailyData) GetVolumeList() []uint64 {
 	var result []uint64
 	result = make([]uint64, len(d.RawData))
@@ -90,21 +99,11 @@ func (d DailyData) GetVolumeList() []uint64 {
 }
 
 func (d DailyData) GetPriceList() []float64 {
-	var result []float64
-	result = make([]float64, len(d.RawData))
-	for i, v := range d.getColsList(6) {
-		result[i], _ = strconv.ParseFloat(v, 64)
-	}
-	return result
+	return d.getColsListFloat64(6)
 }
 
 func (d DailyData) GetOpenList() []float64 {
-	var result []float64
-	result = make([]float64, len(d.RawData))
-	for i, v := range d.getColsList(3) {
-		result[i], _ = strconv.ParseFloat(v, 64)
-	}
-	return result
+	return d.getColsListFloat64(3)
 }
 
 func (d DailyData) MA(days int) []float64 {
