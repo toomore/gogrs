@@ -44,6 +44,27 @@ func TestDailyData_GetData(*testing.T) {
 	fmt.Println(stockData)
 }
 
+func TestGetList(*testing.T) {
+	var stock = DailyData{
+		No:   "2329",
+		Date: time.Date(2015, 03, 20, 0, 0, 0, 0, time.Local),
+	}
+
+	stock.GetData()
+	fmt.Println(stock.RawData)
+	fmt.Println(stock.MA(6))
+	fmt.Println(stock.MAV(6))
+	fmt.Println(stock.GetPriceList())
+	fmt.Println(ThanPastFloat64(stock.GetPriceList(), 3, true))
+	fmt.Println(ThanPastFloat64(stock.GetPriceList(), 3, false))
+	fmt.Println(stock.GetVolumeList())
+	fmt.Println(ThanPastUint64(stock.GetVolumeList(), 3, true))
+	fmt.Println(ThanPastUint64(stock.GetVolumeList(), 3, false))
+	fmt.Println(stock.GetRangeList())
+	fmt.Println(stock.GetOpenList())
+	fmt.Println(stock.IsRed())
+}
+
 func BenchmarkGetData(b *testing.B) {
 	d := DailyData{
 		No:   "2618",
