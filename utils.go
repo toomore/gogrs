@@ -76,16 +76,21 @@ func thanPast(data []float64, max bool) bool {
 	//	}
 	//}
 
+	var base float64 = data[len(data)-1]
+	var condition func(b float64) bool
+
 	if max {
-		var base float64 = data[len(data)-1]
-		for _, v := range data[:len(data)-1] {
-			if base > v {
-				continue
-			} else {
-				return false
-			}
-		}
-		return true
+		condition = func(b float64) bool { return base > b }
+	} else {
+		condition = func(b float64) bool { return base < b }
 	}
-	return false
+
+	for _, v := range data[:len(data)-1] {
+		if condition(v) {
+			continue
+		} else {
+			return false
+		}
+	}
+	return true
 }
