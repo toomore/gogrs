@@ -35,3 +35,10 @@ func BenchmarkThanPastFloat64(t *testing.B) {
 		ThanPastFloat64(sample, 3, true)
 	}
 }
+
+func BenchmarkThanPastUint64(t *testing.B) {
+	var sample = []uint64{20, 23, 125, 105}
+	for i := 0; i < t.N; i++ {
+		ThanPastUint64(sample, 3, true)
+	}
+}
