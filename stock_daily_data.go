@@ -98,12 +98,16 @@ func (d DailyData) GetVolumeList() []uint64 {
 	return result
 }
 
+func (d DailyData) GetOpenList() []float64 {
+	return d.getColsListFloat64(3)
+}
+
 func (d DailyData) GetPriceList() []float64 {
 	return d.getColsListFloat64(6)
 }
 
-func (d DailyData) GetOpenList() []float64 {
-	return d.getColsListFloat64(3)
+func (d DailyData) GetRangeList() []float64 {
+	return d.getColsListFloat64(7)
 }
 
 func (d DailyData) MA(days int) []float64 {
