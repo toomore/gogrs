@@ -54,3 +54,38 @@ func SumUint64(data []uint64) uint64 {
 func AvgUint64(data []uint64) uint64 {
 	return SumUint64(data) / uint64(len(data))
 }
+
+func ThanPastFloat64(data []float64, days int, max bool) bool {
+	var dataFloat64 []float64
+	dataFloat64 = make([]float64, days+1)
+	for i, v := range data[len(data)-1-days:] {
+		dataFloat64[i] = v
+	}
+	return thanPast(dataFloat64, max)
+}
+
+func thanPast(data []float64, max bool) bool {
+	//var dataFloat64 []float64
+	//dataFloat64 = make([]float64, days+1)
+	//for i, v := range data[len(data)-1-days : len(data)-1] {
+	//	switch v.(type) {
+	//	case int64:
+	//		dataFloat64[i] = float64(v.(int64))
+	//	case float64:
+	//		dataFloat64[i] = v.(float64)
+	//	}
+	//}
+
+	if max {
+		var base float64 = data[len(data)-1]
+		for _, v := range data[:len(data)-1] {
+			if base > v {
+				continue
+			} else {
+				return false
+			}
+		}
+		return true
+	}
+	return false
+}
