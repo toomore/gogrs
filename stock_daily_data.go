@@ -15,10 +15,14 @@ type memData map[int64][][]string
 
 // DailyData start with stock no, date.
 type DailyData struct {
-	No      string
-	Date    time.Time
-	RawData [][]string
-	hasData memData
+	No         string
+	Date       time.Time
+	RawData    [][]string
+	hasData    memData
+	openList   []float64
+	priceList  []float64
+	rangeList  []float64
+	volumeList []uint64
 }
 
 // URL return stock csv url path.
@@ -89,25 +93,37 @@ func (d DailyData) getColsListFloat64(colsNo int) []float64 {
 	return result
 }
 
-func (d DailyData) GetVolumeList() []uint64 {
-	var result []uint64
-	result = make([]uint64, len(d.RawData))
-	for i, v := range d.getColsList(1) {
-		result[i], _ = strconv.ParseUint(strings.Replace(v, ",", "", -1), 10, 64)
+func (d *DailyData) GetVolumeList() []uint64 {
+	if len(d.volumeList) == 0 {
+		var result []uint64
+		result = make([]uint64, len(d.RawData))
+		for i, v := range d.getColsList(1) {
+			result[i], _ = strconv.ParseUint(strings.Replace(v, ",", "", -1), 10, 64)
+		}
+		d.volumeList = result
 	}
-	return result
+	return d.volumeList
 }
 
-func (d DailyData) GetOpenList() []float64 {
-	return d.getColsListFloat64(3)
+func (d *DailyData) GetOpenList() []float64 {
+	if len(d.openList) == 0 {
+		d.openList = d.getColsListFloat64(3)
+	}
+	return d.openList
 }
 
-func (d DailyData) GetPriceList() []float64 {
-	return d.getColsListFloat64(6)
+func (d *DailyData) GetPriceList() []float64 {
+	if len(d.priceList) == 0 {
+		d.priceList = d.getColsListFloat64(6)
+	}
+	return d.priceList
 }
 
-func (d DailyData) GetRangeList() []float64 {
-	return d.getColsListFloat64(7)
+func (d *DailyData) GetRangeList() []float64 {
+	if len(d.rangeList) == 0 {
+		d.rangeList = d.getColsListFloat64(7)
+	}
+	return d.rangeList
 }
 
 func (d DailyData) MA(days int) []float64 {
