@@ -127,6 +127,12 @@ func (d DailyData) MAV(days int) []uint64 {
 	return result
 }
 
+func (d DailyData) IsRed() bool {
+	var priceList []float64 = d.GetPriceList()
+	var openList []float64 = d.GetOpenList()
+	return priceList[len(priceList)-1] > openList[len(openList)-1]
+}
+
 // FmtDailyData is struct for daily data format.
 type FmtDailyData struct {
 	Date       time.Time
