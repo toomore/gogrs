@@ -94,7 +94,7 @@ func (d DailyData) getColsListFloat64(colsNo int) []float64 {
 }
 
 func (d *DailyData) GetVolumeList() []uint64 {
-	if len(d.volumeList) == 0 {
+	if d.volumeList == nil {
 		var result []uint64
 		result = make([]uint64, len(d.RawData))
 		for i, v := range d.getColsList(1) {
@@ -106,21 +106,21 @@ func (d *DailyData) GetVolumeList() []uint64 {
 }
 
 func (d *DailyData) GetOpenList() []float64 {
-	if len(d.openList) == 0 {
+	if d.openList == nil {
 		d.openList = d.getColsListFloat64(3)
 	}
 	return d.openList
 }
 
 func (d *DailyData) GetPriceList() []float64 {
-	if len(d.priceList) == 0 {
+	if d.priceList == nil {
 		d.priceList = d.getColsListFloat64(6)
 	}
 	return d.priceList
 }
 
 func (d *DailyData) GetRangeList() []float64 {
-	if len(d.rangeList) == 0 {
+	if d.rangeList == nil {
 		d.rangeList = d.getColsListFloat64(7)
 	}
 	return d.rangeList
