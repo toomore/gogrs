@@ -31,6 +31,7 @@ func ParseDate(strDate string) time.Time {
 	return time.Date(year+1911, time.Month(mon), day, 0, 0, 0, 0, time.Local)
 }
 
+// SumFloat64 計算總和（float64）
 func SumFloat64(data []float64) float64 {
 	var result float64
 	for _, v := range data {
@@ -39,10 +40,12 @@ func SumFloat64(data []float64) float64 {
 	return result
 }
 
+// AvgFlast64 計算平均（float64）
 func AvgFlast64(data []float64) float64 {
 	return float64(int(SumFloat64(data)*100)/len(data)) / 100
 }
 
+// SumUint64 計算總和（uint64）
 func SumUint64(data []uint64) uint64 {
 	var result uint64
 	for _, v := range data {
@@ -51,10 +54,12 @@ func SumUint64(data []uint64) uint64 {
 	return result
 }
 
+// AvgUint64 計算平均（uint64）
 func AvgUint64(data []uint64) uint64 {
 	return SumUint64(data) / uint64(len(data))
 }
 
+// ThanPastUint64 計算最後一個數值是否為過去幾天最大或最小（uint64）
 func ThanPastUint64(data []uint64, days int, max bool) bool {
 	var dataFloat64 []float64
 	dataFloat64 = make([]float64, days+1)
@@ -64,6 +69,7 @@ func ThanPastUint64(data []uint64, days int, max bool) bool {
 	return thanPast(dataFloat64, max)
 }
 
+// ThanPastFloat64 計算最後一個數值是否為過去幾天最大或最小（float64）
 func ThanPastFloat64(data []float64, days int, max bool) bool {
 	return thanPast(data[len(data)-1-days:], max)
 }
@@ -80,7 +86,7 @@ func thanPast(data []float64, max bool) bool {
 	//	}
 	//}
 
-	var base float64 = data[len(data)-1]
+	var base = data[len(data)-1]
 	var condition func(b float64) bool
 
 	if max {
