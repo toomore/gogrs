@@ -93,6 +93,7 @@ func (d DailyData) getColsListFloat64(colsNo int) []float64 {
 	return result
 }
 
+// GetVolumeList 取得 成交股數 序列
 func (d *DailyData) GetVolumeList() []uint64 {
 	if d.volumeList == nil {
 		var result []uint64
@@ -105,6 +106,7 @@ func (d *DailyData) GetVolumeList() []uint64 {
 	return d.volumeList
 }
 
+// GetOpenList 取得 開盤價 序列
 func (d *DailyData) GetOpenList() []float64 {
 	if d.openList == nil {
 		d.openList = d.getColsListFloat64(3)
@@ -112,6 +114,7 @@ func (d *DailyData) GetOpenList() []float64 {
 	return d.openList
 }
 
+// GetPriceList 取得 收盤價 序列
 func (d *DailyData) GetPriceList() []float64 {
 	if d.priceList == nil {
 		d.priceList = d.getColsListFloat64(6)
@@ -119,6 +122,7 @@ func (d *DailyData) GetPriceList() []float64 {
 	return d.priceList
 }
 
+// GetRangeList 取得 漲跌價差 序列
 func (d *DailyData) GetRangeList() []float64 {
 	if d.rangeList == nil {
 		d.rangeList = d.getColsListFloat64(7)
@@ -126,28 +130,31 @@ func (d *DailyData) GetRangeList() []float64 {
 	return d.rangeList
 }
 
+// MA 計算 收盤價 的移動平均
 func (d DailyData) MA(days int) []float64 {
 	var result []float64
 	var priceList = d.GetPriceList()
 	result = make([]float64, len(priceList)-days+1)
-	for i, _ := range priceList[days-1:] {
+	for i := range priceList[days-1:] {
 		result[i] = AvgFlast64(priceList[i : i+days])
 	}
 	return result
 }
 
+// MAV 計算 成交股數 的移動平均
 func (d DailyData) MAV(days int) []uint64 {
 	var result []uint64
 	var volumeList = d.GetVolumeList()
 	result = make([]uint64, len(volumeList)-days+1)
-	for i, _ := range volumeList[days-1:] {
+	for i := range volumeList[days-1:] {
 		result[i] = AvgUint64(volumeList[i : i+days])
 	}
 	return result
 }
 
+// IsRed 計算是否收紅 K
 func (d DailyData) IsRed() bool {
-	var rangeList []float64 = d.GetRangeList()
+	var rangeList = d.GetRangeList()
 	return rangeList[len(rangeList)-1] > 0
 }
 
