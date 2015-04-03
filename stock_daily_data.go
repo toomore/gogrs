@@ -11,18 +11,18 @@ import (
 	"time"
 )
 
-type memData map[int64][][]string
+type unixMapData map[int64][][]string
 
 // DailyData start with stock no, date.
 type DailyData struct {
-	No         string
-	Date       time.Time
-	RawData    [][]string
-	hasData    memData
-	openList   []float64
-	priceList  []float64
-	rangeList  []float64
-	volumeList []uint64
+	No          string
+	Date        time.Time
+	RawData     [][]string
+	UnixMapData unixMapData
+	openList    []float64
+	priceList   []float64
+	rangeList   []float64
+	volumeList  []uint64
 }
 
 // URL return stock csv url path.
@@ -52,10 +52,10 @@ func (d *DailyData) clearCache() {
 
 // GetData return csv data in array.
 func (d *DailyData) GetData() ([][]string, error) {
-	if d.hasData == nil {
-		d.hasData = make(memData)
+	if d.UnixMapData == nil {
+		d.UnixMapData = make(unixMapData)
 	}
-	if len(d.hasData[d.Date.Unix()]) == 0 {
+	if len(d.UnixMapData[d.Date.Unix()]) == 0 {
 		csvFiles, err := http.Get(d.URL())
 		if err != nil {
 			return nil, fmt.Errorf("Network fail: %s", err)
@@ -70,13 +70,13 @@ func (d *DailyData) GetData() ([][]string, error) {
 			csvReader := csv.NewReader(strings.NewReader(strings.Join(csvArrayContent[2:], "\n")))
 			allData, err := csvReader.ReadAll()
 			d.RawData = append(allData, d.RawData...)
-			d.hasData[d.Date.Unix()] = allData
+			d.UnixMapData[d.Date.Unix()] = allData
 			d.clearCache()
 			return allData, err
 		}
 		return nil, errors.New("Not enough data.")
 	}
-	return d.hasData[d.Date.Unix()], nil
+	return d.UnixMapData[d.Date.Unix()], nil
 }
 
 // GetDataByTimeMap return a map by key of time.Time
