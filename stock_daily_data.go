@@ -37,6 +37,12 @@ func (d *DailyData) Round() {
 	d.Date = time.Date(year, month-1, 1, 0, 0, 0, 0, time.UTC)
 }
 
+// PlusData will do Round() and GetData().
+func (d DailyData) PlusData() {
+	d.Round()
+	d.GetData()
+}
+
 // GetData return csv data in array.
 func (d *DailyData) GetData() ([][]string, error) {
 	if d.hasData == nil {
