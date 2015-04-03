@@ -38,9 +38,16 @@ func (d *DailyData) Round() {
 }
 
 // PlusData will do Round() and GetData().
-func (d DailyData) PlusData() {
+func (d *DailyData) PlusData() {
 	d.Round()
 	d.GetData()
+}
+
+func (d *DailyData) clearCache() {
+	d.rangeList = nil
+	d.openList = nil
+	d.priceList = nil
+	d.volumeList = nil
 }
 
 // GetData return csv data in array.
@@ -64,6 +71,7 @@ func (d *DailyData) GetData() ([][]string, error) {
 			allData, err := csvReader.ReadAll()
 			d.RawData = append(allData, d.RawData...)
 			d.hasData[d.Date.Unix()] = allData
+			d.clearCache()
 			return allData, err
 		}
 		return nil, errors.New("Not enough data.")
