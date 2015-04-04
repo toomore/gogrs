@@ -1,10 +1,12 @@
-package gogrs
+package twse
 
 import (
 	"fmt"
 	"reflect"
 	"testing"
 	"time"
+
+	"github.com/toomore/gogrs"
 )
 
 func assertType(t *testing.T, t1 interface{}, t2 interface{}) {
@@ -55,11 +57,11 @@ func TestGetList(*testing.T) {
 	fmt.Println(stock.MA(6))
 	fmt.Println(stock.MAV(6))
 	fmt.Println(stock.GetPriceList())
-	fmt.Println(ThanPastFloat64(stock.GetPriceList(), 3, true))
-	fmt.Println(ThanPastFloat64(stock.GetPriceList(), 3, false))
+	fmt.Println(gogrs.ThanPastFloat64(stock.GetPriceList(), 3, true))
+	fmt.Println(gogrs.ThanPastFloat64(stock.GetPriceList(), 3, false))
 	fmt.Println(stock.GetVolumeList())
-	fmt.Println(ThanPastUint64(stock.GetVolumeList(), 3, true))
-	fmt.Println(ThanPastUint64(stock.GetVolumeList(), 3, false))
+	fmt.Println(gogrs.ThanPastUint64(stock.GetVolumeList(), 3, true))
+	fmt.Println(gogrs.ThanPastUint64(stock.GetVolumeList(), 3, false))
 	fmt.Println(stock.GetRangeList())
 	fmt.Println(stock.GetOpenList())
 	fmt.Println(stock.IsRed())

@@ -1,4 +1,7 @@
-package gogrs
+// Package twse - Fetch stock data from http://www.twse.com.tw/
+// 擷取台灣股市上市股票資訊
+//
+package twse
 
 import (
 	"encoding/csv"
@@ -9,6 +12,8 @@ import (
 	"strconv"
 	"strings"
 	"time"
+
+	"github.com/toomore/gogrs"
 )
 
 type unixMapData map[int64][][]string
@@ -27,8 +32,8 @@ type DailyData struct {
 
 // URL return stock csv url path.
 func (d DailyData) URL() string {
-	path := fmt.Sprintf(TWSECSV, d.Date.Year(), d.Date.Month(), d.Date.Year(), d.Date.Month(), d.No, RandInt())
-	return fmt.Sprintf("%s%s", TWSEHOST, path)
+	path := fmt.Sprintf(gogrs.TWSECSV, d.Date.Year(), d.Date.Month(), d.Date.Year(), d.Date.Month(), d.No, gogrs.RandInt())
+	return fmt.Sprintf("%s%s", gogrs.TWSEHOST, path)
 }
 
 // Round will do sub one month.
@@ -84,7 +89,7 @@ func (d DailyData) GetDataByTimeMap() map[time.Time]interface{} {
 	data := make(map[time.Time]interface{})
 	dailyData, _ := d.GetData()
 	for _, v := range dailyData {
-		data[ParseDate(v[0])] = v
+		data[gogrs.ParseDate(v[0])] = v
 	}
 	return data
 }
@@ -150,7 +155,7 @@ func (d DailyData) MA(days int) []float64 {
 	var priceList = d.GetPriceList()
 	result = make([]float64, len(priceList)-days+1)
 	for i := range priceList[days-1:] {
-		result[i] = AvgFlast64(priceList[i : i+days])
+		result[i] = gogrs.AvgFlast64(priceList[i : i+days])
 	}
 	return result
 }
@@ -161,7 +166,7 @@ func (d DailyData) MAV(days int) []uint64 {
 	var volumeList = d.GetVolumeList()
 	result = make([]uint64, len(volumeList)-days+1)
 	for i := range volumeList[days-1:] {
-		result[i] = AvgUint64(volumeList[i : i+days])
+		result[i] = gogrs.AvgUint64(volumeList[i : i+days])
 	}
 	return result
 }
@@ -190,7 +195,7 @@ func (d DailyData) FormatDailyData() []FmtDailyData {
 	result := make([]FmtDailyData, len(d.RawData))
 	var loopd FmtDailyData
 	for i, v := range d.RawData {
-		loopd.Date = ParseDate(v[0])
+		loopd.Date = gogrs.ParseDate(v[0])
 
 		volume, _ := strconv.ParseUint(strings.Replace(v[1], ",", "", -1), 10, 32)
 		loopd.Volume = volume
