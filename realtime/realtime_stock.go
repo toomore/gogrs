@@ -9,7 +9,7 @@ import (
 	"net/http"
 	"time"
 
-	"github.com/toomore/gogrs"
+	"github.com/toomore/gogrs/utils"
 )
 
 //STOCKPATH = '/stock/api/getStockInfo.jsp?ex_ch=%(exchange)s_%(no)s.tw_%(date)s&json=1&delay=%(delay)s&_=%(timestamp)s'
@@ -33,8 +33,8 @@ type StockBlob struct {
 
 // URL return realtime url path.
 func (stock StockRealTime) URL() string {
-	return fmt.Sprintf("%s%s", gogrs.TWSEURL,
-		fmt.Sprintf(gogrs.TWSEREAL,
+	return fmt.Sprintf("%s%s", utils.TWSEURL,
+		fmt.Sprintf(utils.TWSEREAL,
 			"tse",
 			stock.No,
 			fmt.Sprintf(
