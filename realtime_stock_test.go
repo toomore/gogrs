@@ -4,12 +4,14 @@ import (
 	"fmt"
 	"testing"
 	"time"
+
+	"github.com/toomore/gogrs/utils"
 )
 
 func TestStockRealTime(*testing.T) {
 	r := &StockRealTime{
 		No:        "2618",
-		Timestamp: RandInt(),
+		Timestamp: utils.RandInt(),
 		Date:      time.Now(),
 	}
 	r.URL()
@@ -19,7 +21,7 @@ func TestStockRealTime(*testing.T) {
 func ExampleStockRealTime() {
 	r := StockRealTime{
 		No:        "2618",
-		Timestamp: RandInt(),
+		Timestamp: utils.RandInt(),
 		Date:      time.Date(2014, 12, 26, 0, 0, 0, 0, time.Local),
 	}
 
