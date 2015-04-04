@@ -1,4 +1,4 @@
-package gogrs
+package utils
 
 import "testing"
 

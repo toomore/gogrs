@@ -1,4 +1,5 @@
-package gogrs
+// Package utils - some utils.
+package utils
 
 import (
 	"crypto/rand"
