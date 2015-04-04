@@ -1,4 +1,4 @@
-package twse
+package twse_test
 
 import (
 	"fmt"
@@ -7,6 +7,7 @@ import (
 	"time"
 
 	"github.com/toomore/gogrs"
+	"github.com/toomore/gogrs/twse"
 )
 
 func assertType(t *testing.T, t1 interface{}, t2 interface{}) {
@@ -16,15 +17,15 @@ func assertType(t *testing.T, t1 interface{}, t2 interface{}) {
 }
 
 func TestURL(t *testing.T) {
-	d := &DailyData{
+	d := &twse.DailyData{
 		No:   "2618",
 		Date: time.Now(),
 	}
-	assertType(t, d, &DailyData{})
+	assertType(t, d, &twse.DailyData{})
 }
 
 func ExampleDailyData() {
-	d := DailyData{
+	d := twse.DailyData{
 		No:   "2618",
 		Date: time.Date(2014, 12, 26, 0, 0, 0, 0, time.Local),
 	}
@@ -35,7 +36,7 @@ func ExampleDailyData() {
 }
 
 func TestDailyData_GetData(*testing.T) {
-	d := DailyData{
+	d := twse.DailyData{
 		No:   "2618",
 		Date: time.Date(2014, 12, 26, 0, 0, 0, 0, time.Local),
 	}
@@ -47,7 +48,7 @@ func TestDailyData_GetData(*testing.T) {
 }
 
 func TestGetList(*testing.T) {
-	var stock = DailyData{
+	var stock = twse.DailyData{
 		No:   "2329",
 		Date: time.Date(2015, 03, 20, 0, 0, 0, 0, time.Local),
 	}
@@ -68,7 +69,7 @@ func TestGetList(*testing.T) {
 }
 
 func BenchmarkGetData(b *testing.B) {
-	d := DailyData{
+	d := twse.DailyData{
 		No:   "2618",
 		Date: time.Date(2014, 12, 26, 0, 0, 0, 0, time.Local),
 	}
@@ -78,7 +79,7 @@ func BenchmarkGetData(b *testing.B) {
 }
 
 func BenchmarkGetVolumeList(b *testing.B) {
-	d := DailyData{
+	d := twse.DailyData{
 		No:   "2618",
 		Date: time.Date(2015, 3, 27, 0, 0, 0, 0, time.Local),
 	}
@@ -89,7 +90,7 @@ func BenchmarkGetVolumeList(b *testing.B) {
 }
 
 func BenchmarkGetPriceList(b *testing.B) {
-	d := DailyData{
+	d := twse.DailyData{
 		No:   "2618",
 		Date: time.Date(2015, 3, 27, 0, 0, 0, 0, time.Local),
 	}
@@ -101,7 +102,7 @@ func BenchmarkGetPriceList(b *testing.B) {
 
 func ExampleDailyData_GetData_notEnoughData() {
 	year, month, _ := time.Now().Date()
-	d := DailyData{
+	d := twse.DailyData{
 		No:   "2618",
 		Date: time.Date(year, month+1, 1, 0, 0, 0, 0, time.Local),
 	}
@@ -115,7 +116,7 @@ func ExampleDailyData_GetData_notEnoughData() {
 }
 
 func ExampleDailyData_Round() {
-	d := DailyData{
+	d := twse.DailyData{
 		No:   "2618",
 		Date: time.Date(2014, 12, 26, 0, 0, 0, 0, time.Local),
 	}
@@ -138,7 +139,7 @@ func ExampleDailyData_Round() {
 }
 
 func TestDailyData_Round(*testing.T) {
-	d := DailyData{
+	d := twse.DailyData{
 		No:   "2618",
 		Date: time.Date(2014, 12, 26, 0, 0, 0, 0, time.Local),
 	}
@@ -147,7 +148,7 @@ func TestDailyData_Round(*testing.T) {
 }
 
 func TestDailyData_GetDataByTimeMap(*testing.T) {
-	d := DailyData{
+	d := twse.DailyData{
 		No:   "2618",
 		Date: time.Date(2014, 12, 26, 0, 0, 0, 0, time.Local),
 	}
@@ -155,7 +156,7 @@ func TestDailyData_GetDataByTimeMap(*testing.T) {
 }
 
 func TestDailyData_FormatDailyData(*testing.T) {
-	d := DailyData{
+	d := twse.DailyData{
 		No:   "2618",
 		Date: time.Date(2014, 12, 26, 0, 0, 0, 0, time.Local),
 	}
