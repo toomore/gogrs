@@ -1,4 +1,4 @@
-package gogrs
+package twse
 
 import (
 	"fmt"

@@ -1,4 +1,4 @@
-package gogrs
+package twse
 
 import (
 	"encoding/csv"
@@ -10,6 +10,7 @@ import (
 	"time"
 
 	iconv "github.com/djimenez/iconv-go"
+	"github.com/toomore/gogrs"
 )
 
 // TWSECLASS is a class list of TWSE.
@@ -71,7 +72,7 @@ type TWSEList struct {
 // URL is to render urlpath.
 func (l TWSEList) URL(strNo string) string {
 	year, month, day := l.Date.Date()
-	return fmt.Sprintf("%s%s", TWSEHOST, fmt.Sprintf(TWSELISTCSV, year, month, year, month, day, strNo))
+	return fmt.Sprintf("%s%s", gogrs.TWSEHOST, fmt.Sprintf(gogrs.TWSELISTCSV, year, month, year, month, day, strNo))
 }
 
 // GetData is to get csv data.
