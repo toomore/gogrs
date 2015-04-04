@@ -1,4 +1,4 @@
-package gogrs
+package realtime
 
 import (
 	"fmt"

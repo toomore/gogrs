@@ -1,10 +1,15 @@
-package gogrs
+// Package realtime - Fetch realtime stock data info http://mis.tse.com.tw/
+// 擷取盤中即時股價資訊
+//
+package realtime
 
 import (
 	"encoding/json"
 	"fmt"
 	"net/http"
 	"time"
+
+	"github.com/toomore/gogrs"
 )
 
 //STOCKPATH = '/stock/api/getStockInfo.jsp?ex_ch=%(exchange)s_%(no)s.tw_%(date)s&json=1&delay=%(delay)s&_=%(timestamp)s'
@@ -28,8 +33,8 @@ type StockBlob struct {
 
 // URL return realtime url path.
 func (stock StockRealTime) URL() string {
-	return fmt.Sprintf("%s%s", TWSEURL,
-		fmt.Sprintf(TWSEREAL,
+	return fmt.Sprintf("%s%s", gogrs.TWSEURL,
+		fmt.Sprintf(gogrs.TWSEREAL,
 			"tse",
 			stock.No,
 			fmt.Sprintf(
