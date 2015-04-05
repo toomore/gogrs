@@ -1,2 +1,20 @@
-//Package gogrs is try to get stock data from TWSE.
+/*
+Package gogrs is a tools to fetch TWSE stock data.
+gogrs now is still in development. I will try my best to speed up to completed the same function with grs(Python).
+
+gogrs 是擷取台灣上市股票股價資訊工具，目前還在大量的開發中。原始工具是用 grs（Python 套件），目標是將基本功能用 go 來實作。
+
+Paceage realtime
+
+擷取盤中即時股價資訊
+
+Package twse
+
+擷取上市股票股價資訊
+
+Package utils
+
+一些公用程式
+
+*/
 package gogrs
