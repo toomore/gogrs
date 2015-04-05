@@ -8,6 +8,7 @@ import (
 	"fmt"
 	"net/http"
 	"strconv"
+	"strings"
 	"time"
 
 	"github.com/toomore/gogrs/utils"
@@ -52,8 +53,11 @@ func (stock StockRealTime) URL() string {
 		))
 }
 
-// Get return stock realtime map data.
-func (stock *StockRealTime) Get() (StockBlob, error) {
+type Date struct {
+	BestAskPrice []float64
+}
+
+func (stock *StockRealTime) get() (StockBlob, error) {
 	var value StockBlob
 	url := stock.URL()
 	resp, err := http.Get(url)
@@ -74,4 +78,25 @@ func (stock *StockRealTime) Get() (StockBlob, error) {
 	}
 
 	return value, nil
+}
+
+// Get return stock realtime map data.
+func (stock *StockRealTime) Get() (Date, error) {
+	value, err := stock.get()
+
+	if err != nil {
+		return Date{}, err
+	}
+
+	if len(value.MsgArray) != 0 {
+		var result Date
+		aList := strings.Split(value.MsgArray[0]["a"], "_")
+		result.BestAskPrice = make([]float64, len(aList)-1)
+		for i, v := range aList[:len(aList)-1] {
+			result.BestAskPrice[i], _ = strconv.ParseFloat(v, 10)
+		}
+		return result, nil
+	}
+
+	return Date{}, nil
 }
