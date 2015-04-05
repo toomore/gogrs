@@ -111,6 +111,12 @@ func (stock *StockRealTime) Get() (Date, error) {
 			result.BestAskVolume[i], _ = strconv.ParseInt(v, 10, 64)
 		}
 
+		gList := strings.Split(value.MsgArray[0]["g"], "_")
+		result.BestBidVolume = make([]int64, len(gList)-1)
+		for i, v := range gList[:len(gList)-1] {
+			result.BestBidVolume[i], _ = strconv.ParseInt(v, 10, 64)
+		}
+
 		return result, nil
 	}
 
