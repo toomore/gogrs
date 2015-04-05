@@ -13,9 +13,12 @@ func TestStockRealTime(*testing.T) {
 		No:        "2618",
 		Timestamp: utils.RandInt(),
 		Date:      time.Now(),
+		//Date:      time.Date(2015, 4, 1, 0, 0, 0, 0, time.Local),
 	}
 	r.URL()
-	r.GetData()
+	v, _ := r.GetData()
+	fmt.Println("MsgArray", v.MsgArray)
+	fmt.Println("UnixMapData", r.UnixMapData)
 }
 
 func ExampleStockRealTime() {

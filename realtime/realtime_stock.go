@@ -7,6 +7,7 @@ import (
 	"encoding/json"
 	"fmt"
 	"net/http"
+	"strconv"
 	"time"
 
 	"github.com/toomore/gogrs/utils"
@@ -14,11 +15,15 @@ import (
 
 //STOCKPATH = '/stock/api/getStockInfo.jsp?ex_ch=%(exchange)s_%(no)s.tw_%(date)s&json=1&delay=%(delay)s&_=%(timestamp)s'
 
+type msgArray []map[string]string
+type unixMapData map[int64]msgArray
+
 // StockRealTime start with No, Timestamp, Date.
 type StockRealTime struct {
-	No        string
-	Timestamp int64
-	Date      time.Time
+	No          string
+	Timestamp   int64
+	Date        time.Time
+	UnixMapData unixMapData
 }
 
 // StockBlob return map data.
@@ -27,7 +32,7 @@ type StockBlob struct {
 	UserDelay int
 	Rtmessage string
 	Referer   string
-	MsgArray  []map[string]string
+	MsgArray  msgArray
 	QueryTime map[string]interface{}
 }
 
@@ -48,7 +53,7 @@ func (stock StockRealTime) URL() string {
 }
 
 // GetData return stock realtime map data.
-func (stock StockRealTime) GetData() (StockBlob, error) {
+func (stock *StockRealTime) GetData() (StockBlob, error) {
 	var value StockBlob
 	url := stock.URL()
 	resp, err := http.Get(url)
@@ -57,5 +62,16 @@ func (stock StockRealTime) GetData() (StockBlob, error) {
 	}
 	defer resp.Body.Close()
 	json.NewDecoder(resp.Body).Decode(&value)
+
+	if value.MsgArray != nil {
+		unixTime, _ := strconv.ParseInt(value.MsgArray[0]["tlong"], 10, 64)
+		if stock.UnixMapData == nil {
+			stock.UnixMapData = make(unixMapData)
+		}
+
+		// Should format data.
+		stock.UnixMapData[unixTime/1000] = value.MsgArray
+	}
+
 	return value, nil
 }
