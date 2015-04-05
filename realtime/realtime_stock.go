@@ -52,8 +52,8 @@ func (stock StockRealTime) URL() string {
 		))
 }
 
-// GetData return stock realtime map data.
-func (stock *StockRealTime) GetData() (StockBlob, error) {
+// Get return stock realtime map data.
+func (stock *StockRealTime) Get() (StockBlob, error) {
 	var value StockBlob
 	url := stock.URL()
 	resp, err := http.Get(url)

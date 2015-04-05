@@ -16,7 +16,7 @@ func TestStockRealTime(*testing.T) {
 		//Date:      time.Date(2015, 4, 1, 0, 0, 0, 0, time.Local),
 	}
 	r.URL()
-	v, _ := r.GetData()
+	v, _ := r.Get()
 	fmt.Println("MsgArray", v.MsgArray)
 	fmt.Println("UnixMapData", r.UnixMapData)
 }
@@ -28,6 +28,6 @@ func ExampleStockRealTime() {
 		Date:      time.Date(2014, 12, 26, 0, 0, 0, 0, time.Local),
 	}
 
-	data, _ := r.GetData()
+	data, _ := r.Get()
 	fmt.Printf("%v", data)
 }
