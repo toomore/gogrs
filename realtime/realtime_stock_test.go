@@ -18,6 +18,7 @@ func TestStockRealTime(*testing.T) {
 	r.URL()
 	v, _ := r.Get()
 	fmt.Println(v.BestAskPrice)
+	fmt.Println(v.BestBidPrice)
 	fmt.Println("UnixMapData", r.UnixMapData)
 }
 

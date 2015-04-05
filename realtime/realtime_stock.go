@@ -55,6 +55,7 @@ func (stock StockRealTime) URL() string {
 
 type Date struct {
 	BestAskPrice []float64
+	BestBidPrice []float64
 }
 
 func (stock *StockRealTime) get() (StockBlob, error) {
@@ -94,6 +95,12 @@ func (stock *StockRealTime) Get() (Date, error) {
 		result.BestAskPrice = make([]float64, len(aList)-1)
 		for i, v := range aList[:len(aList)-1] {
 			result.BestAskPrice[i], _ = strconv.ParseFloat(v, 10)
+		}
+
+		bList := strings.Split(value.MsgArray[0]["b"], "_")
+		result.BestBidPrice = make([]float64, len(bList)-1)
+		for i, v := range bList[:len(bList)-1] {
+			result.BestBidPrice[i], _ = strconv.ParseFloat(v, 10)
 		}
 		return result, nil
 	}
