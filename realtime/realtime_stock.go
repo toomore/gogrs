@@ -63,7 +63,7 @@ func (stock *StockRealTime) GetData() (StockBlob, error) {
 	defer resp.Body.Close()
 	json.NewDecoder(resp.Body).Decode(&value)
 
-	if value.MsgArray != nil {
+	if len(value.MsgArray) != 0 {
 		unixTime, _ := strconv.ParseInt(value.MsgArray[0]["tlong"], 10, 64)
 		if stock.UnixMapData == nil {
 			stock.UnixMapData = make(unixMapData)
