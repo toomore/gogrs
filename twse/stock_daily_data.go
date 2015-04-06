@@ -42,10 +42,10 @@ func (d *DailyData) Round() {
 	d.Date = time.Date(year, month-1, 1, 0, 0, 0, 0, time.UTC)
 }
 
-// PlusData will do Round() and GetData().
+// PlusData will do Round() and Get().
 func (d *DailyData) PlusData() {
 	d.Round()
-	d.GetData()
+	d.Get()
 }
 
 func (d *DailyData) clearCache() {
@@ -55,8 +55,8 @@ func (d *DailyData) clearCache() {
 	d.volumeList = nil
 }
 
-// GetData return csv data in array.
-func (d *DailyData) GetData() ([][]string, error) {
+// Get return csv data in array.
+func (d *DailyData) Get() ([][]string, error) {
 	if d.UnixMapData == nil {
 		d.UnixMapData = make(unixMapData)
 	}
@@ -84,10 +84,10 @@ func (d *DailyData) GetData() ([][]string, error) {
 	return d.UnixMapData[d.Date.Unix()], nil
 }
 
-// GetDataByTimeMap return a map by key of time.Time
-func (d DailyData) GetDataByTimeMap() map[time.Time]interface{} {
+// GetByTimeMap return a map by key of time.Time
+func (d DailyData) GetByTimeMap() map[time.Time]interface{} {
 	data := make(map[time.Time]interface{})
-	dailyData, _ := d.GetData()
+	dailyData, _ := d.Get()
 	for _, v := range dailyData {
 		data[utils.ParseDate(v[0])] = v
 	}

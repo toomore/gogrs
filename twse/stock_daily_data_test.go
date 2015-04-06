@@ -30,19 +30,19 @@ func ExampleDailyData() {
 	}
 	fmt.Println(d)
 
-	stockData, _ := d.GetData()
+	stockData, _ := d.Get()
 	fmt.Println(stockData)
 }
 
-func TestDailyData_GetData(*testing.T) {
+func TestDailyData_Get(*testing.T) {
 	d := &DailyData{
 		No:   "2618",
 		Date: time.Date(2014, 12, 26, 0, 0, 0, 0, time.Local),
 	}
 	fmt.Println(d)
 
-	stockData, _ := d.GetData()
-	d.GetData() // Test Cache.
+	stockData, _ := d.Get()
+	d.Get() // Test Cache.
 	fmt.Println(stockData)
 }
 
@@ -52,7 +52,7 @@ func TestGetList(*testing.T) {
 		Date: time.Date(2015, 03, 20, 0, 0, 0, 0, time.Local),
 	}
 
-	stock.GetData()
+	stock.Get()
 	fmt.Println(stock.RawData)
 	fmt.Println(stock.MA(6))
 	fmt.Println(stock.MAV(6))
@@ -67,13 +67,13 @@ func TestGetList(*testing.T) {
 	fmt.Println(stock.IsRed())
 }
 
-func BenchmarkGetData(b *testing.B) {
+func BenchmarkGet(b *testing.B) {
 	d := &DailyData{
 		No:   "2618",
 		Date: time.Date(2014, 12, 26, 0, 0, 0, 0, time.Local),
 	}
 	for i := 0; i <= b.N; i++ {
-		d.GetData()
+		d.Get()
 	}
 }
 
@@ -82,7 +82,7 @@ func BenchmarkGetVolumeList(b *testing.B) {
 		No:   "2618",
 		Date: time.Date(2015, 3, 27, 0, 0, 0, 0, time.Local),
 	}
-	d.GetData()
+	d.Get()
 	for i := 0; i <= b.N; i++ {
 		d.GetVolumeList()
 	}
@@ -93,20 +93,20 @@ func BenchmarkGetPriceList(b *testing.B) {
 		No:   "2618",
 		Date: time.Date(2015, 3, 27, 0, 0, 0, 0, time.Local),
 	}
-	d.GetData()
+	d.Get()
 	for i := 0; i <= b.N; i++ {
 		d.GetPriceList()
 	}
 }
 
-func ExampleDailyData_GetData_notEnoughData() {
+func ExampleDailyData_Get_notEnoughData() {
 	year, month, _ := time.Now().Date()
 	d := &DailyData{
 		No:   "2618",
 		Date: time.Date(year, month+1, 1, 0, 0, 0, 0, time.Local),
 	}
 
-	stockData, err := d.GetData()
+	stockData, err := d.Get()
 	if err != nil {
 		fmt.Println(err)
 	} else {
@@ -121,19 +121,19 @@ func ExampleDailyData_Round() {
 	}
 	fmt.Println(d)
 
-	stockData, _ := d.GetData()
+	stockData, _ := d.Get()
 	fmt.Println(stockData)
 
 	fmt.Println(d.URL()) // 2014/12
 
 	d.Round()
 	fmt.Println(d.URL()) // 2014/11
-	stockData, _ = d.GetData()
+	stockData, _ = d.Get()
 	fmt.Println(stockData)
 
 	d.Round()
 	fmt.Println(d.URL()) // 2014/10
-	stockData, _ = d.GetData()
+	stockData, _ = d.Get()
 	fmt.Println(stockData)
 }
 
@@ -146,12 +146,12 @@ func TestDailyData_Round(*testing.T) {
 	fmt.Println(d.URL())
 }
 
-func TestDailyData_GetDataByTimeMap(*testing.T) {
+func TestDailyData_GetByTimeMap(*testing.T) {
 	d := &DailyData{
 		No:   "2618",
 		Date: time.Date(2014, 12, 26, 0, 0, 0, 0, time.Local),
 	}
-	fmt.Println(d.GetDataByTimeMap())
+	fmt.Println(d.GetByTimeMap())
 }
 
 func TestDailyData_FormatDailyData(*testing.T) {
@@ -159,6 +159,6 @@ func TestDailyData_FormatDailyData(*testing.T) {
 		No:   "2618",
 		Date: time.Date(2014, 12, 26, 0, 0, 0, 0, time.Local),
 	}
-	d.GetData()
+	d.Get()
 	fmt.Println(d.FormatDailyData())
 }
