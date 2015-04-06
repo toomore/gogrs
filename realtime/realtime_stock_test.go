@@ -55,11 +55,24 @@ func BenchmarkGet(b *testing.B) {
 	}
 }
 
-func ExampleStockRealTime() {
+// 擷取 長榮航(2618) 上市即時盤股價資訊
+func ExampleStockRealTime_Get_twse() {
 	r := StockRealTime{
 		No:       "2618",
-		Date:     time.Date(2014, 12, 26, 0, 0, 0, 0, time.Local),
+		Date:     time.Date(2015, 4, 1, 0, 0, 0, 0, time.Local),
 		Exchange: "tse",
+	}
+
+	data, _ := r.Get()
+	fmt.Printf("%v", data)
+}
+
+// 擷取 華研(8446) 上櫃即時盤股價資訊
+func ExampleStockRealTime_Get_otc() {
+	r := StockRealTime{
+		No:       "8446",
+		Date:     time.Date(2015, 4, 1, 0, 0, 0, 0, time.Local),
+		Exchange: "otc",
 	}
 
 	data, _ := r.Get()
