@@ -64,19 +64,19 @@ var TWSECLASS = map[string]string{
 	"CB":         "可轉換公司債",
 }
 
-// TWSEList is to get TWSE list.
-type TWSEList struct {
+// Lists is to get TWSE list.
+type Lists struct {
 	Date time.Time
 }
 
 // URL is to render urlpath.
-func (l TWSEList) URL(strNo string) string {
+func (l Lists) URL(strNo string) string {
 	year, month, day := l.Date.Date()
 	return fmt.Sprintf("%s%s", utils.TWSEHOST, fmt.Sprintf(utils.TWSELISTCSV, year, month, year, month, day, strNo))
 }
 
 // Get is to get csv data.
-func (l TWSEList) Get(strNo string) ([][]string, error) {
+func (l Lists) Get(strNo string) ([][]string, error) {
 	data, err := http.Get(l.URL(strNo))
 	if err != nil {
 		return nil, fmt.Errorf("Network fail: %s", err)
