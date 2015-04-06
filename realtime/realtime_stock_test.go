@@ -43,11 +43,12 @@ func TestStockRealTimeOTC(*testing.T) {
 }
 
 func TestStockRealTimeIndexs(*testing.T) {
-	var date = time.Date(2015, 4, 1, 0, 0, 0, 0, time.Local)
-	var indexs = Indexs{}
-	weight := indexs.NewWeight(date)
-	otc := indexs.NewOTC(date)
-	farmsa := indexs.NewFRMSA(date)
+	var indexs = &StockRealTime{
+		Date: time.Date(2015, 4, 1, 0, 0, 0, 0, time.Local),
+	}
+	weight := indexs.NewWeight()
+	otc := indexs.NewOTC()
+	farmsa := indexs.NewFRMSA()
 	fmt.Println(weight.Get())
 	fmt.Println(otc.Get())
 	fmt.Println(farmsa.Get())
