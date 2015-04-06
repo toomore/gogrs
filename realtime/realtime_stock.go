@@ -25,7 +25,10 @@ type StockRealTime struct {
 	Timestamp   int64
 	Date        time.Time
 	UnixMapData unixMapData
+	Exchange    string
 }
+
+var exchangeMap = map[string]bool{"tse": true, "otc": true}
 
 // StockBlob return map data.
 type StockBlob struct {
@@ -39,18 +42,21 @@ type StockBlob struct {
 
 // URL return realtime url path.
 func (stock StockRealTime) URL() string {
-	return fmt.Sprintf("%s%s", utils.TWSEURL,
-		fmt.Sprintf(utils.TWSEREAL,
-			"tse",
-			stock.No,
-			fmt.Sprintf(
-				"%d%02d%02d",
-				stock.Date.Year(),
-				int(stock.Date.Month()),
-				stock.Date.Day(),
-			),
-			stock.Timestamp,
-		))
+	if exchangeMap[stock.Exchange] {
+		return fmt.Sprintf("%s%s", utils.TWSEURL,
+			fmt.Sprintf(utils.TWSEREAL,
+				stock.Exchange,
+				stock.No,
+				fmt.Sprintf(
+					"%d%02d%02d",
+					stock.Date.Year(),
+					int(stock.Date.Month()),
+					stock.Date.Day(),
+				),
+				stock.Timestamp,
+			))
+	}
+	return ""
 }
 
 type StockInfo struct {

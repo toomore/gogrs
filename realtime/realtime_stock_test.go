@@ -13,8 +13,29 @@ func TestStockRealTime(*testing.T) {
 		No:        "2618",
 		Timestamp: utils.RandInt(),
 		//Date:      time.Now(),
-		Date: time.Date(2015, 4, 1, 0, 0, 0, 0, time.Local),
+		Date:     time.Date(2015, 4, 1, 0, 0, 0, 0, time.Local),
+		Exchange: "tse",
 	}
+
+	r.URL()
+	v, _ := r.Get()
+	fmt.Println(v.BestAskPrice)
+	fmt.Println(v.BestBidPrice)
+	fmt.Println(v.BestAskVolume)
+	fmt.Println(v.BestBidVolume)
+	fmt.Println(v)
+	fmt.Println("UnixMapData", r.UnixMapData)
+}
+
+func TestStockRealTimeOTC(*testing.T) {
+	r := &StockRealTime{
+		No:        "8446",
+		Timestamp: utils.RandInt(),
+		//Date:      time.Now(),
+		Date:     time.Date(2015, 4, 1, 0, 0, 0, 0, time.Local),
+		Exchange: "otc",
+	}
+
 	r.URL()
 	v, _ := r.Get()
 	fmt.Println(v.BestAskPrice)
@@ -30,7 +51,8 @@ func BenchmarkGet(b *testing.B) {
 		No:        "2618",
 		Timestamp: utils.RandInt(),
 		//Date:      time.Now(),
-		Date: time.Date(2015, 4, 1, 0, 0, 0, 0, time.Local),
+		Date:     time.Date(2015, 4, 1, 0, 0, 0, 0, time.Local),
+		Exchange: "tse",
 	}
 
 	for i := 0; i <= b.N; i++ {
@@ -43,6 +65,7 @@ func ExampleStockRealTime() {
 		No:        "2618",
 		Timestamp: utils.RandInt(),
 		Date:      time.Date(2014, 12, 26, 0, 0, 0, 0, time.Local),
+		Exchange:  "tse",
 	}
 
 	data, _ := r.Get()
