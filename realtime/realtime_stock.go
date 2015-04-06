@@ -21,11 +21,11 @@ type unixMapData map[int64]msgArray
 
 // StockRealTime start with No, Timestamp, Date.
 type StockRealTime struct {
-	No          string
-	Timestamp   int64
-	Date        time.Time
-	UnixMapData unixMapData
-	Exchange    string
+	No          string      // 股票代碼
+	Timestamp   int64       // 時間戳記
+	Date        time.Time   // 擷取時間
+	UnixMapData unixMapData // 時間資料暫存
+	Exchange    string      // tse, otc
 }
 
 var exchangeMap = map[string]bool{"tse": true, "otc": true}
@@ -70,20 +70,20 @@ type StockInfo struct {
 
 // Data is realtime return formated data.
 type Data struct {
-	BestAskPrice   []float64
-	BestBidPrice   []float64
-	BestAskVolume  []int64
-	BestBidVolume  []int64
-	Open           float64
-	Highest        float64
-	Lowest         float64
-	Price          float64
-	LimitUp        float64
-	LimitDown      float64
-	Volume         float64
-	VolumeAcc      float64
-	YesterdayPrice float64
-	Info           StockInfo
+	BestAskPrice   []float64 // 最佳五檔賣出價資訊
+	BestBidPrice   []float64 // 最佳五檔買進價資訊
+	BestAskVolume  []int64   // 最佳五檔賣出量資訊
+	BestBidVolume  []int64   // 最佳五檔買進量資訊
+	Open           float64   // 開盤價格
+	Highest        float64   // 最高價
+	Lowest         float64   // 最低價
+	Price          float64   // 該盤成交價格
+	LimitUp        float64   // 漲停價
+	LimitDown      float64   // 跌停價
+	Volume         float64   // 該盤成交量
+	VolumeAcc      float64   // 累計成交量
+	YesterdayPrice float64   // 昨日收盤價格
+	Info           StockInfo // 相關資訊
 }
 
 func (stock *StockRealTime) get() (StockBlob, error) {
