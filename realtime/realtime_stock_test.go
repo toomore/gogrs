@@ -90,3 +90,27 @@ func ExampleStockRealTime_Get_otc() {
 	data, _ := r.Get()
 	fmt.Printf("%v", data)
 }
+
+func ExampleStockRealTime_NewWeight() {
+	var indexs = &StockRealTime{
+		Date: time.Date(2015, 4, 1, 0, 0, 0, 0, time.Local),
+	}
+	weight := indexs.NewWeight()
+	fmt.Println(weight.Get())
+}
+
+func ExampleStockRealTime_NewOTC() {
+	var indexs = &StockRealTime{
+		Date: time.Date(2015, 4, 1, 0, 0, 0, 0, time.Local),
+	}
+	otc := indexs.NewOTC()
+	fmt.Println(otc.Get())
+}
+
+func ExampleStockRealTime_NewFRMSA() {
+	var indexs = &StockRealTime{
+		Date: time.Date(2015, 4, 1, 0, 0, 0, 0, time.Local),
+	}
+	farmsa := indexs.NewFRMSA()
+	fmt.Println(farmsa.Get())
+}
