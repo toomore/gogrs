@@ -13,6 +13,7 @@ var stock = &twse.DailyData{
 	Date: time.Date(2015, 3, 20, 0, 0, 0, 0, time.Local),
 }
 
+// ShowAll is lazy to show all XD.
 func ShowAll(stock *twse.DailyData) {
 	fmt.Println(stock.RawData)
 	fmt.Println(stock.MA(6))
@@ -28,7 +29,7 @@ func ShowAll(stock *twse.DailyData) {
 }
 
 func main() {
-	stock.GetData()
+	stock.Get()
 	ShowAll(stock)
 	fmt.Println("-----------------------------")
 	stock.PlusData()
