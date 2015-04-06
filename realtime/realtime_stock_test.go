@@ -25,6 +25,19 @@ func TestStockRealTime(*testing.T) {
 	fmt.Println("UnixMapData", r.UnixMapData)
 }
 
+func BenchmarkGet(b *testing.B) {
+	r := &StockRealTime{
+		No:        "2618",
+		Timestamp: utils.RandInt(),
+		//Date:      time.Now(),
+		Date: time.Date(2015, 4, 1, 0, 0, 0, 0, time.Local),
+	}
+
+	for i := 0; i <= b.N; i++ {
+		r.Get()
+	}
+}
+
 func ExampleStockRealTime() {
 	r := StockRealTime{
 		No:        "2618",
