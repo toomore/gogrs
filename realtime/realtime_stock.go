@@ -54,10 +54,19 @@ func (stock StockRealTime) URL() string {
 }
 
 type Date struct {
-	BestAskPrice  []float64
-	BestBidPrice  []float64
-	BestAskVolume []int64
-	BestBidVolume []int64
+	BestAskPrice   []float64
+	BestBidPrice   []float64
+	BestAskVolume  []int64
+	BestBidVolume  []int64
+	Open           float64
+	Highest        float64
+	Lowest         float64
+	Price          float64
+	LimitUp        float64
+	LimitDown      float64
+	Volume         float64
+	VolumeAcc      float64
+	YesterdayPrice float64
 }
 
 func (stock *StockRealTime) get() (StockBlob, error) {
@@ -116,6 +125,16 @@ func (stock *StockRealTime) Get() (Date, error) {
 		for i, v := range gList[:len(gList)-1] {
 			result.BestBidVolume[i], _ = strconv.ParseInt(v, 10, 64)
 		}
+
+		result.Open, _ = strconv.ParseFloat(value.MsgArray[0]["o"], 10)
+		result.Highest, _ = strconv.ParseFloat(value.MsgArray[0]["h"], 10)
+		result.Lowest, _ = strconv.ParseFloat(value.MsgArray[0]["l"], 10)
+		result.Price, _ = strconv.ParseFloat(value.MsgArray[0]["z"], 10)
+		result.LimitUp, _ = strconv.ParseFloat(value.MsgArray[0]["u"], 10)
+		result.LimitDown, _ = strconv.ParseFloat(value.MsgArray[0]["w"], 10)
+		result.Volume, _ = strconv.ParseFloat(value.MsgArray[0]["tv"], 10)
+		result.VolumeAcc, _ = strconv.ParseFloat(value.MsgArray[0]["v"], 10)
+		result.YesterdayPrice, _ = strconv.ParseFloat(value.MsgArray[0]["y"], 10)
 
 		return result, nil
 	}
