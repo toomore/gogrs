@@ -75,8 +75,8 @@ func (l TWSEList) URL(strNo string) string {
 	return fmt.Sprintf("%s%s", utils.TWSEHOST, fmt.Sprintf(utils.TWSELISTCSV, year, month, year, month, day, strNo))
 }
 
-// GetData is to get csv data.
-func (l TWSEList) GetData(strNo string) ([][]string, error) {
+// Get is to get csv data.
+func (l TWSEList) Get(strNo string) ([][]string, error) {
 	data, err := http.Get(l.URL(strNo))
 	if err != nil {
 		return nil, fmt.Errorf("Network fail: %s", err)
