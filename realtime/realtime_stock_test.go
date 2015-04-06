@@ -21,6 +21,7 @@ func TestStockRealTime(*testing.T) {
 	fmt.Println(v.BestBidPrice)
 	fmt.Println(v.BestAskVolume)
 	fmt.Println(v.BestBidVolume)
+	fmt.Println(v)
 	fmt.Println("UnixMapData", r.UnixMapData)
 }
 

@@ -53,6 +53,14 @@ func (stock StockRealTime) URL() string {
 		))
 }
 
+type StockInfo struct {
+	Exchange string
+	FullName string
+	Name     string
+	No       string
+	Ticker   string
+}
+
 type Date struct {
 	BestAskPrice   []float64
 	BestBidPrice   []float64
@@ -67,6 +75,7 @@ type Date struct {
 	Volume         float64
 	VolumeAcc      float64
 	YesterdayPrice float64
+	Info           StockInfo
 }
 
 func (stock *StockRealTime) get() (StockBlob, error) {
@@ -135,6 +144,12 @@ func (stock *StockRealTime) Get() (Date, error) {
 		result.Volume, _ = strconv.ParseFloat(value.MsgArray[0]["tv"], 10)
 		result.VolumeAcc, _ = strconv.ParseFloat(value.MsgArray[0]["v"], 10)
 		result.YesterdayPrice, _ = strconv.ParseFloat(value.MsgArray[0]["y"], 10)
+
+		result.Info.No = value.MsgArray[0]["n"]
+		result.Info.FullName = value.MsgArray[0]["nf"]
+		result.Info.No = value.MsgArray[0]["n"]
+		result.Info.Ticker = value.MsgArray[0]["ch"]
+		result.Info.Exchange = value.MsgArray[0]["ex"]
 
 		return result, nil
 	}
