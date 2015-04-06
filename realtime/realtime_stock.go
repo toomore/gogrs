@@ -59,15 +59,17 @@ func (stock StockRealTime) URL() string {
 	return ""
 }
 
+// StockInfo is base stock info.
 type StockInfo struct {
-	Exchange string
-	FullName string
-	Name     string
-	No       string
-	Ticker   string
+	Exchange string // tse or otc
+	FullName string // Full company name.
+	Name     string // Stock name.
+	No       string // Stock no
+	Ticker   string // Ticker symbol（股票代號）
 }
 
-type Date struct {
+// Data is realtime return formated data.
+type Data struct {
 	BestAskPrice   []float64
 	BestBidPrice   []float64
 	BestAskVolume  []int64
@@ -108,15 +110,15 @@ func (stock *StockRealTime) get() (StockBlob, error) {
 }
 
 // Get return stock realtime map data.
-func (stock *StockRealTime) Get() (Date, error) {
+func (stock *StockRealTime) Get() (Data, error) {
 	value, err := stock.get()
 
 	if err != nil {
-		return Date{}, err
+		return Data{}, err
 	}
 
 	if len(value.MsgArray) != 0 {
-		var result Date
+		var result Data
 		aList := strings.Split(value.MsgArray[0]["a"], "_")
 		result.BestAskPrice = make([]float64, len(aList)-1)
 		for i, v := range aList[:len(aList)-1] {
@@ -160,5 +162,5 @@ func (stock *StockRealTime) Get() (Date, error) {
 		return result, nil
 	}
 
-	return Date{}, nil
+	return Data{}, nil
 }
