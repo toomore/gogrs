@@ -22,7 +22,6 @@ type unixMapData map[int64]msgArray
 // StockRealTime start with No, Timestamp, Date.
 type StockRealTime struct {
 	No          string      // 股票代碼
-	Timestamp   int64       // 時間戳記
 	Date        time.Time   // 擷取時間
 	UnixMapData unixMapData // 時間資料暫存
 	Exchange    string      // tse, otc
@@ -53,7 +52,7 @@ func (stock StockRealTime) URL() string {
 					int(stock.Date.Month()),
 					stock.Date.Day(),
 				),
-				stock.Timestamp,
+				utils.RandInt(),
 			))
 	}
 	return ""

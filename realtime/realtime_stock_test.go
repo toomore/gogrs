@@ -4,14 +4,11 @@ import (
 	"fmt"
 	"testing"
 	"time"
-
-	"github.com/toomore/gogrs/utils"
 )
 
 func TestStockRealTime(*testing.T) {
 	r := &StockRealTime{
-		No:        "2618",
-		Timestamp: utils.RandInt(),
+		No: "2618",
 		//Date:      time.Now(),
 		Date:     time.Date(2015, 4, 1, 0, 0, 0, 0, time.Local),
 		Exchange: "tse",
@@ -29,8 +26,7 @@ func TestStockRealTime(*testing.T) {
 
 func TestStockRealTimeOTC(*testing.T) {
 	r := &StockRealTime{
-		No:        "8446",
-		Timestamp: utils.RandInt(),
+		No: "8446",
 		//Date:      time.Now(),
 		Date:     time.Date(2015, 4, 1, 0, 0, 0, 0, time.Local),
 		Exchange: "otc",
@@ -48,8 +44,7 @@ func TestStockRealTimeOTC(*testing.T) {
 
 func BenchmarkGet(b *testing.B) {
 	r := &StockRealTime{
-		No:        "2618",
-		Timestamp: utils.RandInt(),
+		No: "2618",
 		//Date:      time.Now(),
 		Date:     time.Date(2015, 4, 1, 0, 0, 0, 0, time.Local),
 		Exchange: "tse",
@@ -62,10 +57,9 @@ func BenchmarkGet(b *testing.B) {
 
 func ExampleStockRealTime() {
 	r := StockRealTime{
-		No:        "2618",
-		Timestamp: utils.RandInt(),
-		Date:      time.Date(2014, 12, 26, 0, 0, 0, 0, time.Local),
-		Exchange:  "tse",
+		No:       "2618",
+		Date:     time.Date(2014, 12, 26, 0, 0, 0, 0, time.Local),
+		Exchange: "tse",
 	}
 
 	data, _ := r.Get()
