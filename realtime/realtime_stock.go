@@ -163,3 +163,33 @@ func (stock *StockRealTime) Get() (Data, error) {
 
 	return Data{}, nil
 }
+
+// Indexs 產生大盤指數、上櫃指數、寶島指數
+type Indexs struct{}
+
+// NewWeight 大盤指數
+func (Indexs) NewWeight(date time.Time) StockRealTime {
+	return StockRealTime{
+		No:       "t00",
+		Date:     date,
+		Exchange: "tse",
+	}
+}
+
+// NewOTC 上櫃指數
+func (Indexs) NewOTC(date time.Time) StockRealTime {
+	return StockRealTime{
+		No:       "o00",
+		Date:     date,
+		Exchange: "otc",
+	}
+}
+
+// NewFRMSA 寶島指數
+func (Indexs) NewFRMSA(date time.Time) StockRealTime {
+	return StockRealTime{
+		No:       "FRMSA",
+		Date:     date,
+		Exchange: "tse",
+	}
+}
