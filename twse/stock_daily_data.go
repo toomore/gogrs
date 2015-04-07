@@ -56,7 +56,7 @@ func (d Data) URL() string {
 		path = fmt.Sprintf(utils.TWSECSV, d.Date.Year(), d.Date.Month(), d.Date.Year(), d.Date.Month(), d.No, utils.RandInt())
 		host = utils.TWSEHOST
 	} else if d.exchange == "otc" {
-		path = fmt.Sprintf(utils.OTCCSV, d.Date.Year(), d.Date.Month(), d.No, utils.RandInt())
+		path = fmt.Sprintf(utils.OTCCSV, d.Date.Year()-1911, d.Date.Month(), d.No, utils.RandInt())
 		host = utils.OTCHOST
 	}
 
@@ -98,8 +98,13 @@ func (d *Data) Get() ([][]string, error) {
 		for i := range csvArrayContent {
 			csvArrayContent[i] = strings.TrimSpace(csvArrayContent[i])
 		}
-		if len(csvArrayContent) > 2 {
-			csvReader := csv.NewReader(strings.NewReader(strings.Join(csvArrayContent[2:], "\n")))
+		var csvReader *csv.Reader
+		if (d.exchange == "tse" && len(csvArrayContent) > 2) || (d.exchange == "otc" && len(csvArrayContent) > 5) {
+			if d.exchange == "tse" {
+				csvReader = csv.NewReader(strings.NewReader(strings.Join(csvArrayContent[2:], "\n")))
+			} else if d.exchange == "otc" {
+				csvReader = csv.NewReader(strings.NewReader(strings.Join(csvArrayContent[5:len(csvArrayContent)-1], "\n")))
+			}
 			allData, err := csvReader.ReadAll()
 			d.RawData = append(allData, d.RawData...)
 			d.UnixMapData[d.Date.Unix()] = allData
