@@ -16,15 +16,15 @@ func assertType(t *testing.T, t1 interface{}, t2 interface{}) {
 }
 
 func TestURL(t *testing.T) {
-	d := &DailyData{
+	d := &Data{
 		No:   "2618",
 		Date: time.Now(),
 	}
-	assertType(t, d, &DailyData{})
+	assertType(t, d, &Data{})
 }
 
-func ExampleDailyData() {
-	d := &DailyData{
+func ExampleData() {
+	d := &Data{
 		No:   "2618",
 		Date: time.Date(2014, 12, 26, 0, 0, 0, 0, time.Local),
 	}
@@ -34,8 +34,8 @@ func ExampleDailyData() {
 	fmt.Println(stockData)
 }
 
-func TestDailyData_Get(*testing.T) {
-	d := &DailyData{
+func TestData_Get(*testing.T) {
+	d := &Data{
 		No:   "2618",
 		Date: time.Date(2014, 12, 26, 0, 0, 0, 0, time.Local),
 	}
@@ -47,7 +47,7 @@ func TestDailyData_Get(*testing.T) {
 }
 
 func TestGetList(*testing.T) {
-	var stock = &DailyData{
+	var stock = &Data{
 		No:   "2329",
 		Date: time.Date(2015, 03, 20, 0, 0, 0, 0, time.Local),
 	}
@@ -68,7 +68,7 @@ func TestGetList(*testing.T) {
 }
 
 func BenchmarkGet(b *testing.B) {
-	d := &DailyData{
+	d := &Data{
 		No:   "2618",
 		Date: time.Date(2014, 12, 26, 0, 0, 0, 0, time.Local),
 	}
@@ -78,7 +78,7 @@ func BenchmarkGet(b *testing.B) {
 }
 
 func BenchmarkGetVolumeList(b *testing.B) {
-	d := &DailyData{
+	d := &Data{
 		No:   "2618",
 		Date: time.Date(2015, 3, 27, 0, 0, 0, 0, time.Local),
 	}
@@ -89,7 +89,7 @@ func BenchmarkGetVolumeList(b *testing.B) {
 }
 
 func BenchmarkGetPriceList(b *testing.B) {
-	d := &DailyData{
+	d := &Data{
 		No:   "2618",
 		Date: time.Date(2015, 3, 27, 0, 0, 0, 0, time.Local),
 	}
@@ -99,9 +99,9 @@ func BenchmarkGetPriceList(b *testing.B) {
 	}
 }
 
-func ExampleDailyData_Get_notEnoughData() {
+func ExampleData_Get_notEnoughData() {
 	year, month, _ := time.Now().Date()
-	d := &DailyData{
+	d := &Data{
 		No:   "2618",
 		Date: time.Date(year, month+1, 1, 0, 0, 0, 0, time.Local),
 	}
@@ -114,8 +114,8 @@ func ExampleDailyData_Get_notEnoughData() {
 	}
 }
 
-func ExampleDailyData_Round() {
-	d := &DailyData{
+func ExampleData_Round() {
+	d := &Data{
 		No:   "2618",
 		Date: time.Date(2014, 12, 26, 0, 0, 0, 0, time.Local),
 	}
@@ -137,8 +137,8 @@ func ExampleDailyData_Round() {
 	fmt.Println(stockData)
 }
 
-func TestDailyData_Round(*testing.T) {
-	d := &DailyData{
+func TestData_Round(*testing.T) {
+	d := &Data{
 		No:   "2618",
 		Date: time.Date(2014, 12, 26, 0, 0, 0, 0, time.Local),
 	}
@@ -146,19 +146,19 @@ func TestDailyData_Round(*testing.T) {
 	fmt.Println(d.URL())
 }
 
-func TestDailyData_GetByTimeMap(*testing.T) {
-	d := &DailyData{
+func TestData_GetByTimeMap(*testing.T) {
+	d := &Data{
 		No:   "2618",
 		Date: time.Date(2014, 12, 26, 0, 0, 0, 0, time.Local),
 	}
 	fmt.Println(d.GetByTimeMap())
 }
 
-func TestDailyData_FormatDailyData(*testing.T) {
-	d := &DailyData{
+func TestData_FormatData(*testing.T) {
+	d := &Data{
 		No:   "2618",
 		Date: time.Date(2014, 12, 26, 0, 0, 0, 0, time.Local),
 	}
 	d.Get()
-	fmt.Println(d.FormatDailyData())
+	fmt.Println(d.FormatData())
 }

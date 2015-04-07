@@ -8,13 +8,13 @@ import (
 	"github.com/toomore/gogrs/utils"
 )
 
-var stock = &twse.DailyData{
+var stock = &twse.Data{
 	No:   "2329",
 	Date: time.Date(2015, 3, 20, 0, 0, 0, 0, time.Local),
 }
 
 // ShowAll is lazy to show all XD.
-func ShowAll(stock *twse.DailyData) {
+func ShowAll(stock *twse.Data) {
 	fmt.Println(stock.RawData)
 	fmt.Println(stock.MA(6))
 	fmt.Println(stock.MAV(6))

@@ -18,8 +18,8 @@ import (
 
 type unixMapData map[int64][][]string
 
-// DailyData start with stock no, date.
-type DailyData struct {
+// Data start with stock no, date.
+type Data struct {
 	No          string
 	Date        time.Time
 	RawData     [][]string
@@ -31,24 +31,24 @@ type DailyData struct {
 }
 
 // URL return stock csv url path.
-func (d DailyData) URL() string {
+func (d Data) URL() string {
 	path := fmt.Sprintf(utils.TWSECSV, d.Date.Year(), d.Date.Month(), d.Date.Year(), d.Date.Month(), d.No, utils.RandInt())
 	return fmt.Sprintf("%s%s", utils.TWSEHOST, path)
 }
 
 // Round will do sub one month.
-func (d *DailyData) Round() {
+func (d *Data) Round() {
 	year, month, _ := d.Date.Date()
 	d.Date = time.Date(year, month-1, 1, 0, 0, 0, 0, time.UTC)
 }
 
 // PlusData will do Round() and Get().
-func (d *DailyData) PlusData() {
+func (d *Data) PlusData() {
 	d.Round()
 	d.Get()
 }
 
-func (d *DailyData) clearCache() {
+func (d *Data) clearCache() {
 	d.rangeList = nil
 	d.openList = nil
 	d.priceList = nil
@@ -56,7 +56,7 @@ func (d *DailyData) clearCache() {
 }
 
 // Get return csv data in array.
-func (d *DailyData) Get() ([][]string, error) {
+func (d *Data) Get() ([][]string, error) {
 	if d.UnixMapData == nil {
 		d.UnixMapData = make(unixMapData)
 	}
@@ -85,7 +85,7 @@ func (d *DailyData) Get() ([][]string, error) {
 }
 
 // GetByTimeMap return a map by key of time.Time
-func (d DailyData) GetByTimeMap() map[time.Time]interface{} {
+func (d Data) GetByTimeMap() map[time.Time]interface{} {
 	data := make(map[time.Time]interface{})
 	dailyData, _ := d.Get()
 	for _, v := range dailyData {
@@ -94,7 +94,7 @@ func (d DailyData) GetByTimeMap() map[time.Time]interface{} {
 	return data
 }
 
-func (d DailyData) getColsList(colsNo int) []string {
+func (d Data) getColsList(colsNo int) []string {
 	var result []string
 	result = make([]string, len(d.RawData))
 	for i, value := range d.RawData {
@@ -103,7 +103,7 @@ func (d DailyData) getColsList(colsNo int) []string {
 	return result
 }
 
-func (d DailyData) getColsListFloat64(colsNo int) []float64 {
+func (d Data) getColsListFloat64(colsNo int) []float64 {
 	var result []float64
 	result = make([]float64, len(d.RawData))
 	for i, v := range d.getColsList(colsNo) {
@@ -113,7 +113,7 @@ func (d DailyData) getColsListFloat64(colsNo int) []float64 {
 }
 
 // GetVolumeList 取得 成交股數 序列
-func (d *DailyData) GetVolumeList() []uint64 {
+func (d *Data) GetVolumeList() []uint64 {
 	if d.volumeList == nil {
 		var result []uint64
 		result = make([]uint64, len(d.RawData))
@@ -126,7 +126,7 @@ func (d *DailyData) GetVolumeList() []uint64 {
 }
 
 // GetOpenList 取得 開盤價 序列
-func (d *DailyData) GetOpenList() []float64 {
+func (d *Data) GetOpenList() []float64 {
 	if d.openList == nil {
 		d.openList = d.getColsListFloat64(3)
 	}
@@ -134,7 +134,7 @@ func (d *DailyData) GetOpenList() []float64 {
 }
 
 // GetPriceList 取得 收盤價 序列
-func (d *DailyData) GetPriceList() []float64 {
+func (d *Data) GetPriceList() []float64 {
 	if d.priceList == nil {
 		d.priceList = d.getColsListFloat64(6)
 	}
@@ -142,7 +142,7 @@ func (d *DailyData) GetPriceList() []float64 {
 }
 
 // GetRangeList 取得 漲跌價差 序列
-func (d *DailyData) GetRangeList() []float64 {
+func (d *Data) GetRangeList() []float64 {
 	if d.rangeList == nil {
 		d.rangeList = d.getColsListFloat64(7)
 	}
@@ -150,7 +150,7 @@ func (d *DailyData) GetRangeList() []float64 {
 }
 
 // MA 計算 收盤價 的移動平均
-func (d DailyData) MA(days int) []float64 {
+func (d Data) MA(days int) []float64 {
 	var result []float64
 	var priceList = d.GetPriceList()
 	result = make([]float64, len(priceList)-days+1)
@@ -161,7 +161,7 @@ func (d DailyData) MA(days int) []float64 {
 }
 
 // MAV 計算 成交股數 的移動平均
-func (d DailyData) MAV(days int) []uint64 {
+func (d Data) MAV(days int) []uint64 {
 	var result []uint64
 	var volumeList = d.GetVolumeList()
 	result = make([]uint64, len(volumeList)-days+1)
@@ -172,13 +172,13 @@ func (d DailyData) MAV(days int) []uint64 {
 }
 
 // IsRed 計算是否收紅 K
-func (d DailyData) IsRed() bool {
+func (d Data) IsRed() bool {
 	var rangeList = d.GetRangeList()
 	return rangeList[len(rangeList)-1] > 0
 }
 
-// FmtDailyData is struct for daily data format.
-type FmtDailyData struct {
+// FmtData is struct for daily data format.
+type FmtData struct {
 	Date       time.Time
 	Volume     uint64  //成交股數
 	TotalPrice uint64  //成交金額
@@ -190,10 +190,10 @@ type FmtDailyData struct {
 	Totalsale  uint64  //成交筆數
 }
 
-// FormatDailyData is format daily data.
-func (d DailyData) FormatDailyData() []FmtDailyData {
-	result := make([]FmtDailyData, len(d.RawData))
-	var loopd FmtDailyData
+// FormatData is format daily data.
+func (d Data) FormatData() []FmtData {
+	result := make([]FmtData, len(d.RawData))
+	var loopd FmtData
 	for i, v := range d.RawData {
 		loopd.Date = utils.ParseDate(v[0])
 
