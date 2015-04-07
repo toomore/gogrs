@@ -8,10 +8,7 @@ import (
 	"github.com/toomore/gogrs/utils"
 )
 
-var stock = &twse.Data{
-	No:   "2329",
-	Date: time.Date(2015, 3, 20, 0, 0, 0, 0, time.Local),
-}
+var stock = twse.NewTWSE("2329", time.Date(2015, 3, 20, 0, 0, 0, 0, time.Local))
 
 // ShowAll is lazy to show all XD.
 func ShowAll(stock *twse.Data) {

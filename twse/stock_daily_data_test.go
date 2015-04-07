@@ -16,18 +16,12 @@ func assertType(t *testing.T, t1 interface{}, t2 interface{}) {
 }
 
 func TestURL(t *testing.T) {
-	d := &Data{
-		No:   "2618",
-		Date: time.Now(),
-	}
+	var d = NewTWSE("2618", time.Now())
 	assertType(t, d, &Data{})
 }
 
 func ExampleData() {
-	d := &Data{
-		No:   "2618",
-		Date: time.Date(2014, 12, 26, 0, 0, 0, 0, time.Local),
-	}
+	var d = NewTWSE("2618", time.Date(2014, 12, 26, 0, 0, 0, 0, time.Local))
 	fmt.Println(d)
 
 	stockData, _ := d.Get()
@@ -35,10 +29,7 @@ func ExampleData() {
 }
 
 func TestData_Get(*testing.T) {
-	d := &Data{
-		No:   "2618",
-		Date: time.Date(2014, 12, 26, 0, 0, 0, 0, time.Local),
-	}
+	var d = NewTWSE("2618", time.Date(2014, 12, 26, 0, 0, 0, 0, time.Local))
 	fmt.Println(d)
 
 	stockData, _ := d.Get()
@@ -47,10 +38,7 @@ func TestData_Get(*testing.T) {
 }
 
 func TestGetList(*testing.T) {
-	var stock = &Data{
-		No:   "2329",
-		Date: time.Date(2015, 03, 20, 0, 0, 0, 0, time.Local),
-	}
+	var stock = NewTWSE("2329", time.Date(2015, 03, 20, 0, 0, 0, 0, time.Local))
 
 	stock.Get()
 	fmt.Println(stock.RawData)
@@ -68,20 +56,14 @@ func TestGetList(*testing.T) {
 }
 
 func BenchmarkGet(b *testing.B) {
-	d := &Data{
-		No:   "2618",
-		Date: time.Date(2014, 12, 26, 0, 0, 0, 0, time.Local),
-	}
+	var d = NewTWSE("2618", time.Date(2014, 12, 26, 0, 0, 0, 0, time.Local))
 	for i := 0; i <= b.N; i++ {
 		d.Get()
 	}
 }
 
 func BenchmarkGetVolumeList(b *testing.B) {
-	d := &Data{
-		No:   "2618",
-		Date: time.Date(2015, 3, 27, 0, 0, 0, 0, time.Local),
-	}
+	var d = NewTWSE("2618", time.Date(2015, 3, 27, 0, 0, 0, 0, time.Local))
 	d.Get()
 	for i := 0; i <= b.N; i++ {
 		d.GetVolumeList()
@@ -89,10 +71,7 @@ func BenchmarkGetVolumeList(b *testing.B) {
 }
 
 func BenchmarkGetPriceList(b *testing.B) {
-	d := &Data{
-		No:   "2618",
-		Date: time.Date(2015, 3, 27, 0, 0, 0, 0, time.Local),
-	}
+	var d = NewTWSE("2618", time.Date(2015, 3, 27, 0, 0, 0, 0, time.Local))
 	d.Get()
 	for i := 0; i <= b.N; i++ {
 		d.GetPriceList()
@@ -101,10 +80,7 @@ func BenchmarkGetPriceList(b *testing.B) {
 
 func ExampleData_Get_notEnoughData() {
 	year, month, _ := time.Now().Date()
-	d := &Data{
-		No:   "2618",
-		Date: time.Date(year, month+1, 1, 0, 0, 0, 0, time.Local),
-	}
+	var d = NewTWSE("2618", time.Date(year, month+1, 1, 0, 0, 0, 0, time.Local))
 
 	stockData, err := d.Get()
 	if err != nil {
@@ -115,10 +91,7 @@ func ExampleData_Get_notEnoughData() {
 }
 
 func ExampleData_Round() {
-	d := &Data{
-		No:   "2618",
-		Date: time.Date(2014, 12, 26, 0, 0, 0, 0, time.Local),
-	}
+	var d = NewTWSE("2618", time.Date(2014, 12, 26, 0, 0, 0, 0, time.Local))
 	fmt.Println(d)
 
 	stockData, _ := d.Get()
@@ -138,27 +111,18 @@ func ExampleData_Round() {
 }
 
 func TestData_Round(*testing.T) {
-	d := &Data{
-		No:   "2618",
-		Date: time.Date(2014, 12, 26, 0, 0, 0, 0, time.Local),
-	}
+	var d = NewTWSE("2618", time.Date(2014, 12, 26, 0, 0, 0, 0, time.Local))
 	d.Round()
 	fmt.Println(d.URL())
 }
 
 func TestData_GetByTimeMap(*testing.T) {
-	d := &Data{
-		No:   "2618",
-		Date: time.Date(2014, 12, 26, 0, 0, 0, 0, time.Local),
-	}
+	var d = NewTWSE("2618", time.Date(2014, 12, 26, 0, 0, 0, 0, time.Local))
 	fmt.Println(d.GetByTimeMap())
 }
 
 func TestData_FormatData(*testing.T) {
-	d := &Data{
-		No:   "2618",
-		Date: time.Date(2014, 12, 26, 0, 0, 0, 0, time.Local),
-	}
+	var d = NewTWSE("2618", time.Date(2014, 12, 26, 0, 0, 0, 0, time.Local))
 	d.Get()
 	fmt.Println(d.FormatData())
 }
