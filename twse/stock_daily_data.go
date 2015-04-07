@@ -24,6 +24,7 @@ type Data struct {
 	Date        time.Time
 	RawData     [][]string
 	UnixMapData unixMapData
+	exchange    string
 	openList    []float64
 	priceList   []float64
 	rangeList   []float64
@@ -32,8 +33,18 @@ type Data struct {
 
 // URL return stock csv url path.
 func (d Data) URL() string {
-	path := fmt.Sprintf(utils.TWSECSV, d.Date.Year(), d.Date.Month(), d.Date.Year(), d.Date.Month(), d.No, utils.RandInt())
-	return fmt.Sprintf("%s%s", utils.TWSEHOST, path)
+	var path string
+	var host string
+
+	if d.exchange == "tse" {
+		path = fmt.Sprintf(utils.TWSECSV, d.Date.Year(), d.Date.Month(), d.Date.Year(), d.Date.Month(), d.No, utils.RandInt())
+		host = utils.TWSEHOST
+	} else if d.exchange == "otc" {
+		path = fmt.Sprintf(utils.OTCCSV, d.Date.Year(), d.Date.Month(), d.No, utils.RandInt())
+		host = utils.OTCHOST
+	}
+
+	return fmt.Sprintf("%s%s", host, path)
 }
 
 // Round will do sub one month.
