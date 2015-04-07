@@ -27,8 +27,6 @@ type StockRealTime struct {
 	Exchange    string      // tse, otc
 }
 
-var exchangeMap = map[string]bool{"tse": true, "otc": true}
-
 // StockBlob return map data.
 type StockBlob struct {
 	Rtcode    string
@@ -41,7 +39,7 @@ type StockBlob struct {
 
 // URL return realtime url path.
 func (stock StockRealTime) URL() string {
-	if exchangeMap[stock.Exchange] {
+	if utils.ExchangeMap[stock.Exchange] {
 		return fmt.Sprintf("%s%s", utils.TWSEURL,
 			fmt.Sprintf(utils.TWSEREAL,
 				stock.Exchange,
