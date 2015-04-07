@@ -163,28 +163,28 @@ func (stock *StockRealTime) Get() (Data, error) {
 }
 
 // NewWeight 大盤指數
-func (stock StockRealTime) NewWeight() StockRealTime {
-	return StockRealTime{
+func NewWeight(Date time.Time) *StockRealTime {
+	return &StockRealTime{
 		No:       "t00",
-		Date:     stock.Date,
+		Date:     Date,
 		Exchange: "tse",
 	}
 }
 
 // NewOTC 上櫃指數
-func (stock StockRealTime) NewOTC() StockRealTime {
-	return StockRealTime{
+func NewOTC(Date time.Time) *StockRealTime {
+	return &StockRealTime{
 		No:       "o00",
-		Date:     stock.Date,
+		Date:     Date,
 		Exchange: "otc",
 	}
 }
 
 // NewFRMSA 寶島指數
-func (stock StockRealTime) NewFRMSA() StockRealTime {
-	return StockRealTime{
+func NewFRMSA(Date time.Time) *StockRealTime {
+	return &StockRealTime{
 		No:       "FRMSA",
-		Date:     stock.Date,
+		Date:     Date,
 		Exchange: "tse",
 	}
 }
