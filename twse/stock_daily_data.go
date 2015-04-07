@@ -31,6 +31,22 @@ type Data struct {
 	volumeList  []uint64
 }
 
+func NewTWSE(No string, Date time.Time) *Data {
+	data := new(Data)
+	data.No = No
+	data.Date = Date
+	data.exchange = "tse"
+	return data
+}
+
+func NewOTC(No string, Date time.Time) *Data {
+	data := new(Data)
+	data.No = No
+	data.Date = Date
+	data.exchange = "otc"
+	return data
+}
+
 // URL return stock csv url path.
 func (d Data) URL() string {
 	var path string
