@@ -134,13 +134,7 @@ func ExampleData_Round() {
 	fmt.Println(stockData)
 }
 
-func TestData_Round(*testing.T) {
-	var d = NewTWSE("2618", time.Date(2014, 12, 26, 0, 0, 0, 0, time.Local))
-	d.Round()
-	fmt.Println(d.URL())
-}
-
-func TestData_PlusData(t *testing.T) {
+func TestData_Round(t *testing.T) {
 	var now = time.Date(2015, 3, 27, 0, 0, 0, 0, time.Local)
 	var past = time.Date(2015, 2, 1, 0, 0, 0, 0, time.Local)
 	var d = NewTWSE("2618", now)
@@ -149,10 +143,24 @@ func TestData_PlusData(t *testing.T) {
 	if d.Date == past {
 		t.Fatal(d.Date, past)
 	}
-	d.PlusData()
+	d.Round()
 	t.Log(d.Date)
 	if d.Date != past {
 		t.Fatal(d.Date, past)
+	}
+}
+
+func TestData_PlusData(t *testing.T) {
+	var now = time.Date(2015, 3, 27, 0, 0, 0, 0, time.Local)
+	var d = NewTWSE("2618", now)
+	d.PlusData()
+	var d2 = NewTWSE("2618", time.Date(2015, 2, 1, 0, 0, 0, 0, time.Local))
+	d2.Get()
+	for i := range d2.RawData {
+		if d.RawData[i][0] != d2.RawData[i][0] {
+			t.Fatal("Data not difference.")
+			t.Log(d.RawData, d2.RawData)
+		}
 	}
 }
 
