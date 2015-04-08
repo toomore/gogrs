@@ -88,12 +88,18 @@ func BenchmarkGetPriceList(b *testing.B) {
 func Example_newTWSE() {
 	var stock = NewTWSE("2618", time.Date(2015, 3, 27, 0, 0, 0, 0, time.Local))
 	stock.Get()
+	fmt.Println(stock.RawData[0])
+	// output:
+	// [104/03/02 13,384,378 305,046,992 23.00 23.05 22.50 22.90 -0.10 3,793]
 }
 
 // 新增一個 OTC 上櫃股票
 func Example_newOTC() {
-	var stock = NewTWSE("2618", time.Date(2015, 3, 27, 0, 0, 0, 0, time.Local))
+	var stock = NewOTC("8446", time.Date(2015, 3, 27, 0, 0, 0, 0, time.Local))
 	stock.Get()
+	fmt.Println(stock.RawData[0])
+	// output:
+	// [104/03/02 354 33,018 92.00 94.90 90.80 92.60 3.50 299]
 }
 
 func ExampleData_Get_notEnoughData() {
