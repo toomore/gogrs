@@ -140,6 +140,22 @@ func TestData_Round(*testing.T) {
 	fmt.Println(d.URL())
 }
 
+func TestData_PlusData(t *testing.T) {
+	var now = time.Date(2015, 3, 27, 0, 0, 0, 0, time.Local)
+	var past = time.Date(2015, 2, 1, 0, 0, 0, 0, time.Local)
+	var d = NewTWSE("2618", now)
+
+	t.Log(d.Date)
+	if d.Date == past {
+		t.Fatal(d.Date, past)
+	}
+	d.PlusData()
+	t.Log(d.Date)
+	if d.Date != past {
+		t.Fatal(d.Date, past)
+	}
+}
+
 func TestData_GetByTimeMap(*testing.T) {
 	var d = NewTWSE("2618", time.Date(2014, 12, 26, 0, 0, 0, 0, time.Local))
 	fmt.Println(d.GetByTimeMap())
