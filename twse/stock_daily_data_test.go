@@ -84,6 +84,18 @@ func BenchmarkGetPriceList(b *testing.B) {
 	}
 }
 
+// 新增一個 TWSE 上市股票
+func Example_newTWSE() {
+	var stock = NewTWSE("2618", time.Date(2015, 3, 27, 0, 0, 0, 0, time.Local))
+	stock.Get()
+}
+
+// 新增一個 OTC 上櫃股票
+func Example_newOTC() {
+	var stock = NewTWSE("2618", time.Date(2015, 3, 27, 0, 0, 0, 0, time.Local))
+	stock.Get()
+}
+
 func ExampleData_Get_notEnoughData() {
 	year, month, _ := time.Now().Date()
 	var d = NewTWSE("2618", time.Date(year, month+1, 1, 0, 0, 0, 0, time.Local))
@@ -94,6 +106,12 @@ func ExampleData_Get_notEnoughData() {
 	} else {
 		fmt.Println(stockData)
 	}
+}
+
+func ExampleData_PlusData() {
+	var stock = NewTWSE("2618", time.Date(2015, 3, 27, 0, 0, 0, 0, time.Local))
+	stock.Get()      // 2015/3
+	stock.PlusData() // 2015/2
 }
 
 func ExampleData_Round() {
