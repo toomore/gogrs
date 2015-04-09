@@ -112,32 +112,35 @@ func ExampleData_Get_notEnoughData() {
 	} else {
 		fmt.Println(stockData)
 	}
+	// output:
+	// Not enough data.
 }
 
 func ExampleData_PlusData() {
 	var stock = NewTWSE("2618", time.Date(2015, 3, 27, 0, 0, 0, 0, time.Local))
-	stock.Get()      // 2015/3
+	stock.Get() // 2015/3
+	fmt.Println(stock.Date)
 	stock.PlusData() // 2015/2
+	fmt.Println(stock.Date)
+	// output:
+	// 2015-03-27 00:00:00 +0800 CST
+	// 2015-02-01 00:00:00 +0800 CST
 }
 
 func ExampleData_Round() {
 	var d = NewTWSE("2618", time.Date(2014, 12, 26, 0, 0, 0, 0, time.Local))
-	fmt.Println(d)
 
-	stockData, _ := d.Get()
-	fmt.Println(stockData)
-
-	fmt.Println(d.URL()) // 2014/12
+	fmt.Println(d.Date) // 2014/12
 
 	d.Round()
-	fmt.Println(d.URL()) // 2014/11
-	stockData, _ = d.Get()
-	fmt.Println(stockData)
+	fmt.Println(d.Date) // 2014/11
 
 	d.Round()
-	fmt.Println(d.URL()) // 2014/10
-	stockData, _ = d.Get()
-	fmt.Println(stockData)
+	fmt.Println(d.Date) // 2014/10
+	// output:
+	// 2014-12-26 00:00:00 +0800 CST
+	// 2014-11-01 00:00:00 +0800 CST
+	// 2014-10-01 00:00:00 +0800 CST
 }
 
 func TestData_Round(t *testing.T) {
