@@ -87,20 +87,31 @@ func ExampleStockRealTime_Get_otc() {
 	}
 
 	data, _ := r.Get()
-	fmt.Printf("%v", data)
+	fmt.Printf("%v", data.Info)
+	// output:
+	// {otc 華研國際音樂股份有限公司  華研 8446.tw}
 }
 
 func ExampleStockRealTime_NewWeight() {
 	weight := NewWeight(time.Date(2015, 4, 1, 0, 0, 0, 0, time.Local))
-	fmt.Println(weight.Get())
+	data, _ := weight.Get()
+	fmt.Println(data.Info)
+	// output:
+	// {tse   發行量加權股價指數 t00.tw}
 }
 
 func ExampleStockRealTime_NewOTC() {
 	otc := NewOTC(time.Date(2015, 4, 1, 0, 0, 0, 0, time.Local))
-	fmt.Println(otc.Get())
+	data, _ := otc.Get()
+	fmt.Println(data.Info)
+	// output:
+	// {otc   櫃檯指數 o00.tw}
 }
 
 func ExampleStockRealTime_NewFRMSA() {
 	farmsa := NewFRMSA(time.Date(2015, 4, 1, 0, 0, 0, 0, time.Local))
-	fmt.Println(farmsa.Get())
+	data, _ := farmsa.Get()
+	fmt.Println(data.Info)
+	// output:
+	// {tse   寶島股價指數 FRMSA.tw}
 }
