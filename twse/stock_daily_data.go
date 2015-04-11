@@ -66,7 +66,7 @@ func (d Data) URL() string {
 // Round will do sub one month.
 func (d *Data) Round() {
 	year, month, _ := d.Date.Date()
-	d.Date = time.Date(year, month-1, 1, 0, 0, 0, 0, time.Local)
+	d.Date = time.Date(year, month-1, 1, 0, 0, 0, 0, d.Date.Location())
 }
 
 // PlusData will do Round() and Get().
