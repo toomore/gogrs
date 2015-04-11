@@ -21,16 +21,18 @@ func TestURL(t *testing.T) {
 }
 
 func ExampleData() {
-	var d = NewTWSE("2618", time.Date(2014, 12, 26, 0, 0, 0, 0, time.Local))
+	var d = NewTWSE("2618", time.Date(2014, 12, 26, 0, 0, 0, 0, utils.TaipeiTimeZone))
+	fmt.Println(d.Date)
 
 	stockData, _ := d.Get()
 	fmt.Println(stockData[0])
 	// output:
+	// 2014-12-26 00:00:00 +0800 Asia/Taipei
 	// [103/12/01 64,418,143 1,350,179,448 20.20 21.40 20.20 21.35 +1.35 13,249]
 }
 
 func TestData_Get(*testing.T) {
-	var d = NewTWSE("2618", time.Date(2014, 12, 26, 0, 0, 0, 0, time.Local))
+	var d = NewTWSE("2618", time.Date(2014, 12, 26, 0, 0, 0, 0, utils.TaipeiTimeZone))
 	fmt.Println(d)
 
 	stockData, _ := d.Get()
@@ -38,8 +40,8 @@ func TestData_Get(*testing.T) {
 	fmt.Println(stockData)
 }
 
-var twse = NewTWSE("2329", time.Date(2015, 03, 20, 0, 0, 0, 0, time.Local))
-var otc = NewOTC("8446", time.Date(2015, 03, 20, 0, 0, 0, 0, time.Local))
+var twse = NewTWSE("2329", time.Date(2015, 03, 20, 0, 0, 0, 0, utils.TaipeiTimeZone))
+var otc = NewOTC("8446", time.Date(2015, 03, 20, 0, 0, 0, 0, utils.TaipeiTimeZone))
 
 func TestGetList(*testing.T) {
 	for _, stock := range []*Data{twse, otc} {
@@ -63,14 +65,14 @@ func TestGetList(*testing.T) {
 }
 
 func BenchmarkGet(b *testing.B) {
-	var d = NewTWSE("2618", time.Date(2014, 12, 26, 0, 0, 0, 0, time.Local))
+	var d = NewTWSE("2618", time.Date(2014, 12, 26, 0, 0, 0, 0, utils.TaipeiTimeZone))
 	for i := 0; i <= b.N; i++ {
 		d.Get()
 	}
 }
 
 func BenchmarkGetVolumeList(b *testing.B) {
-	var d = NewTWSE("2618", time.Date(2015, 3, 27, 0, 0, 0, 0, time.Local))
+	var d = NewTWSE("2618", time.Date(2015, 3, 27, 0, 0, 0, 0, utils.TaipeiTimeZone))
 	d.Get()
 	for i := 0; i <= b.N; i++ {
 		d.GetVolumeList()
@@ -78,7 +80,7 @@ func BenchmarkGetVolumeList(b *testing.B) {
 }
 
 func BenchmarkGetPriceList(b *testing.B) {
-	var d = NewTWSE("2618", time.Date(2015, 3, 27, 0, 0, 0, 0, time.Local))
+	var d = NewTWSE("2618", time.Date(2015, 3, 27, 0, 0, 0, 0, utils.TaipeiTimeZone))
 	d.Get()
 	for i := 0; i <= b.N; i++ {
 		d.GetPriceList()
@@ -87,7 +89,7 @@ func BenchmarkGetPriceList(b *testing.B) {
 
 // 新增一個 TWSE 上市股票
 func Example_newTWSE() {
-	var stock = NewTWSE("2618", time.Date(2015, 3, 27, 0, 0, 0, 0, time.Local))
+	var stock = NewTWSE("2618", time.Date(2015, 3, 27, 0, 0, 0, 0, utils.TaipeiTimeZone))
 	stock.Get()
 	fmt.Println(stock.RawData[0])
 	// output:
@@ -96,7 +98,7 @@ func Example_newTWSE() {
 
 // 新增一個 OTC 上櫃股票
 func Example_newOTC() {
-	var stock = NewOTC("8446", time.Date(2015, 3, 27, 0, 0, 0, 0, time.Local))
+	var stock = NewOTC("8446", time.Date(2015, 3, 27, 0, 0, 0, 0, utils.TaipeiTimeZone))
 	stock.Get()
 	fmt.Println(stock.RawData[0])
 	// output:
@@ -105,7 +107,7 @@ func Example_newOTC() {
 
 func ExampleData_Get_notEnoughData() {
 	year, month, _ := time.Now().Date()
-	var d = NewTWSE("2618", time.Date(year, month+1, 1, 0, 0, 0, 0, time.Local))
+	var d = NewTWSE("2618", time.Date(year, month+1, 1, 0, 0, 0, 0, utils.TaipeiTimeZone))
 
 	stockData, err := d.Get()
 	if err != nil {
@@ -118,18 +120,18 @@ func ExampleData_Get_notEnoughData() {
 }
 
 func ExampleData_PlusData() {
-	var stock = NewTWSE("2618", time.Date(2015, 3, 27, 0, 0, 0, 0, time.Local))
+	var stock = NewTWSE("2618", time.Date(2015, 3, 27, 0, 0, 0, 0, utils.TaipeiTimeZone))
 	stock.Get() // 2015/3
 	fmt.Println(stock.Date)
 	stock.PlusData() // 2015/2
 	fmt.Println(stock.Date)
 	// output:
-	// 2015-03-27 00:00:00 +0800 CST
-	// 2015-02-01 00:00:00 +0800 CST
+	// 2015-03-27 00:00:00 +0800 Asia/Taipei
+	// 2015-02-01 00:00:00 +0800 Asia/Taipei
 }
 
 func ExampleData_Round() {
-	var d = NewTWSE("2618", time.Date(2014, 12, 26, 0, 0, 0, 0, time.Local))
+	var d = NewTWSE("2618", time.Date(2014, 12, 26, 0, 0, 0, 0, utils.TaipeiTimeZone))
 
 	fmt.Println(d.Date) // 2014/12
 
@@ -139,14 +141,14 @@ func ExampleData_Round() {
 	d.Round()
 	fmt.Println(d.Date) // 2014/10
 	// output:
-	// 2014-12-26 00:00:00 +0800 CST
-	// 2014-11-01 00:00:00 +0800 CST
-	// 2014-10-01 00:00:00 +0800 CST
+	// 2014-12-26 00:00:00 +0800 Asia/Taipei
+	// 2014-11-01 00:00:00 +0800 Asia/Taipei
+	// 2014-10-01 00:00:00 +0800 Asia/Taipei
 }
 
 func TestData_Round(t *testing.T) {
-	var now = time.Date(2015, 3, 27, 0, 0, 0, 0, time.Local)
-	var past = time.Date(2015, 2, 1, 0, 0, 0, 0, time.Local)
+	var now = time.Date(2015, 3, 27, 0, 0, 0, 0, utils.TaipeiTimeZone)
+	var past = time.Date(2015, 2, 1, 0, 0, 0, 0, utils.TaipeiTimeZone)
 	var d = NewTWSE("2618", now)
 
 	t.Log(d.Date)
@@ -161,10 +163,10 @@ func TestData_Round(t *testing.T) {
 }
 
 func TestData_PlusData(t *testing.T) {
-	var now = time.Date(2015, 3, 27, 0, 0, 0, 0, time.Local)
+	var now = time.Date(2015, 3, 27, 0, 0, 0, 0, utils.TaipeiTimeZone)
 	var d = NewTWSE("2618", now)
 	d.PlusData()
-	var d2 = NewTWSE("2618", time.Date(2015, 2, 1, 0, 0, 0, 0, time.Local))
+	var d2 = NewTWSE("2618", time.Date(2015, 2, 1, 0, 0, 0, 0, utils.TaipeiTimeZone))
 	d2.Get()
 	for i := range d2.RawData {
 		if d.RawData[i][0] != d2.RawData[i][0] {
@@ -175,12 +177,12 @@ func TestData_PlusData(t *testing.T) {
 }
 
 func TestData_GetByTimeMap(*testing.T) {
-	var d = NewTWSE("2618", time.Date(2014, 12, 26, 0, 0, 0, 0, time.Local))
+	var d = NewTWSE("2618", time.Date(2014, 12, 26, 0, 0, 0, 0, utils.TaipeiTimeZone))
 	fmt.Println(d.GetByTimeMap())
 }
 
 func TestData_FormatData(*testing.T) {
-	var d = NewTWSE("2618", time.Date(2014, 12, 26, 0, 0, 0, 0, time.Local))
+	var d = NewTWSE("2618", time.Date(2014, 12, 26, 0, 0, 0, 0, utils.TaipeiTimeZone))
 	d.Get()
 	fmt.Println(d.FormatData())
 }
