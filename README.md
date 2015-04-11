@@ -3,6 +3,7 @@ gogrs
 
 [![GoDoc](https://godoc.org/github.com/toomore/gogrs?status.svg)](https://godoc.org/github.com/toomore/gogrs)
 [![Build Status](https://travis-ci.org/toomore/gogrs.svg?branch=master)](https://travis-ci.org/toomore/gogrs)
+[![Coverage Status](https://coveralls.io/repos/toomore/gogrs/badge.svg?branch=master)](https://coveralls.io/r/toomore/gogrs?branch=master)
 
 Packages
 ---------
