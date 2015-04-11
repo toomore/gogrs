@@ -22,10 +22,11 @@ func TestURL(t *testing.T) {
 
 func ExampleData() {
 	var d = NewTWSE("2618", time.Date(2014, 12, 26, 0, 0, 0, 0, time.Local))
-	fmt.Println(d)
 
 	stockData, _ := d.Get()
-	fmt.Println(stockData)
+	fmt.Println(stockData[0])
+	// output:
+	// [103/12/01 64,418,143 1,350,179,448 20.20 21.40 20.20 21.35 +1.35 13,249]
 }
 
 func TestData_Get(*testing.T) {
