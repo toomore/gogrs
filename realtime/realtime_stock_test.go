@@ -4,13 +4,15 @@ import (
 	"fmt"
 	"testing"
 	"time"
+
+	"github.com/toomore/gogrs/utils"
 )
 
 func TestStockRealTime(*testing.T) {
 	r := &StockRealTime{
 		No: "2618",
 		//Date:      time.Now(),
-		Date:     time.Date(2015, 4, 1, 0, 0, 0, 0, time.Local),
+		Date:     time.Date(2015, 4, 1, 0, 0, 0, 0, utils.TaipeiTimeZone),
 		Exchange: "tse",
 	}
 
@@ -28,7 +30,7 @@ func TestStockRealTimeOTC(*testing.T) {
 	r := &StockRealTime{
 		No: "8446",
 		//Date:      time.Now(),
-		Date:     time.Date(2015, 4, 1, 0, 0, 0, 0, time.Local),
+		Date:     time.Date(2015, 4, 1, 0, 0, 0, 0, utils.TaipeiTimeZone),
 		Exchange: "otc",
 	}
 
@@ -43,7 +45,7 @@ func TestStockRealTimeOTC(*testing.T) {
 }
 
 func TestStockRealTimeIndexs(*testing.T) {
-	var date = time.Date(2015, 4, 1, 0, 0, 0, 0, time.Local)
+	var date = time.Date(2015, 4, 1, 0, 0, 0, 0, utils.TaipeiTimeZone)
 
 	weight := NewWeight(date)
 	otc := NewOTC(date)
@@ -57,7 +59,7 @@ func BenchmarkGet(b *testing.B) {
 	r := &StockRealTime{
 		No: "2618",
 		//Date:      time.Now(),
-		Date:     time.Date(2015, 4, 1, 0, 0, 0, 0, time.Local),
+		Date:     time.Date(2015, 4, 1, 0, 0, 0, 0, utils.TaipeiTimeZone),
 		Exchange: "tse",
 	}
 
@@ -70,7 +72,7 @@ func BenchmarkGet(b *testing.B) {
 func ExampleStockRealTime_Get_twse() {
 	r := StockRealTime{
 		No:       "2618",
-		Date:     time.Date(2015, 4, 1, 0, 0, 0, 0, time.Local),
+		Date:     time.Date(2015, 4, 1, 0, 0, 0, 0, utils.TaipeiTimeZone),
 		Exchange: "tse",
 	}
 
@@ -82,7 +84,7 @@ func ExampleStockRealTime_Get_twse() {
 func ExampleStockRealTime_Get_otc() {
 	r := StockRealTime{
 		No:       "8446",
-		Date:     time.Date(2015, 4, 1, 0, 0, 0, 0, time.Local),
+		Date:     time.Date(2015, 4, 1, 0, 0, 0, 0, utils.TaipeiTimeZone),
 		Exchange: "otc",
 	}
 
@@ -93,7 +95,7 @@ func ExampleStockRealTime_Get_otc() {
 }
 
 func ExampleStockRealTime_NewWeight() {
-	weight := NewWeight(time.Date(2015, 4, 1, 0, 0, 0, 0, time.Local))
+	weight := NewWeight(time.Date(2015, 4, 1, 0, 0, 0, 0, utils.TaipeiTimeZone))
 	data, _ := weight.Get()
 	fmt.Println(data.Info)
 	// output:
@@ -101,7 +103,7 @@ func ExampleStockRealTime_NewWeight() {
 }
 
 func ExampleStockRealTime_NewOTC() {
-	otc := NewOTC(time.Date(2015, 4, 1, 0, 0, 0, 0, time.Local))
+	otc := NewOTC(time.Date(2015, 4, 1, 0, 0, 0, 0, utils.TaipeiTimeZone))
 	data, _ := otc.Get()
 	fmt.Println(data.Info)
 	// output:
@@ -109,7 +111,7 @@ func ExampleStockRealTime_NewOTC() {
 }
 
 func ExampleStockRealTime_NewFRMSA() {
-	farmsa := NewFRMSA(time.Date(2015, 4, 1, 0, 0, 0, 0, time.Local))
+	farmsa := NewFRMSA(time.Date(2015, 4, 1, 0, 0, 0, 0, utils.TaipeiTimeZone))
 	data, _ := farmsa.Get()
 	fmt.Println(data.Info)
 	// output:
