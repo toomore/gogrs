@@ -10,7 +10,11 @@ import (
 	"time"
 )
 
+// ExchangeMap is simple to check tse or otc.
 var ExchangeMap = map[string]bool{"tse": true, "otc": true}
+
+// TaipeiTimeZone is for time.Data() setting.
+var TaipeiTimeZone = time.FixedZone("Asia/Taipei", 8*3600)
 
 // TWSE base url.
 const (
