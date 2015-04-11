@@ -8,9 +8,11 @@ os:
     - linux
     - osx
 
-env:
-    - secure: "l04PdBqGjY+ZyC2ahT3bxbwWaE7Y2mjq4Ps6B8kSKRNMqW3H02POkLIcbgVqTtQsfVRYRT2vZTsgPHloXRT3VxpqpVpFx+AlOfWc+SPFuMmEIi+xIgqYegGZljxwVTHif+IzTYhcpXE+IxBcl58+iOPhAw+u5VnsQu3g0Ywg2N8="
+before_install:
+    - go get golang.org/x/tools/cmd/cover
+    - go get github.com/mattn/goveralls
 
 script:
-    - go get golang.org/x/tools/cmd/cover
     - go test -v -cover --benchmem --bench=. ./...
+    - sh ./goclean.sh
+    - $HOME/gopath/bin/goveralls -coverprofile=profile.cov -service=travis-ci
