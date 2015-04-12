@@ -9,6 +9,20 @@ func BenchmarkParseDate(t *testing.B) {
 	}
 }
 
+func BenchmarkSumUint64(t *testing.B) {
+	var sample = []uint64{1, 2, 3, 4, 5, 6, 7, 8, 9}
+	for i := 0; i < t.N; i++ {
+		SumUint64(sample)
+	}
+}
+
+func BenchmarkAvgUint64(t *testing.B) {
+	var sample = []uint64{1, 2, 3, 4, 5, 6, 7, 8, 9}
+	for i := 0; i < t.N; i++ {
+		AvgUint64(sample)
+	}
+}
+
 func BenchmarkRanInt(t *testing.B) {
 	for i := 0; i < t.N; i++ {
 		RandInt()
@@ -33,6 +47,13 @@ func BenchmarkThanPast(t *testing.B) {
 	var sample = []float64{20.2, 20.3, 100.25, 100.75}
 	for i := 0; i < t.N; i++ {
 		thanPast(sample, true)
+	}
+}
+
+func BenchmarkThanPast_false(t *testing.B) {
+	var sample = []float64{20.2, 20.3, 100.25, 100.75}
+	for i := 0; i < t.N; i++ {
+		thanPast(sample, false)
 	}
 }
 
