@@ -2,6 +2,13 @@ package utils
 
 import "testing"
 
+func BenchmarkParseDate(t *testing.B) {
+	var strdate = "104/04/01"
+	for i := 0; i < t.N; i++ {
+		ParseDate(strdate)
+	}
+}
+
 func BenchmarkRanInt(t *testing.B) {
 	for i := 0; i < t.N; i++ {
 		RandInt()
