@@ -16,6 +16,5 @@ before_install:
     - go get github.com/mattn/goveralls
 
 script:
-    - go test -v -cover --benchmem --bench=. ./...
     - sh ./goclean.sh
     - $HOME/gopath/bin/goveralls -coverprofile=profile.cov -service=travis-ci
