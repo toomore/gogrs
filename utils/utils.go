@@ -79,8 +79,7 @@ func AvgUint64(data []uint64) uint64 {
 
 // ThanPastUint64 計算最後一個數值是否為過去幾天最大或最小（uint64）
 func ThanPastUint64(data []uint64, days int, max bool) bool {
-	var dataFloat64 []float64
-	dataFloat64 = make([]float64, days+1)
+	var dataFloat64 = make([]float64, days+1)
 	for i, v := range data[len(data)-1-days:] {
 		dataFloat64[i] = float64(v)
 	}
