@@ -38,15 +38,15 @@ func RandInt() int64 {
 //	return r.Int63n(100000)
 //}
 
-var dateReg = regexp.MustCompile(`[\d]{2,}`)
+var dateReg = regexp.MustCompile(`([\d]{2,})/([\d]{1,2})/([\d]{1,2})`)
 
 // ParseDate is to parse "104/01/13" format.
 func ParseDate(strDate string) time.Time {
-	p := dateReg.FindAllString(strDate, -1)
-	year, _ := strconv.Atoi(p[0])
-	mon, _ := strconv.Atoi(p[1])
-	day, _ := strconv.Atoi(p[2])
-	return time.Date(year+1911, time.Month(mon), day, 0, 0, 0, 0, time.Local)
+	p := dateReg.FindStringSubmatch(strDate)
+	year, _ := strconv.Atoi(p[1])
+	mon, _ := strconv.Atoi(p[2])
+	day, _ := strconv.Atoi(p[3])
+	return time.Date(year+1911, time.Month(mon), day, 0, 0, 0, 0, TaipeiTimeZone)
 }
 
 // SumFloat64 計算總和（float64）
