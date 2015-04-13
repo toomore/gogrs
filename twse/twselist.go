@@ -6,6 +6,8 @@ import (
 	"fmt"
 	"io/ioutil"
 	"net/http"
+	"net/url"
+	"strconv"
 	"strings"
 	"time"
 
@@ -68,17 +70,16 @@ var TWSECLASS = map[string]string{
 type Lists struct {
 	Date            time.Time
 	categoryRawData map[string][][]string
-}
-
-// URL is to render urlpath.
-func (l Lists) URL(strNo string) string {
-	year, month, day := l.Date.Date()
-	return fmt.Sprintf("%s%s", utils.TWSEHOST, fmt.Sprintf(utils.TWSELISTCSV, year, month, year, month, day, strNo))
+	FmtData         map[string]FmtListData
 }
 
 // Get is to get csv data.
 func (l *Lists) Get(strNo string) ([][]string, error) {
-	data, err := http.Get(l.URL(strNo))
+	year, month, day := l.Date.Date()
+	data, err := http.PostForm(fmt.Sprintf("%s%s", utils.TWSEHOST, utils.TWSELISTCSV),
+		url.Values{"download": {"csv"}, "selectType": {strNo},
+			"qdate": {fmt.Sprintf("%d/%02d/%02d", year-1911, month, day)}})
+
 	if err != nil {
 		return nil, fmt.Errorf("Network fail: %s", err)
 	}
@@ -90,15 +91,50 @@ func (l *Lists) Get(strNo string) ([][]string, error) {
 		//for i := range csvArrayContent {
 		//	fmt.Println(i, csvArrayContent[i])
 		//}
-		csvReader := csv.NewReader(strings.NewReader(strings.Join(csvArrayContent[2:len(csvArrayContent)-5], "\n")))
+		csvReader := csv.NewReader(strings.NewReader(strings.Join(csvArrayContent[4:len(csvArrayContent)-7], "\n")))
 		returnData, err := csvReader.ReadAll()
 		if err == nil {
 			if l.categoryRawData == nil {
 				l.categoryRawData = make(map[string][][]string)
 			}
 			l.categoryRawData[strNo] = returnData
+			l.formatData(strNo)
 		}
 		return returnData, err
 	}
 	return nil, errors.New("Not enough data.")
+}
+
+type FmtListData struct {
+	No         string
+	Name       string
+	Volume     uint64  //成交股數
+	TotalPrice uint64  //成交金額
+	Open       float64 //開盤價
+	High       float64 //最高價
+	Low        float64 //最低價
+	Price      float64 //收盤價
+	Range      float64 //漲跌價差
+	Totalsale  uint64  //成交筆數
+}
+
+func (l *Lists) formatData(categoryNo string) {
+	if l.FmtData == nil {
+		l.FmtData = make(map[string]FmtListData)
+	}
+	for _, v := range l.categoryRawData[categoryNo] {
+		var data FmtListData
+		data.No = v[0]
+		data.Name = v[1]
+		data.Volume, _ = strconv.ParseUint(strings.Replace(v[2], ",", "", -1), 10, 32)
+		data.Totalsale, _ = strconv.ParseUint(strings.Replace(v[3], ",", "", -1), 10, 32)
+		data.TotalPrice, _ = strconv.ParseUint(strings.Replace(v[4], ",", "", -1), 10, 32)
+		data.Open, _ = strconv.ParseFloat(v[5], 64)
+		data.High, _ = strconv.ParseFloat(v[6], 64)
+		data.Low, _ = strconv.ParseFloat(v[7], 64)
+		data.Price, _ = strconv.ParseFloat(v[8], 64)
+		data.Range, _ = strconv.ParseFloat(fmt.Sprintf("%s%s", v[9], v[10]), 64)
+
+		l.FmtData[v[0]] = data
+	}
 }
