@@ -106,16 +106,21 @@ func (l *Lists) Get(strNo string) ([][]string, error) {
 }
 
 type FmtListData struct {
-	No         string
-	Name       string
-	Volume     uint64  //成交股數
-	TotalPrice uint64  //成交金額
-	Open       float64 //開盤價
-	High       float64 //最高價
-	Low        float64 //最低價
-	Price      float64 //收盤價
-	Range      float64 //漲跌價差
-	Totalsale  uint64  //成交筆數
+	No             string
+	Name           string
+	Volume         uint64  //成交股數
+	TotalPrice     uint64  //成交金額
+	Open           float64 //開盤價
+	High           float64 //最高價
+	Low            float64 //最低價
+	Price          float64 //收盤價
+	Range          float64 //漲跌價差
+	Totalsale      uint64  //成交筆數
+	LastBuyPrice   float64 //最後揭示買價
+	LastBuyVolume  uint64  //最後揭示買量
+	LastSellPrice  float64 //最後揭示賣價
+	LastSellVolume uint64  //最後揭示賣量
+	PERatio        float64 //本益比
 }
 
 func (l *Lists) formatData(categoryNo string) {
@@ -124,16 +129,21 @@ func (l *Lists) formatData(categoryNo string) {
 	}
 	for _, v := range l.categoryRawData[categoryNo] {
 		var data FmtListData
-		data.No = v[0]
-		data.Name = v[1]
-		data.Volume, _ = strconv.ParseUint(strings.Replace(v[2], ",", "", -1), 10, 32)
-		data.Totalsale, _ = strconv.ParseUint(strings.Replace(v[3], ",", "", -1), 10, 32)
-		data.TotalPrice, _ = strconv.ParseUint(strings.Replace(v[4], ",", "", -1), 10, 32)
+		data.No = strings.Trim(v[0], " ")
+		data.Name = strings.Trim(v[1], " ")
+		data.Volume, _ = strconv.ParseUint(v[2], 10, 32)
+		data.Totalsale, _ = strconv.ParseUint(v[3], 10, 32)
+		data.TotalPrice, _ = strconv.ParseUint(v[4], 10, 32)
 		data.Open, _ = strconv.ParseFloat(v[5], 64)
 		data.High, _ = strconv.ParseFloat(v[6], 64)
 		data.Low, _ = strconv.ParseFloat(v[7], 64)
 		data.Price, _ = strconv.ParseFloat(v[8], 64)
 		data.Range, _ = strconv.ParseFloat(fmt.Sprintf("%s%s", v[9], v[10]), 64)
+		data.LastBuyPrice, _ = strconv.ParseFloat(v[11], 64)
+		data.LastBuyVolume, _ = strconv.ParseUint(v[12], 10, 32)
+		data.LastSellPrice, _ = strconv.ParseFloat(v[13], 64)
+		data.LastSellVolume, _ = strconv.ParseUint(v[14], 10, 32)
+		data.PERatio, _ = strconv.ParseFloat(v[15], 64)
 
 		l.FmtData[v[0]] = data
 	}
