@@ -69,8 +69,8 @@ var TWSECLASS = map[string]string{
 // Lists is to get TWSE list.
 type Lists struct {
 	Date            time.Time
-	categoryRawData map[string][][]string
 	FmtData         map[string]FmtListData
+	categoryRawData map[string][][]string
 }
 
 // Get is to get csv data.
@@ -145,6 +145,6 @@ func (l *Lists) formatData(categoryNo string) {
 		data.LastSellVolume, _ = strconv.ParseUint(v[14], 10, 32)
 		data.PERatio, _ = strconv.ParseFloat(v[15], 64)
 
-		l.FmtData[v[0]] = data
+		l.FmtData[data.No] = data
 	}
 }
