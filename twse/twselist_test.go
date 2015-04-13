@@ -2,10 +2,30 @@ package twse
 
 import (
 	"fmt"
+	"testing"
 	"time"
 
 	"github.com/toomore/gogrs/utils"
 )
+
+func TestLists_Get_Rawdata(*testing.T) {
+	l := &Lists{
+		Date: time.Date(2014, 12, 23, 0, 0, 0, 0, utils.TaipeiTimeZone),
+	}
+	listdata, _ := l.Get("15") //航運業
+	fmt.Println(l.categoryRawData, "\n\n", listdata)
+	fmt.Println(l.FmtData)
+}
+
+func ExampleLists_Get_fmtData() {
+	l := &Lists{
+		Date: time.Date(2015, 4, 9, 0, 0, 0, 0, utils.TaipeiTimeZone),
+	}
+	l.Get("15") //航運業
+	fmt.Println(l.FmtData["2618"])
+	// output:
+	// {2618 長榮航 46670950 1136982254 24 24.65 24 24 0.55 11117 24 2027 24.1 10 0}
+}
 
 func ExampleLists_Get() {
 	l := &Lists{
@@ -14,7 +34,7 @@ func ExampleLists_Get() {
 	listdata, _ := l.Get("15") //航運業
 	fmt.Println(listdata[0])
 	// output:
-	// [2208 台船 729,340 324 12,048,156 16.45 16.60 16.45 16.45  0.00 16.45 67 16.50 58 41.13]
+	// [2208   台船   729340 324 12048156 16.45 16.6 16.45 16.45   0 16.45 67 16.5 58 41.13]
 }
 
 func ExampleLists_Get_notEnoughData() {
@@ -26,12 +46,4 @@ func ExampleLists_Get_notEnoughData() {
 	fmt.Println(err)
 	// output:
 	// Not enough data.
-}
-
-func ExampleLists_URL() {
-	l := &Lists{
-		Date: time.Date(2014, 12, 26, 0, 0, 0, 0, utils.TaipeiTimeZone),
-	}
-	fmt.Println(l.URL("15"))
-	// output: http://www.twse.com.tw/ch/trading/exchange/MI_INDEX/MI_INDEX2_print.php?genpage=genpage/Report201412/A1122014122615.php&type=csv
 }
