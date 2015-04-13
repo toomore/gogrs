@@ -87,7 +87,7 @@ func (l *Lists) Get(strNo string) ([][]string, error) {
 	dataContentBig5, _ := ioutil.ReadAll(data.Body)
 	dataContent, _ := iconv.ConvertString(string(dataContentBig5), "big5", "utf-8")
 	csvArrayContent := strings.Split(dataContent, "\n")
-	if len(csvArrayContent) > 5 {
+	if len(csvArrayContent) > 9 {
 		//for i := range csvArrayContent {
 		//	fmt.Println(i, csvArrayContent[i])
 		//}
