@@ -66,7 +66,8 @@ var TWSECLASS = map[string]string{
 
 // Lists is to get TWSE list.
 type Lists struct {
-	Date time.Time
+	Date            time.Time
+	categoryRawData map[string][][]string
 }
 
 // URL is to render urlpath.
@@ -76,7 +77,7 @@ func (l Lists) URL(strNo string) string {
 }
 
 // Get is to get csv data.
-func (l Lists) Get(strNo string) ([][]string, error) {
+func (l *Lists) Get(strNo string) ([][]string, error) {
 	data, err := http.Get(l.URL(strNo))
 	if err != nil {
 		return nil, fmt.Errorf("Network fail: %s", err)
@@ -90,7 +91,14 @@ func (l Lists) Get(strNo string) ([][]string, error) {
 		//	fmt.Println(i, csvArrayContent[i])
 		//}
 		csvReader := csv.NewReader(strings.NewReader(strings.Join(csvArrayContent[2:len(csvArrayContent)-5], "\n")))
-		return csvReader.ReadAll()
+		returnData, err := csvReader.ReadAll()
+		if err == nil {
+			if l.categoryRawData == nil {
+				l.categoryRawData = make(map[string][][]string)
+			}
+			l.categoryRawData[strNo] = returnData
+		}
+		return returnData, err
 	}
 	return nil, errors.New("Not enough data.")
 }
