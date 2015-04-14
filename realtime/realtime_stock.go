@@ -1,5 +1,5 @@
 // Package realtime - Fetch realtime stock data info http://mis.tse.com.tw/
-// 擷取盤中即時股價資訊
+// 擷取盤中個股、指數即時股價資訊
 //
 package realtime
 

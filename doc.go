@@ -6,15 +6,15 @@ gogrs 是擷取台灣上市股票股價資訊工具，目前還在大量的開�
 
 Paceage realtime
 
-擷取盤中即時股價資訊
+擷取盤中個股、指數即時股價資訊
 
 Package twse
 
-擷取上市股票股價資訊
+擷取台灣股市上市、上櫃股票資訊
 
 Package utils
 
-一些公用程式
+套件所需的公用工具
 
 */
 package gogrs

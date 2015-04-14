@@ -1,5 +1,5 @@
-// Package twse - Fetch stock data from http://www.twse.com.tw/
-// 擷取台灣股市上市股票資訊
+// Package twse - Fetch stock data from TWSE, OTC
+// 擷取台灣股市上市、上櫃股票資訊
 //
 package twse
 
