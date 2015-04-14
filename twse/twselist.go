@@ -105,6 +105,7 @@ func (l *Lists) Get(strNo string) ([][]string, error) {
 	return nil, errors.New("Not enough data.")
 }
 
+// FmtListData 格式化個股的資料資訊
 type FmtListData struct {
 	No             string
 	Name           string

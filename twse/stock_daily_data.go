@@ -31,6 +31,7 @@ type Data struct {
 	volumeList  []uint64
 }
 
+// NewTWSE 建立一個 TWSE 上市股票
 func NewTWSE(No string, Date time.Time) *Data {
 	data := new(Data)
 	data.No = No
@@ -39,6 +40,7 @@ func NewTWSE(No string, Date time.Time) *Data {
 	return data
 }
 
+// NewOTC 建立一個 OTC 上櫃股票
 func NewOTC(No string, Date time.Time) *Data {
 	data := new(Data)
 	data.No = No
