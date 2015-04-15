@@ -26,6 +26,19 @@ func TestStockRealTime(*testing.T) {
 	fmt.Println("UnixMapData", r.UnixMapData)
 }
 
+func TestStockRealTime_URL(t *testing.T) {
+	r := &StockRealTime{
+		No:       "2618",
+		Date:     time.Date(2015, 4, 1, 0, 0, 0, 0, utils.TaipeiTimeZone),
+		Exchange: "TSE",
+	}
+
+	if r.URL() != "" {
+		t.Error("Should be \"\"")
+	}
+
+}
+
 func TestStockRealTimeOTC(*testing.T) {
 	r := &StockRealTime{
 		No: "8446",
