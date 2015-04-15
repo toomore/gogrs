@@ -41,4 +41,4 @@ go tool cover -func profile.cov
 # goveralls -coverprofile=profile.cov -service=travis-ci
 
 # Test build cmd.
-cd ./cmd; go build ./; time ./cmd; rm -rf ./cmd;
+cd ./cmd; go build ./; ./cmd; rm -rf ./cmd;
