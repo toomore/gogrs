@@ -230,31 +230,14 @@ func (d Data) FormatData() []FmtData {
 	var loopd FmtData
 	for i, v := range d.RawData {
 		loopd.Date = utils.ParseDate(v[0])
-
-		volume, _ := strconv.ParseUint(strings.Replace(v[1], ",", "", -1), 10, 32)
-		loopd.Volume = volume
-
-		totalprice, _ := strconv.ParseUint(strings.Replace(v[2], ",", "", -1), 10, 32)
-		loopd.TotalPrice = totalprice
-
-		open, _ := strconv.ParseFloat(v[3], 64)
-		loopd.Open = open
-
-		high, _ := strconv.ParseFloat(v[4], 64)
-		loopd.High = high
-
-		low, _ := strconv.ParseFloat(v[5], 64)
-		loopd.Low = low
-
-		price, _ := strconv.ParseFloat(v[6], 64)
-		loopd.Price = price
-
-		rangeData, _ := strconv.ParseFloat(v[7], 64)
-		loopd.Range = rangeData
-
-		totalsale, _ := strconv.ParseUint(strings.Replace(v[8], ",", "", -1), 10, 64)
-		loopd.Totalsale = totalsale
-
+		loopd.Volume, _ = strconv.ParseUint(strings.Replace(v[1], ",", "", -1), 10, 32)
+		loopd.TotalPrice, _ = strconv.ParseUint(strings.Replace(v[2], ",", "", -1), 10, 32)
+		loopd.Open, _ = strconv.ParseFloat(v[3], 64)
+		loopd.High, _ = strconv.ParseFloat(v[4], 64)
+		loopd.Low, _ = strconv.ParseFloat(v[5], 64)
+		loopd.Price, _ = strconv.ParseFloat(v[6], 64)
+		loopd.Range, _ = strconv.ParseFloat(v[7], 64)
+		loopd.Totalsale, _ = strconv.ParseUint(strings.Replace(v[8], ",", "", -1), 10, 64)
 		result[i] = loopd
 	}
 	return result
