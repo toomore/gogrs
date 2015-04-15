@@ -101,9 +101,9 @@ func (stock *StockRealTime) get() (StockBlob, error) {
 
 		// Should format data.
 		stock.UnixMapData[unixTime/1000] = value.MsgArray
+		return value, nil
 	}
-
-	return value, nil
+	return value, fmt.Errorf("No Data.")
 }
 
 // Get return stock realtime map data.

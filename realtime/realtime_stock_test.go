@@ -17,13 +17,27 @@ func TestStockRealTime(*testing.T) {
 	}
 
 	r.URL()
-	v, _ := r.Get()
+	v, err := r.Get()
+	fmt.Println("ERR", err)
 	fmt.Println(v.BestAskPrice)
 	fmt.Println(v.BestBidPrice)
 	fmt.Println(v.BestAskVolume)
 	fmt.Println(v.BestBidVolume)
 	fmt.Println(v)
 	fmt.Println("UnixMapData", r.UnixMapData)
+}
+
+func TestStockRealTime_noData(t *testing.T) {
+	r := &StockRealTime{
+		No:       "26188",
+		Date:     time.Date(2015, 4, 1, 0, 0, 0, 0, utils.TaipeiTimeZone),
+		Exchange: "tse",
+	}
+
+	_, err := r.Get()
+	if err.Error() != "No Data." {
+		t.Error("Should be \"No Data.\"")
+	}
 }
 
 func TestStockRealTime_URL(t *testing.T) {
