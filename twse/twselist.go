@@ -17,6 +17,7 @@ import (
 
 // TWSECLASS is a class list of TWSE.
 var TWSECLASS = map[string]string{
+	"MS":         "大盤統計資訊",
 	"0049":       "封閉式基金",
 	"0099P":      "ETF",
 	"01":         "水泥工業",
@@ -79,28 +80,35 @@ func (l *Lists) Get(strNo string) ([][]string, error) {
 	data, err := http.PostForm(fmt.Sprintf("%s%s", utils.TWSEHOST, utils.TWSELISTCSV),
 		url.Values{"download": {"csv"}, "selectType": {strNo},
 			"qdate": {fmt.Sprintf("%d/%02d/%02d", year-1911, month, day)}})
+	defer data.Body.Close()
 
 	if err != nil {
 		return nil, fmt.Errorf("Network fail: %s", err)
 	}
-	defer data.Body.Close()
+
 	dataContentBig5, _ := ioutil.ReadAll(data.Body)
 	dataContent, _ := iconv.ConvertString(string(dataContentBig5), "big5", "utf-8")
 	csvArrayContent := strings.Split(dataContent, "\n")
-	if len(csvArrayContent) > 9 {
-		//for i := range csvArrayContent {
-		//	fmt.Println(i, csvArrayContent[i])
-		//}
-		csvReader := csv.NewReader(strings.NewReader(strings.Join(csvArrayContent[4:len(csvArrayContent)-7], "\n")))
-		returnData, err := csvReader.ReadAll()
-		if err == nil {
-			if l.categoryRawData == nil {
-				l.categoryRawData = make(map[string][][]string)
-			}
-			l.categoryRawData[strNo] = returnData
-			l.formatData(strNo)
+
+	if strNo == "MS" {
+		if len(csvArrayContent) > 6 {
+			csvReader := csv.NewReader(strings.NewReader(strings.Join(csvArrayContent[4:51], "\n")))
+			returnData, err := csvReader.ReadAll()
+			return returnData, err
 		}
-		return returnData, err
+	} else {
+		if len(csvArrayContent) > 9 {
+			csvReader := csv.NewReader(strings.NewReader(strings.Join(csvArrayContent[4:len(csvArrayContent)-7], "\n")))
+			returnData, err := csvReader.ReadAll()
+			if err == nil {
+				if l.categoryRawData == nil {
+					l.categoryRawData = make(map[string][][]string)
+				}
+				l.categoryRawData[strNo] = returnData
+				l.formatData(strNo)
+			}
+			return returnData, err
+		}
 	}
 	return nil, errors.New("Not enough data.")
 }
