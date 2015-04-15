@@ -76,6 +76,10 @@ type Lists struct {
 
 // Get is to get csv data.
 func (l *Lists) Get(strNo string) ([][]string, error) {
+	if TWSECLASS[strNo] == "" {
+		return nil, errors.New("Not support.")
+	}
+
 	year, month, day := l.Date.Date()
 	data, err := http.PostForm(fmt.Sprintf("%s%s", utils.TWSEHOST, utils.TWSELISTCSV),
 		url.Values{"download": {"csv"}, "selectType": {strNo},
