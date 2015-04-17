@@ -109,13 +109,9 @@ func (stock *StockRealTime) get() (StockBlob, error) {
 // Get return stock realtime map data.
 func (stock *StockRealTime) Get() (Data, error) {
 	value, err := stock.get()
+	var result Data
 
-	if err != nil {
-		return Data{}, err
-	}
-
-	if len(value.MsgArray) != 0 {
-		var result Data
+	if err == nil && len(value.MsgArray) != 0 {
 		aList := strings.Split(value.MsgArray[0]["a"], "_")
 		result.BestAskPrice = make([]float64, len(aList)-1)
 		for i, v := range aList[:len(aList)-1] {
@@ -155,11 +151,8 @@ func (stock *StockRealTime) Get() (Data, error) {
 		result.Info.No = value.MsgArray[0]["n"]
 		result.Info.Ticker = value.MsgArray[0]["ch"]
 		result.Info.Exchange = value.MsgArray[0]["ex"]
-
-		return result, nil
 	}
-
-	return Data{}, nil
+	return result, err
 }
 
 // NewWeight 大盤指數
