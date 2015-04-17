@@ -33,20 +33,20 @@ type Data struct {
 
 // NewTWSE 建立一個 TWSE 上市股票
 func NewTWSE(No string, Date time.Time) *Data {
-	data := new(Data)
-	data.No = No
-	data.Date = Date
-	data.exchange = "tse"
-	return data
+	return &Data{
+		No:       No,
+		Date:     Date,
+		exchange: "tse",
+	}
 }
 
 // NewOTC 建立一個 OTC 上櫃股票
 func NewOTC(No string, Date time.Time) *Data {
-	data := new(Data)
-	data.No = No
-	data.Date = Date
-	data.exchange = "otc"
-	return data
+	return &Data{
+		No:       No,
+		Date:     Date,
+		exchange: "otc",
+	}
 }
 
 // URL return stock csv url path.
