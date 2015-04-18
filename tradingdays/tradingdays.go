@@ -11,8 +11,12 @@ import (
 )
 
 // IsOpen is check open or not.
-func IsOpen(d time.Time) bool {
-	if d.Weekday() == 0 || d.Weekday() == 6 {
+func IsOpen(year int, month time.Month, day int, loc *time.Location) bool {
+	d := time.Date(year, month, day, 0, 0, 0, 0, loc)
+	if openornot, ok := exceptDays[d.Unix()]; ok {
+		return openornot
+	}
+	if d.In(utils.TaipeiTimeZone).Weekday() == 0 || d.In(utils.TaipeiTimeZone).Weekday() == 6 {
 		return false
 	}
 	return true
@@ -32,7 +36,7 @@ func readCSV() {
 		}
 		//fmt.Println(record[1])
 		t, err := time.ParseInLocation(timeLayout, record[0], utils.TaipeiTimeZone)
-		isopen := false
+		var isopen bool
 		if record[1] == "1" {
 			isopen = true
 		}
