@@ -24,7 +24,6 @@ var timeLayout = "2006/1/02"
 func readCSV() {
 	data, _ := ioutil.ReadFile("./list.csv")
 	csvdata := csv.NewReader(bytes.NewReader(data))
-	exceptDays = make(map[int64]bool)
 
 	for {
 		record, err := csvdata.Read()
@@ -41,4 +40,9 @@ func readCSV() {
 		//fmt.Println(t, err, t.Unix(), isopen)
 		//fmt.Println(exceptDays)
 	}
+}
+
+func init() {
+	exceptDays = make(map[int64]bool)
+	readCSV()
 }
