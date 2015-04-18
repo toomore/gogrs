@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"time"
 
+	"github.com/toomore/gogrs/tradingdays"
 	"github.com/toomore/gogrs/twse"
 	"github.com/toomore/gogrs/utils"
 )
@@ -31,4 +32,5 @@ func main() {
 	fmt.Println("-----------------------------")
 	stock.PlusData()
 	ShowAll(stock)
+	fmt.Println(tradingdays.IsOpen(2015, 4, 25, utils.TaipeiTimeZone))
 }
