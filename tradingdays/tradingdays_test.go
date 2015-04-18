@@ -8,14 +8,20 @@ import (
 	"github.com/toomore/gogrs/utils"
 )
 
-func TestReadCSV(*testing.T) {
-	//readCSV()
+func TestIsOpen(t *testing.T) {
 	fmt.Println(exceptDays)
-	fmt.Println(time.Date(2015, 9, 29, 0, 0, 0, 0, time.Local))
-	fmt.Println(IsOpen(2015, 4, 17, time.Local))
-	fmt.Println(IsOpen(2015, 4, 18, time.Local))
-	fmt.Println(IsOpen(2015, 4, 20, time.Local))
-	fmt.Println(IsOpen(2015, 4, 25, time.Local))
+	if IsOpen(2015, 4, 17, time.Local) != true {
+		t.Error("Should be `true`")
+	}
+	if IsOpen(2015, 4, 18, time.Local) != false {
+		t.Error("Should be `false`")
+	}
+	if IsOpen(2015, 4, 20, time.Local) != true {
+		t.Error("Should be `true`")
+	}
+	if IsOpen(2015, 5, 1, time.Local) != false {
+		t.Error("Should be `false`")
+	}
 }
 
 func BenchmarkIsOpen(t *testing.B) {
