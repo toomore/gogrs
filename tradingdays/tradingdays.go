@@ -23,7 +23,7 @@ func IsOpen(year int, month time.Month, day int, loc *time.Location) bool {
 }
 
 var exceptDays map[int64]bool
-var timeLayout = "2006/1/02"
+var timeLayout = "2006/1/2"
 
 func readCSV() {
 	data, _ := ioutil.ReadFile("./list.csv")
