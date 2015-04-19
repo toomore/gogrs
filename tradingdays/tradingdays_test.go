@@ -7,6 +7,14 @@ import (
 	"github.com/toomore/gogrs/utils"
 )
 
+func ExampleIsOpen() {
+	fmt.Println(IsOpen(2015, 4, 17, utils.TaipeiTimeZone))
+	fmt.Println(IsOpen(2015, 5, 1, utils.TaipeiTimeZone))
+	// output:
+	// true
+	// false
+}
+
 func TestIsOpen(t *testing.T) {
 	fmt.Println(exceptDays)
 	if IsOpen(2015, 4, 17, utils.TaipeiTimeZone) != true {
