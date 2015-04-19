@@ -28,3 +28,9 @@ func BenchmarkIsOpen(t *testing.B) {
 		IsOpen(2015, 4, 19, utils.TaipeiTimeZone)
 	}
 }
+
+func BenchmarkDownloadCSV(t *testing.B) {
+	for i := 0; i < t.N; i++ {
+		DownloadCSV(true)
+	}
+}

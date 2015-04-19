@@ -11,7 +11,7 @@ import (
 	"github.com/toomore/gogrs/utils"
 )
 
-// IsOpen 判斷是否為開、休日
+// IsOpen 判斷是否為開休日
 func IsOpen(year int, month time.Month, day int, loc *time.Location) bool {
 	d := time.Date(year, month, day, 0, 0, 0, 0, loc)
 	if openornot, ok := exceptDays[d.Unix()]; ok {
@@ -31,7 +31,8 @@ func readCSV() {
 	processCSV(bytes.NewReader(data))
 }
 
-func downloadCSV(replace bool) {
+// DownloadCSV 更新開休市表
+func DownloadCSV(replace bool) {
 	resp, _ := http.Get("https://s3-ap-northeast-1.amazonaws.com/toomore/gogrs/list.csv")
 	defer resp.Body.Close()
 	if data, err := ioutil.ReadAll(resp.Body); err == nil {
@@ -50,20 +51,17 @@ func processCSV(data io.Reader) {
 		if err == io.EOF {
 			break
 		}
-		//fmt.Println(record[1])
-		t, err := time.ParseInLocation(timeLayout, record[0], utils.TaipeiTimeZone)
-		var isopen bool
-		if record[1] == "1" {
-			isopen = true
+		if t, err := time.ParseInLocation(timeLayout, record[0], utils.TaipeiTimeZone); err == nil {
+			var isopen bool
+			if record[1] == "1" {
+				isopen = true
+			}
+			exceptDays[t.Unix()] = isopen
 		}
-		exceptDays[t.Unix()] = isopen
-		//fmt.Println(t, err, t.Unix(), isopen)
-		//fmt.Println(exceptDays)
 	}
 }
 
 func init() {
 	exceptDays = make(map[int64]bool)
 	readCSV()
-	downloadCSV(true)
 }
