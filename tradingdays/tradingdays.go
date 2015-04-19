@@ -5,12 +5,13 @@ import (
 	"encoding/csv"
 	"io"
 	"io/ioutil"
+	"net/http"
 	"time"
 
 	"github.com/toomore/gogrs/utils"
 )
 
-// IsOpen is check open or not.
+// IsOpen 判斷是否為開、休日
 func IsOpen(year int, month time.Month, day int, loc *time.Location) bool {
 	d := time.Date(year, month, day, 0, 0, 0, 0, loc)
 	if openornot, ok := exceptDays[d.Unix()]; ok {
@@ -27,7 +28,22 @@ var timeLayout = "2006/1/2"
 
 func readCSV() {
 	data, _ := ioutil.ReadFile("./list.csv")
-	csvdata := csv.NewReader(bytes.NewReader(data))
+	processCSV(bytes.NewReader(data))
+}
+
+func downloadCSV(replace bool) {
+	resp, _ := http.Get("https://s3-ap-northeast-1.amazonaws.com/toomore/gogrs/list.csv")
+	defer resp.Body.Close()
+	if data, err := ioutil.ReadAll(resp.Body); err == nil {
+		if replace {
+			exceptDays = make(map[int64]bool)
+		}
+		processCSV(bytes.NewReader(data))
+	}
+}
+
+func processCSV(data io.Reader) {
+	csvdata := csv.NewReader(data)
 
 	for {
 		record, err := csvdata.Read()
@@ -49,4 +65,5 @@ func readCSV() {
 func init() {
 	exceptDays = make(map[int64]bool)
 	readCSV()
+	downloadCSV(true)
 }
