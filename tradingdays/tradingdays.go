@@ -1,3 +1,6 @@
+// Package tradingdays - Check the day is open or not
+// 股市開休市判斷（支援非國定假日：颱風假）
+//
 package tradingdays
 
 import (
@@ -32,6 +35,9 @@ func readCSV() {
 }
 
 // DownloadCSV 更新開休市表
+//
+// 從 https://s3-ap-northeast-1.amazonaws.com/toomore/gogrs/list.csv
+// 下載表更新，主要發生在非國定假日，如：颱風假。
 func DownloadCSV(replace bool) {
 	resp, _ := http.Get("https://s3-ap-northeast-1.amazonaws.com/toomore/gogrs/list.csv")
 	defer resp.Body.Close()

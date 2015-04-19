@@ -12,6 +12,10 @@ Package twse
 
 擷取台灣股市上市、上櫃股票資訊
 
+Package tradingdays
+
+股市開休市判斷（支援非國定假日：颱風假）
+
 Package utils
 
 套件所需的公用工具
