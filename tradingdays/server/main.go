@@ -10,10 +10,12 @@ import (
 	"github.com/toomore/gogrs/tradingdays"
 )
 
+// Log is show viwer log.
 func Log(req *http.Request) {
 	log.Println(req.URL, req.UserAgent(), req.Form)
 }
 
+// Home is home page.
 func Home(w http.ResponseWriter, req *http.Request) {
 	w.Write([]byte("Hello World"))
 	Log(req)
@@ -28,19 +30,20 @@ type errorJSON struct {
 	Error string `json:"error"`
 }
 
+// TradeOpen is "./open" page.
 func TradeOpen(w http.ResponseWriter, req *http.Request) {
-	var json_str []byte
+	var jsonStr []byte
 	data, err := strconv.ParseInt(req.FormValue("q"), 10, 64)
 	if err != nil {
-		json_str, _ = json.Marshal(&errorJSON{Error: "Wrong date format"})
+		jsonStr, _ = json.Marshal(&errorJSON{Error: "Wrong date format"})
 	} else {
 		date := time.Unix(data, 0)
-		json_str, _ = json.Marshal(&tradeJSON{
+		jsonStr, _ = json.Marshal(&tradeJSON{
 			Date: date.UTC(),
 			Open: tradingdays.IsOpen(date.Year(), date.Month(), date.Day(), date.Location())})
 	}
 	w.Header().Set("Content-Type", "application/json")
-	w.Write(json_str)
+	w.Write(jsonStr)
 	Log(req)
 }
 
