@@ -9,6 +9,8 @@ import (
 	"io"
 	"io/ioutil"
 	"net/http"
+	"path"
+	"runtime"
 	"time"
 
 	"github.com/toomore/gogrs/utils"
@@ -30,7 +32,8 @@ var exceptDays map[int64]bool
 var timeLayout = "2006/1/2"
 
 func readCSV() {
-	data, _ := ioutil.ReadFile("./list.csv")
+	_, filename, _, _ := runtime.Caller(1)
+	data, _ := ioutil.ReadFile(path.Join(path.Dir(filename), "list.csv"))
 	processCSV(bytes.NewReader(data))
 }
 

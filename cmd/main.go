@@ -32,5 +32,6 @@ func main() {
 	fmt.Println("-----------------------------")
 	stock.PlusData()
 	ShowAll(stock)
-	fmt.Println(tradingdays.IsOpen(2015, 4, 25, utils.TaipeiTimeZone))
+	fmt.Println("-----------------------------")
+	fmt.Println(tradingdays.IsOpen(2015, 5, 1, utils.TaipeiTimeZone))
 }
