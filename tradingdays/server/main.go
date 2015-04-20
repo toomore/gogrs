@@ -24,18 +24,23 @@ type tradeJSON struct {
 	Open bool      `json:"open"`
 }
 
+type errorJSON struct {
+	Error string `json:"error"`
+}
+
 func TradeOpen(w http.ResponseWriter, req *http.Request) {
+	var json_str []byte
 	data, err := strconv.ParseInt(req.FormValue("q"), 10, 64)
 	if err != nil {
-		w.Write([]byte("Wrong data format."))
+		json_str, _ = json.Marshal(&errorJSON{Error: "Wrong date format"})
 	} else {
 		date := time.Unix(data, 0)
-		json_str, _ := json.Marshal(&tradeJSON{
+		json_str, _ = json.Marshal(&tradeJSON{
 			Date: date.UTC(),
 			Open: tradingdays.IsOpen(date.Year(), date.Month(), date.Day(), date.Location())})
-		w.Header().Set("Content-Type", "application/json")
-		w.Write(json_str)
 	}
+	w.Header().Set("Content-Type", "application/json")
+	w.Write(json_str)
 	Log(req)
 }
 
