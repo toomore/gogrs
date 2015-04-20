@@ -3,6 +3,8 @@ package main
 import (
 	"log"
 	"net/http"
+	"strconv"
+	"time"
 )
 
 func Log(req *http.Request) {
@@ -15,8 +17,13 @@ func Home(w http.ResponseWriter, req *http.Request) {
 }
 
 func TradeOpen(w http.ResponseWriter, req *http.Request) {
-	log.Println(req.FormValue("q"))
-	w.Write([]byte(req.FormValue("q")))
+	data, err := strconv.ParseInt(req.FormValue("q"), 10, 64)
+	if err != nil {
+		w.Write([]byte("Wrong data format."))
+	} else {
+		date := time.Unix(data, 0)
+		w.Write([]byte(date.String()))
+	}
 	Log(req)
 }
 
