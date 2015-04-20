@@ -1,10 +1,13 @@
 package main
 
 import (
+	"encoding/json"
 	"log"
 	"net/http"
 	"strconv"
 	"time"
+
+	"github.com/toomore/gogrs/tradingdays"
 )
 
 func Log(req *http.Request) {
@@ -16,15 +19,28 @@ func Home(w http.ResponseWriter, req *http.Request) {
 	Log(req)
 }
 
+type tradeJSON struct {
+	Date time.Time `json:"date"`
+	Open bool      `json:"open"`
+}
+
 func TradeOpen(w http.ResponseWriter, req *http.Request) {
 	data, err := strconv.ParseInt(req.FormValue("q"), 10, 64)
 	if err != nil {
 		w.Write([]byte("Wrong data format."))
 	} else {
 		date := time.Unix(data, 0)
-		w.Write([]byte(date.String()))
+		json_str, _ := json.Marshal(&tradeJSON{
+			Date: date.UTC(),
+			Open: tradingdays.IsOpen(date.Year(), date.Month(), date.Day(), date.Location())})
+		w.Header().Set("Content-Type", "application/json")
+		w.Write(json_str)
 	}
 	Log(req)
+}
+
+func init() {
+	tradingdays.DownloadCSV(true)
 }
 
 func main() {
