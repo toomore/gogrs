@@ -3,6 +3,7 @@ package main
 import (
 	"encoding/json"
 	"flag"
+	"fmt"
 	"log"
 	"net/http"
 	"strconv"
@@ -18,7 +19,11 @@ func Log(req *http.Request) {
 
 // Home is home page.
 func Home(w http.ResponseWriter, req *http.Request) {
-	w.Write([]byte("Hello World"))
+	w.Header().Set("Content-Type", "text/html; charset=utf-8")
+	w.Write([]byte("查詢台灣股市是否開市<br>"))
+	w.Write([]byte(fmt.Sprintf("<a href=\"/open?q=%d\">範例</a><br>", time.Now().Unix())))
+	w.Write([]byte("[<a href=\"https://godoc.org/github.com/toomore/gogrs/tradingdays\">Docs</a>] [<a href=\"https://github.com/toomore/gogrs/blob/master/tradingdays/tradingdays_server/main.go\">github</a>]<br>"))
+
 	Log(req)
 }
 
