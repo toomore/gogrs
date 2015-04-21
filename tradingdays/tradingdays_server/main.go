@@ -35,6 +35,13 @@ type errorJSON struct {
 func TradeOpen(w http.ResponseWriter, req *http.Request) {
 	var jsonStr []byte
 	data, err := strconv.ParseInt(req.FormValue("q"), 10, 64)
+
+	if csvcachetime.InCache(defaultcachetime) != true {
+		tradingdays.DownloadCSV(true)
+		csvcachetime.Set()
+		log.Println("DownloadCSV.")
+	}
+
 	if err != nil {
 		jsonStr, _ = json.Marshal(&errorJSON{Error: "Wrong date format"})
 	} else {
@@ -48,15 +55,38 @@ func TradeOpen(w http.ResponseWriter, req *http.Request) {
 	Log(req)
 }
 
+type cachetime struct {
+	timestamp int64
+}
+
+func (c *cachetime) Set() {
+	c.timestamp = time.Now().Unix()
+}
+
+func (c *cachetime) InCache(seconds int64) bool {
+	result := (time.Now().Unix() - c.timestamp) <= seconds
+	if result != true {
+		c.timestamp = 0
+	}
+	return result
+}
+
+var csvcachetime cachetime
+
 var httpport string
+var defaultcachetime int64
 
 func init() {
 	tradingdays.DownloadCSV(true)
+	log.Println("Init DownloadCSV.")
+	csvcachetime.Set()
 	flag.StringVar(&httpport, "http", ":59123", "HTTP service address (e.g., ':59123')")
+	flag.Int64Var(&defaultcachetime, "csvcachetime", 21600, "CSV cache time.")
 }
 
 func main() {
 	flag.Parse()
+	log.Println("http:", httpport, "csvcachetime:", defaultcachetime)
 	http.HandleFunc("/", Home)
 	http.HandleFunc("/open", TradeOpen)
 	log.Fatal(http.ListenAndServe(httpport, nil))
