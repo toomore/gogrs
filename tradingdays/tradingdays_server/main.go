@@ -14,7 +14,7 @@ import (
 
 // Log is show viwer log.
 func Log(req *http.Request) {
-	log.Println(req.URL, req.UserAgent(), req.Form)
+	log.Println(req.URL, req.RemoteAddr, req.UserAgent(), req.Form, req.Referer())
 }
 
 // Home is home page.
