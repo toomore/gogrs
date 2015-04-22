@@ -14,7 +14,11 @@ import (
 
 // Log is show viwer log.
 func Log(req *http.Request) {
-	log.Println(req.URL, req.RemoteAddr, req.UserAgent(), req.Form, req.Referer())
+	var userIP string
+	if userIP = req.Header.Get("X-FORWARDED-FOR"); userIP == "" {
+		userIP = req.RemoteAddr
+	}
+	log.Println(req.URL, userIP, req.UserAgent(), req.Form, req.Referer())
 }
 
 // Home is home page.
