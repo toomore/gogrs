@@ -39,17 +39,16 @@ type errorJSON struct {
 // TradeOpen is "./open" page.
 func TradeOpen(w http.ResponseWriter, req *http.Request) {
 	var jsonStr []byte
-	data, err := strconv.ParseInt(req.FormValue("q"), 10, 64)
 
-	if csvcachetime.InCache(defaultcachetime) != true {
-		tradingdays.DownloadCSV(true)
-		csvcachetime.Set()
-		log.Println("DownloadCSV.")
-	}
-
-	if err != nil {
+	if data, err := strconv.ParseInt(req.FormValue("q"), 10, 64); err != nil {
 		jsonStr, _ = json.Marshal(&errorJSON{Error: "Wrong date format"})
 	} else {
+		if csvcachetime.InCache(defaultcachetime) != true {
+			tradingdays.DownloadCSV(true)
+			csvcachetime.Set()
+			log.Println("DownloadCSV.")
+		}
+
 		date := time.Unix(data, 0)
 		jsonStr, _ = json.Marshal(&tradeJSON{
 			Date: date.UTC(),
