@@ -194,7 +194,7 @@ func (d Data) MA(days int) []float64 {
 	return result
 }
 
-// MABR 計算 收盤價移動平均 的 乖離
+// MABR 計算 收盤價移動平均 的乖離
 func (d Data) MABR(days1, days2 int) []float64 {
 	MA1 := d.MA(days1)
 	MA2 := d.MA(days2)
@@ -212,6 +212,17 @@ func (d Data) MAV(days int) []uint64 {
 	result = make([]uint64, len(volumeList)-days+1)
 	for i := range volumeList[days-1:] {
 		result[i] = utils.AvgUint64(volumeList[i : i+days])
+	}
+	return result
+}
+
+// MAVBR 計算 成交股數移動平均 的乖離
+func (d Data) MAVBR(days1, days2 int) []int64 {
+	MAV1 := d.MAV(days1)
+	MAV2 := d.MAV(days2)
+	result := make([]int64, len(MAV2))
+	for i := 1; i <= len(MAV2); i++ {
+		result[len(MAV2)-i] = int64(MAV1[len(MAV1)-i]) - int64(MAV2[len(MAV2)-i])
 	}
 	return result
 }
