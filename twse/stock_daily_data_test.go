@@ -2,6 +2,7 @@ package twse
 
 import (
 	"fmt"
+	"log"
 	"reflect"
 	"testing"
 	"time"
@@ -61,6 +62,40 @@ func TestGetList(*testing.T) {
 		fmt.Println(stock.GetRangeList())
 		fmt.Println(stock.GetOpenList())
 		fmt.Println(stock.IsRed())
+	}
+}
+
+func TestMABR(*testing.T) {
+	twse.Get()
+	log.Println(twse.MABR(3, 6))
+	log.Println(twse.MAVBR(3, 6))
+}
+
+func BenchmarkMA(b *testing.B) {
+	twse.Get()
+	for i := 0; i <= b.N; i++ {
+		twse.MA(3)
+	}
+}
+
+func BenchmarkMABR(b *testing.B) {
+	twse.Get()
+	for i := 0; i <= b.N; i++ {
+		twse.MABR(3, 6)
+	}
+}
+
+func BenchmarkMAV(b *testing.B) {
+	twse.Get()
+	for i := 0; i <= b.N; i++ {
+		twse.MAV(3)
+	}
+}
+
+func BenchmarkMAVBR(b *testing.B) {
+	twse.Get()
+	for i := 0; i <= b.N; i++ {
+		twse.MAVBR(3, 6)
 	}
 }
 
