@@ -4,6 +4,7 @@
 主要支援動態更新 CSV 檔案讀取，解決非預定開休市狀況（如：颱風假）
 
 Install:
+
 	go install -v github.com/toomore/gogrs/tradingdays/tradingdays_server
 
 Usage:
@@ -11,12 +12,14 @@ Usage:
 	tradingdays_server [flags]
 
 The flags are:
+
 	-http
-			HTTP service address (default ':59123')
+		HTTP service address (default ':59123')
 	-csvcachetime
-			CSV cache time.(default: 21600)
+		CSV cache time.(default: 21600)
 
 URL Path:
+
 	/open?q={timestamp}
 
 回傳 JSON 格式
@@ -27,6 +30,7 @@ URL Path:
 	}
 
 範例：
+
 	http://gogrs-trd.toomore.net/open?q=1429888492
 
 */
