@@ -1,5 +1,0 @@
-{
-	"ImportPath": "github.com/toomore/gogrs/tradingdays/tradingdays_server",
-	"GoVersion": "go1.4.2",
-	"Deps": []
-}
