@@ -123,3 +123,11 @@ func thanPast(data []float64, max bool) bool {
 	}
 	return true
 }
+
+func thanSumPast(data []float64, max bool) bool {
+	var result = data[len(data)-1] > SumFloat64(data[:len(data)-2])
+	if max {
+		return result
+	}
+	return !result
+}
