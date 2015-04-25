@@ -70,3 +70,28 @@ func BenchmarkThanPastUint64(t *testing.B) {
 		ThanPastUint64(sample, 3, true)
 	}
 }
+
+func BenchmarkThanSumPastUint64(b *testing.B) {
+	var sample = []uint64{10, 11, 12, 53}
+	for i := 0; i < b.N; i++ {
+		ThanSumPastUint64(sample, 3, true)
+	}
+}
+
+func BenchmarkThanSumPast(b *testing.B) {
+	var sample = []float64{10.1, 11.1, 12.1, 53.1}
+	for i := 0; i < b.N; i++ {
+		thanSumPast(sample, true)
+	}
+}
+
+func TestThanSumPast(t *testing.T) {
+	var sample1 = []float64{10.1, 11.1, 12.1, 53.1}
+	var sample2 = []float64{10.1, 11.1, 12.1, 10.1}
+	if !ThanSumPastFloat64(sample1, 3, true) {
+		t.Error("Should be `true`")
+	}
+	if !ThanSumPastFloat64(sample2, 3, false) {
+		t.Error("Should be `true`")
+	}
+}
