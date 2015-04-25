@@ -129,6 +129,15 @@ func ThanSumPastFloat64(data []float64, days int, max bool) bool {
 	return thanSumPast(data[len(data)-1-days:], max)
 }
 
+// ThanSumPastUint64 計算最後一個數值是否為過去幾天的總和大或小（uint64）
+func ThanSumPastUint64(data []uint64, days int, max bool) bool {
+	var dataFloat64 = make([]float64, days+1)
+	for i, v := range data[len(data)-1-days:] {
+		dataFloat64[i] = float64(v)
+	}
+	return thanSumPast(dataFloat64, max)
+}
+
 func thanSumPast(data []float64, max bool) bool {
 	var result = data[len(data)-1] > SumFloat64(data[:len(data)-1])
 	if max {
