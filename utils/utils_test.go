@@ -88,6 +88,12 @@ func BenchmarkThanSumPast(b *testing.B) {
 	}
 }
 
+func TestRanInt(t *testing.T) {
+	if RandInt() == RandInt() {
+		t.Error("Should not be the same.")
+	}
+}
+
 func TestParseDate(t *testing.T) {
 	var sample1 = "104/2/28"
 	if ParseDate(sample1) != time.Date(2015, 2, 28, 0, 0, 0, 0, TaipeiTimeZone) {
