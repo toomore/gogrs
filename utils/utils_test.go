@@ -85,6 +85,17 @@ func BenchmarkThanSumPast(b *testing.B) {
 	}
 }
 
+func TestAvg(t *testing.T) {
+	var sample1 = []float64{3.3, 6.6, 9.9}
+	if AvgFloat64(sample1) != 6.59 {
+		t.Error("Should be 6.59")
+	}
+	var sample2 = []uint64{3, 6, 9}
+	if AvgUint64(sample2) != 6 {
+		t.Error("Should be 6")
+	}
+}
+
 func TestSum(t *testing.T) {
 	var sample1 = []float64{1.1, 2.2, 3.3}
 	if SumFloat64(sample1) != 6.6 {
