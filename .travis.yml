@@ -18,3 +18,4 @@ before_install:
 script:
     - sh ./goclean.sh
     - $HOME/gopath/bin/goveralls -coverprofile=profile.cov -service=travis-ci
+    - go test -bench=. -benchmem ./...
