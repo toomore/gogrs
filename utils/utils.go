@@ -145,3 +145,21 @@ func thanSumPast(data []float64, max bool) bool {
 	}
 	return !result
 }
+
+func countCountineFloat64(data []float64) (int, bool) {
+	var condition func(x float64) bool
+	if data[len(data)-1] > 0 {
+		condition = func(x float64) bool { return x > 0 }
+	} else {
+		condition = func(x float64) bool { return x < 0 }
+	}
+	counter := 1
+	for i := 1; i <= len(data)-1; i++ {
+		if condition(data[len(data)-1-i]) {
+			counter++
+		} else {
+			break
+		}
+	}
+	return counter, data[len(data)-1] > 0
+}
