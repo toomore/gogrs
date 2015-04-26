@@ -189,7 +189,7 @@ func (d Data) MA(days int) []float64 {
 	var priceList = d.GetPriceList()
 	result = make([]float64, len(priceList)-days+1)
 	for i := range priceList[days-1:] {
-		result[i] = utils.AvgFlast64(priceList[i : i+days])
+		result[i] = utils.AvgFloat64(priceList[i : i+days])
 	}
 	return result
 }

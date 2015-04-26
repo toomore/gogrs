@@ -60,8 +60,8 @@ func SumFloat64(data []float64) float64 {
 	return result
 }
 
-// AvgFlast64 計算平均（float64）
-func AvgFlast64(data []float64) float64 {
+// AvgFloat64 計算平均（float64）
+func AvgFloat64(data []float64) float64 {
 	return float64(int(SumFloat64(data)*100)/len(data)) / 100
 }
 
