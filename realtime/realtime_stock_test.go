@@ -17,14 +17,7 @@ func TestStockRealTime(*testing.T) {
 	}
 
 	r.URL()
-	v, err := r.Get()
-	fmt.Println("ERR", err)
-	fmt.Println(v.BestAskPrice)
-	fmt.Println(v.BestBidPrice)
-	fmt.Println(v.BestAskVolume)
-	fmt.Println(v.BestBidVolume)
-	fmt.Println(v)
-	fmt.Println("UnixMapData", r.UnixMapData)
+	r.Get()
 }
 
 func TestStockRealTime_noData(t *testing.T) {
@@ -62,13 +55,7 @@ func TestStockRealTimeOTC(*testing.T) {
 	}
 
 	r.URL()
-	v, _ := r.Get()
-	fmt.Println(v.BestAskPrice)
-	fmt.Println(v.BestBidPrice)
-	fmt.Println(v.BestAskVolume)
-	fmt.Println(v.BestBidVolume)
-	fmt.Println(v)
-	fmt.Println("UnixMapData", r.UnixMapData)
+	r.Get()
 }
 
 func TestStockRealTimeIndexs(*testing.T) {
@@ -77,9 +64,9 @@ func TestStockRealTimeIndexs(*testing.T) {
 	weight := NewWeight(date)
 	otc := NewOTC(date)
 	farmsa := NewFRMSA(date)
-	fmt.Println(weight.Get())
-	fmt.Println(otc.Get())
-	fmt.Println(farmsa.Get())
+	weight.Get()
+	otc.Get()
+	farmsa.Get()
 }
 
 func BenchmarkGet(b *testing.B) {
