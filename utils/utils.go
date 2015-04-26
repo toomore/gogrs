@@ -146,6 +146,10 @@ func thanSumPast(data []float64, max bool) bool {
 	return !result
 }
 
+func CountCountineFloat64(data []float64) (int, bool) {
+	return countCountineFloat64(data)
+}
+
 func countCountineFloat64(data []float64) (int, bool) {
 	var condition func(x float64) bool
 	if data[len(data)-1] > 0 {
