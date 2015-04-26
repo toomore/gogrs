@@ -171,3 +171,25 @@ func TestThanSumPast(t *testing.T) {
 		t.Error("Should be `true`")
 	}
 }
+
+func BenchmarkCountCountine(b *testing.B) {
+	var sample1 = []float64{10.1, 11.1, 12.1, 53.1}
+	for i := 0; i < b.N; i++ {
+		CountCountineFloat64(sample1)
+	}
+}
+
+func TestCountCountine(t *testing.T) {
+	var sample1 = []float64{10.1, 11.1, 12.1, 53.1}  // 4 true
+	var sample2 = []float64{10.1, 11.1, -12.1, 53.1} // 1 true
+	var sample3 = []float64{10.1, 11.1, 12.1, -53.1} // 1 false
+	if times, max := CountCountineFloat64(sample1); times != 4 && max != true {
+		t.Error("Should be `4 true`")
+	}
+	if times, max := CountCountineFloat64(sample2); times != 1 && max != true {
+		t.Error("Should be `1 true`")
+	}
+	if times, max := CountCountineFloat64(sample3); times != 1 && max != false {
+		t.Error("Should be `1 false`")
+	}
+}
