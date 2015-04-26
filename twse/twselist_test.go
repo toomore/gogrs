@@ -12,10 +12,10 @@ func TestLists_Get_Rawdata(*testing.T) {
 	l := &Lists{
 		Date: time.Date(2014, 12, 23, 0, 0, 0, 0, utils.TaipeiTimeZone),
 	}
-	listdata, err := l.Get("MS")
-	fmt.Println(l.categoryRawData, "\n\n", listdata, err)
-	fmt.Println(l.FmtData)
-	fmt.Println(l.Get("ms"))
+	//listdata, err := l.Get("MS")
+	//fmt.Println(l.categoryRawData, "\n\n", listdata, err)
+	//l.FmtData
+	l.Get("ms")
 }
 
 func ExampleLists_Get_fmtData() {

@@ -2,7 +2,6 @@ package twse
 
 import (
 	"fmt"
-	"log"
 	"reflect"
 	"testing"
 	"time"
@@ -34,11 +33,9 @@ func ExampleData() {
 
 func TestData_Get(*testing.T) {
 	var d = NewTWSE("2618", time.Date(2014, 12, 26, 0, 0, 0, 0, utils.TaipeiTimeZone))
-	fmt.Println(d)
 
-	stockData, _ := d.Get()
+	d.Get()
 	d.Get() // Test Cache.
-	fmt.Println(stockData)
 }
 
 var twse = NewTWSE("2329", time.Date(2015, 03, 20, 0, 0, 0, 0, utils.TaipeiTimeZone))
@@ -46,29 +43,27 @@ var otc = NewOTC("8446", time.Date(2015, 03, 20, 0, 0, 0, 0, utils.TaipeiTimeZon
 
 func TestGetList(*testing.T) {
 	for _, stock := range []*Data{twse, otc} {
-
-		fmt.Println(stock)
-		fmt.Println(stock.URL())
+		stock.URL()
 		stock.Get()
-		fmt.Println(stock.RawData)
-		fmt.Println(stock.MA(6))
-		fmt.Println(stock.MAV(6))
-		fmt.Println(stock.GetPriceList())
-		fmt.Println(utils.ThanPastFloat64(stock.GetPriceList(), 3, true))
-		fmt.Println(utils.ThanPastFloat64(stock.GetPriceList(), 3, false))
-		fmt.Println(stock.GetVolumeList())
-		fmt.Println(utils.ThanPastUint64(stock.GetVolumeList(), 3, true))
-		fmt.Println(utils.ThanPastUint64(stock.GetVolumeList(), 3, false))
-		fmt.Println(stock.GetRangeList())
-		fmt.Println(stock.GetOpenList())
-		fmt.Println(stock.IsRed())
+		//fmt.Println(stock.RawData)
+		stock.MA(6)
+		stock.MAV(6)
+		stock.GetPriceList()
+		utils.ThanPastFloat64(stock.GetPriceList(), 3, true)
+		utils.ThanPastFloat64(stock.GetPriceList(), 3, false)
+		stock.GetVolumeList()
+		utils.ThanPastUint64(stock.GetVolumeList(), 3, true)
+		utils.ThanPastUint64(stock.GetVolumeList(), 3, false)
+		stock.GetRangeList()
+		stock.GetOpenList()
+		stock.IsRed()
 	}
 }
 
 func TestMABR(*testing.T) {
 	twse.Get()
-	log.Println(twse.MABR(3, 6))
-	log.Println(twse.MAVBR(3, 6))
+	twse.MABR(3, 6)
+	twse.MAVBR(3, 6)
 }
 
 func BenchmarkMA(b *testing.B) {
@@ -213,11 +208,11 @@ func TestData_PlusData(t *testing.T) {
 
 func TestData_GetByTimeMap(*testing.T) {
 	var d = NewTWSE("2618", time.Date(2014, 12, 26, 0, 0, 0, 0, utils.TaipeiTimeZone))
-	fmt.Println(d.GetByTimeMap())
+	d.GetByTimeMap()
 }
 
 func TestData_FormatData(*testing.T) {
 	var d = NewTWSE("2618", time.Date(2014, 12, 26, 0, 0, 0, 0, utils.TaipeiTimeZone))
 	d.Get()
-	fmt.Println(d.FormatData())
+	d.FormatData()
 }
