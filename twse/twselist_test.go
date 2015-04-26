@@ -15,6 +15,7 @@ func TestLists_Get_Rawdata(*testing.T) {
 	//listdata, err := l.Get("MS")
 	//fmt.Println(l.categoryRawData, "\n\n", listdata, err)
 	//l.FmtData
+	l.Get("MS")
 	l.Get("ms")
 }
 

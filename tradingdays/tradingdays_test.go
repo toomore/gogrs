@@ -16,7 +16,6 @@ func ExampleIsOpen() {
 }
 
 func TestIsOpen(t *testing.T) {
-	fmt.Println(exceptDays)
 	DownloadCSV(true)
 	if IsOpen(2015, 4, 17, utils.TaipeiTimeZone) != true {
 		t.Error("Should be `true`")
