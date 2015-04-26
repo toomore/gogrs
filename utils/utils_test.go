@@ -1,6 +1,9 @@
 package utils
 
-import "testing"
+import (
+	"testing"
+	"time"
+)
 
 func BenchmarkParseDate(t *testing.B) {
 	var strdate = "104/04/01"
@@ -82,6 +85,21 @@ func BenchmarkThanSumPast(b *testing.B) {
 	var sample = []float64{10.1, 11.1, 12.1, 53.1}
 	for i := 0; i < b.N; i++ {
 		thanSumPast(sample, true)
+	}
+}
+
+func TestParseDate(t *testing.T) {
+	var sample1 = "104/2/28"
+	if ParseDate(sample1) != time.Date(2015, 2, 28, 0, 0, 0, 0, TaipeiTimeZone) {
+		t.Error("Should be 2015/2/28")
+	}
+	var sample2 = "104/2/29"
+	if ParseDate(sample2) != time.Date(2015, 3, 1, 0, 0, 0, 0, TaipeiTimeZone) {
+		t.Error("Should be 2015/3/1")
+	}
+	var sample3 = "104/4/31"
+	if ParseDate(sample3) != time.Date(2015, 5, 1, 0, 0, 0, 0, TaipeiTimeZone) {
+		t.Error("Should be 2015/5/1")
 	}
 }
 
