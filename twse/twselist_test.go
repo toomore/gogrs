@@ -19,6 +19,19 @@ func TestLists_Get_Rawdata(*testing.T) {
 	l.Get("ms")
 }
 
+func TestLists_Get_categoryNoList(t *testing.T) {
+	l := &Lists{
+		Date: time.Date(2015, 4, 27, 0, 0, 0, 0, utils.TaipeiTimeZone),
+	}
+	l.Get("15") //航運業
+	l.Get("01") //水泥業
+	t.Log(l.FmtData["2618"])
+	t.Log(l.FmtData)
+	t.Log(l.categoryRawData)
+	t.Log(l.categoryNoList)
+	t.Log(l.GetCategoryList())
+}
+
 func ExampleLists_Get_fmtData() {
 	l := &Lists{
 		Date: time.Date(2015, 4, 9, 0, 0, 0, 0, utils.TaipeiTimeZone),
