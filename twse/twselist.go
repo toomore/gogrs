@@ -67,7 +67,8 @@ var TWSECLASS = map[string]string{
 	"CB":         "可轉換公司債",
 }
 
-type stockInfo struct {
+// StockInfo is simple stock info for no, name.
+type StockInfo struct {
 	No   string
 	Name string
 }
@@ -77,7 +78,7 @@ type Lists struct {
 	Date            time.Time
 	FmtData         map[string]FmtListData
 	categoryRawData map[string][][]string
-	categoryNoList  map[string][]stockInfo
+	categoryNoList  map[string][]StockInfo
 }
 
 // Get is to get csv data.
@@ -123,6 +124,11 @@ func (l *Lists) Get(category string) ([][]string, error) {
 	return nil, errors.New("Not enough data.")
 }
 
+// GetCategoryList 取得分類的股票代碼與名稱列表
+func (l Lists) GetCategoryList() map[string][]StockInfo {
+	return l.categoryNoList
+}
+
 // FmtListData 格式化個股的資料資訊
 type FmtListData struct {
 	No             string
@@ -148,11 +154,11 @@ func (l *Lists) formatData(categoryNo string) {
 	}
 
 	if l.categoryNoList == nil {
-		l.categoryNoList = make(map[string][]stockInfo)
+		l.categoryNoList = make(map[string][]StockInfo)
 	}
 
 	if _, ok := l.categoryNoList[categoryNo]; !ok {
-		l.categoryNoList[categoryNo] = make([]stockInfo, len(l.categoryRawData[categoryNo]))
+		l.categoryNoList[categoryNo] = make([]StockInfo, len(l.categoryRawData[categoryNo]))
 	}
 
 	for i, v := range l.categoryRawData[categoryNo] {
@@ -174,6 +180,6 @@ func (l *Lists) formatData(categoryNo string) {
 		data.PERatio, _ = strconv.ParseFloat(v[15], 64)
 
 		l.FmtData[data.No] = data
-		l.categoryNoList[categoryNo][i] = stockInfo{No: data.No, Name: data.Name}
+		l.categoryNoList[categoryNo][i] = StockInfo{No: data.No, Name: data.Name}
 	}
 }
