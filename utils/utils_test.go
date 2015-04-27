@@ -89,7 +89,7 @@ func BenchmarkThanSumPast(b *testing.B) {
 }
 
 func TestRanInt(t *testing.T) {
-	if RandInt() == RandInt() {
+	if (RandInt() - RandInt() + RandInt() - RandInt()) == 0 {
 		t.Error("Should not be the same.")
 	}
 }
