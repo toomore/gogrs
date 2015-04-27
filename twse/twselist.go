@@ -72,6 +72,7 @@ type Lists struct {
 	Date            time.Time
 	FmtData         map[string]FmtListData
 	categoryRawData map[string][][]string
+	categoryNoList  map[string][]string
 }
 
 // Get is to get csv data.
@@ -140,7 +141,16 @@ func (l *Lists) formatData(categoryNo string) {
 	if l.FmtData == nil {
 		l.FmtData = make(map[string]FmtListData)
 	}
-	for _, v := range l.categoryRawData[categoryNo] {
+
+	if l.categoryNoList == nil {
+		l.categoryNoList = make(map[string][]string)
+	}
+
+	if _, ok := l.categoryNoList[categoryNo]; !ok {
+		l.categoryNoList[categoryNo] = make([]string, len(l.categoryRawData[categoryNo]))
+	}
+
+	for i, v := range l.categoryRawData[categoryNo] {
 		var data FmtListData
 		data.No = strings.Trim(v[0], " ")
 		data.Name = strings.Trim(v[1], " ")
@@ -159,5 +169,6 @@ func (l *Lists) formatData(categoryNo string) {
 		data.PERatio, _ = strconv.ParseFloat(v[15], 64)
 
 		l.FmtData[data.No] = data
+		l.categoryNoList[categoryNo][i] = data.No
 	}
 }
