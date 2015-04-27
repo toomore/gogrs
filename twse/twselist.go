@@ -75,14 +75,14 @@ type Lists struct {
 }
 
 // Get is to get csv data.
-func (l *Lists) Get(strNo string) ([][]string, error) {
-	if TWSECLASS[strNo] == "" {
+func (l *Lists) Get(category string) ([][]string, error) {
+	if TWSECLASS[category] == "" {
 		return nil, errors.New("Not support.")
 	}
 
 	year, month, day := l.Date.Date()
 	data, err := http.PostForm(fmt.Sprintf("%s%s", utils.TWSEHOST, utils.TWSELISTCSV),
-		url.Values{"download": {"csv"}, "selectType": {strNo},
+		url.Values{"download": {"csv"}, "selectType": {category},
 			"qdate": {fmt.Sprintf("%d/%02d/%02d", year-1911, month, day)}})
 	defer data.Body.Close()
 
@@ -94,7 +94,7 @@ func (l *Lists) Get(strNo string) ([][]string, error) {
 	dataContent, _ := iconv.ConvertString(string(dataContentBig5), "big5", "utf-8")
 	csvArrayContent := strings.Split(dataContent, "\n")
 
-	if strNo == "MS" {
+	if category == "MS" {
 		if len(csvArrayContent) > 6 {
 			csvReader := csv.NewReader(strings.NewReader(strings.Join(csvArrayContent[4:51], "\n")))
 			returnData, err := csvReader.ReadAll()
@@ -108,8 +108,8 @@ func (l *Lists) Get(strNo string) ([][]string, error) {
 				if l.categoryRawData == nil {
 					l.categoryRawData = make(map[string][][]string)
 				}
-				l.categoryRawData[strNo] = returnData
-				l.formatData(strNo)
+				l.categoryRawData[category] = returnData
+				l.formatData(category)
 			}
 			return returnData, err
 		}
