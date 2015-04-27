@@ -67,12 +67,17 @@ var TWSECLASS = map[string]string{
 	"CB":         "可轉換公司債",
 }
 
+type stockInfo struct {
+	No   string
+	Name string
+}
+
 // Lists is to get TWSE list.
 type Lists struct {
 	Date            time.Time
 	FmtData         map[string]FmtListData
 	categoryRawData map[string][][]string
-	categoryNoList  map[string][]string
+	categoryNoList  map[string][]stockInfo
 }
 
 // Get is to get csv data.
@@ -143,11 +148,11 @@ func (l *Lists) formatData(categoryNo string) {
 	}
 
 	if l.categoryNoList == nil {
-		l.categoryNoList = make(map[string][]string)
+		l.categoryNoList = make(map[string][]stockInfo)
 	}
 
 	if _, ok := l.categoryNoList[categoryNo]; !ok {
-		l.categoryNoList[categoryNo] = make([]string, len(l.categoryRawData[categoryNo]))
+		l.categoryNoList[categoryNo] = make([]stockInfo, len(l.categoryRawData[categoryNo]))
 	}
 
 	for i, v := range l.categoryRawData[categoryNo] {
@@ -169,6 +174,6 @@ func (l *Lists) formatData(categoryNo string) {
 		data.PERatio, _ = strconv.ParseFloat(v[15], 64)
 
 		l.FmtData[data.No] = data
-		l.categoryNoList[categoryNo][i] = data.No
+		l.categoryNoList[categoryNo][i] = stockInfo{No: data.No, Name: data.Name}
 	}
 }
