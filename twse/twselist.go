@@ -125,8 +125,11 @@ func (l *Lists) Get(category string) ([][]string, error) {
 }
 
 // GetCategoryList 取得分類的股票代碼與名稱列表
-func (l Lists) GetCategoryList() map[string][]StockInfo {
-	return l.categoryNoList
+func (l Lists) GetCategoryList(category string) []StockInfo {
+	if _, ok := l.categoryNoList[category]; !ok {
+		l.Get(category)
+	}
+	return l.categoryNoList[category]
 }
 
 // FmtListData 格式化個股的資料資訊
