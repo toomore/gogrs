@@ -29,7 +29,22 @@ func TestLists_Get_categoryNoList(t *testing.T) {
 	t.Log(l.FmtData)
 	t.Log(l.categoryRawData)
 	t.Log(l.categoryNoList)
-	t.Log(l.GetCategoryList())
+	t.Log(l.GetCategoryList("15"))
+}
+
+func ExampleLists_GetCategoryList() {
+	l := &Lists{
+		Date: time.Date(2015, 4, 27, 0, 0, 0, 0, utils.TaipeiTimeZone),
+	}
+	categoryList := l.GetCategoryList("15")
+	for _, v := range categoryList {
+		if v.No == "2618" {
+			fmt.Printf("%+v", v)
+			break
+		}
+	}
+	// output:
+	// {No:2618 Name:長榮航}
 }
 
 func ExampleLists_Get_fmtData() {
