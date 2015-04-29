@@ -91,7 +91,9 @@ func ExampleStockRealTime_Get_twse() {
 	}
 
 	data, _ := r.Get()
-	fmt.Printf("%v", data)
+	fmt.Printf("%+v", data.Info)
+	// output:
+	// {Exchange:tse FullName:長榮航空股份有限公司 Name:長榮航 No:2618 Ticker:2618.tw}
 }
 
 // 擷取 華研(8446) 上櫃即時盤股價資訊
@@ -103,31 +105,31 @@ func ExampleStockRealTime_Get_otc() {
 	}
 
 	data, _ := r.Get()
-	fmt.Printf("%v", data.Info)
+	fmt.Printf("%+v", data.Info)
 	// output:
-	// {otc 華研國際音樂股份有限公司  華研 8446.tw}
+	// {Exchange:otc FullName:華研國際音樂股份有限公司 Name:華研 No:8446 Ticker:8446.tw}
 }
 
 func ExampleStockRealTime_NewWeight() {
 	weight := NewWeight(time.Date(2015, 4, 1, 0, 0, 0, 0, utils.TaipeiTimeZone))
 	data, _ := weight.Get()
-	fmt.Println(data.Info)
+	fmt.Printf("%+v", data.Info)
 	// output:
-	// {tse   發行量加權股價指數 t00.tw}
+	// {Exchange:tse FullName: Name:發行量加權股價指數 No:t00 Ticker:t00.tw}
 }
 
 func ExampleStockRealTime_NewOTCI() {
 	otc := NewOTCI(time.Date(2015, 4, 1, 0, 0, 0, 0, utils.TaipeiTimeZone))
 	data, _ := otc.Get()
-	fmt.Println(data.Info)
+	fmt.Printf("%+v", data.Info)
 	// output:
-	// {otc   櫃檯指數 o00.tw}
+	// {Exchange:otc FullName: Name:櫃檯指數 No:o00 Ticker:o00.tw}
 }
 
 func ExampleStockRealTime_NewFRMSA() {
 	farmsa := NewFRMSA(time.Date(2015, 4, 1, 0, 0, 0, 0, utils.TaipeiTimeZone))
 	data, _ := farmsa.Get()
-	fmt.Println(data.Info)
+	fmt.Printf("%+v", data.Info)
 	// output:
-	// {tse   寶島股價指數 FRMSA.tw}
+	// {Exchange:tse FullName: Name:寶島股價指數 No:FRMSA Ticker:FRMSA.tw}
 }
