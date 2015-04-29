@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"log"
 	"runtime"
+	"strings"
 	"sync"
 	"time"
 
@@ -37,10 +38,14 @@ func main() {
 	flag.Parse()
 	queue := []*realtime.StockRealTime{}
 	if *twseNo != "" {
-		queue = append(queue, realtime.NewTWSE(*twseNo, TaipeiNow()))
+		for _, no := range strings.Split(*twseNo, ",") {
+			queue = append(queue, realtime.NewTWSE(no, TaipeiNow()))
+		}
 	}
 	if *otcNo != "" {
-		queue = append(queue, realtime.NewOTC(*otcNo, TaipeiNow()))
+		for _, no := range strings.Split(*otcNo, ",") {
+			queue = append(queue, realtime.NewOTC(no, TaipeiNow()))
+		}
 	}
 	if *index {
 		queue = append(queue, []*realtime.StockRealTime{realtime.NewWeight(TaipeiNow()),
