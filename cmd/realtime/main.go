@@ -4,6 +4,7 @@ import (
 	"flag"
 	"fmt"
 	"log"
+	"runtime"
 	"sync"
 	"time"
 
@@ -24,42 +25,42 @@ func prettyprint(data realtime.Data) string {
 		data.TradeTime, data.SysInfo["sysDate"], data.SysInfo["sysTime"])
 }
 
+func init() {
+	runtime.GOMAXPROCS(runtime.NumCPU())
+}
+
 var twseNo = flag.String("twse", "", "TWSE NO.")
 var otcNo = flag.String("otc", "", "OTC NO.")
 var index = flag.Bool("index", false, "Show Index.")
 
 func main() {
 	flag.Parse()
-	var r *realtime.StockRealTime
+	queue := []*realtime.StockRealTime{}
 	if *twseNo != "" {
-		r = realtime.NewTWSE(*twseNo, TaipeiNow())
-		data, _ := r.Get()
-		log.Println(prettyprint(data))
+		queue = append(queue, realtime.NewTWSE(*twseNo, TaipeiNow()))
 	}
 	if *otcNo != "" {
-		r = realtime.NewOTC(*otcNo, TaipeiNow())
-		data, _ := r.Get()
-		log.Println(prettyprint(data))
+		queue = append(queue, realtime.NewOTC(*otcNo, TaipeiNow()))
 	}
 	if *index {
-		var wg sync.WaitGroup
-		indexList := [3]*realtime.StockRealTime{realtime.NewWeight(TaipeiNow()),
-			realtime.NewOTCI(TaipeiNow()), realtime.NewFRMSA(TaipeiNow())}
-		result := make(chan string)
-		wg.Add(3)
-		for _, r := range indexList {
-			go func(r *realtime.StockRealTime) {
-				data, _ := r.Get()
-				result <- prettyprint(data)
-			}(r)
-		}
-		go func() {
-			for v := range result {
-				wg.Done()
-				log.Println(v)
-			}
-		}()
-		wg.Wait()
+		queue = append(queue, []*realtime.StockRealTime{realtime.NewWeight(TaipeiNow()),
+			realtime.NewOTCI(TaipeiNow()), realtime.NewFRMSA(TaipeiNow())}...)
 	}
+	result := make(chan string)
+	var wg sync.WaitGroup
+	wg.Add(len(queue))
+	for _, r := range queue {
+		go func(r *realtime.StockRealTime) {
+			data, _ := r.Get()
+			result <- prettyprint(data)
+		}(r)
+	}
+	go func() {
+		for v := range result {
+			wg.Done()
+			log.Println(v)
+		}
+	}()
+	wg.Wait()
 	//flag.PrintDefaults()
 }
