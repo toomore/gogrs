@@ -67,20 +67,21 @@ type StockInfo struct {
 
 // Data is realtime return formated data.
 type Data struct {
-	BestAskPrice   []float64 // 最佳五檔賣出價資訊
-	BestBidPrice   []float64 // 最佳五檔買進價資訊
-	BestAskVolume  []int64   // 最佳五檔賣出量資訊
-	BestBidVolume  []int64   // 最佳五檔買進量資訊
-	Open           float64   // 開盤價格
-	Highest        float64   // 最高價
-	Lowest         float64   // 最低價
-	Price          float64   // 該盤成交價格
-	LimitUp        float64   // 漲停價
-	LimitDown      float64   // 跌停價
-	Volume         float64   // 該盤成交量
-	VolumeAcc      float64   // 累計成交量
-	YesterdayPrice float64   // 昨日收盤價格
-	Info           StockInfo // 相關資訊
+	BestAskPrice   []float64              // 最佳五檔賣出價資訊
+	BestBidPrice   []float64              // 最佳五檔買進價資訊
+	BestAskVolume  []int64                // 最佳五檔賣出量資訊
+	BestBidVolume  []int64                // 最佳五檔買進量資訊
+	Open           float64                // 開盤價格
+	Highest        float64                // 最高價
+	Lowest         float64                // 最低價
+	Price          float64                // 該盤成交價格
+	LimitUp        float64                // 漲停價
+	LimitDown      float64                // 跌停價
+	Volume         float64                // 該盤成交量
+	VolumeAcc      float64                // 累計成交量
+	YesterdayPrice float64                // 昨日收盤價格
+	Info           StockInfo              // 相關資訊
+	SysInfo        map[string]interface{} // 系統回傳資訊
 }
 
 func (stock *StockRealTime) get() (StockBlob, error) {
@@ -146,11 +147,14 @@ func (stock *StockRealTime) Get() (Data, error) {
 		result.VolumeAcc, _ = strconv.ParseFloat(value.MsgArray[0]["v"], 10)
 		result.YesterdayPrice, _ = strconv.ParseFloat(value.MsgArray[0]["y"], 10)
 
-		result.Info.No = value.MsgArray[0]["n"]
+		result.Info.No = value.MsgArray[0]["c"]
 		result.Info.FullName = value.MsgArray[0]["nf"]
-		result.Info.No = value.MsgArray[0]["n"]
+		result.Info.Name = value.MsgArray[0]["n"]
 		result.Info.Ticker = value.MsgArray[0]["ch"]
 		result.Info.Exchange = value.MsgArray[0]["ex"]
+
+		result.SysInfo = make(map[string]interface{})
+		result.SysInfo = value.QueryTime
 	}
 	return result, err
 }
