@@ -1,3 +1,15 @@
+// 簡單範例測試
+//
+/*
+Install
+
+	go install -u github.com/toomore/gogrs/cmd/gogrs_example
+
+Usage:
+
+	gogrs_example
+
+*/
 package main
 
 import (
