@@ -164,6 +164,24 @@ func (stock *StockRealTime) Get() (Data, error) {
 	return result, err
 }
 
+// NewTWSE 建立一個上市股票
+func NewTWSE(No string, Date time.Time) *StockRealTime {
+	return &StockRealTime{
+		No:       No,
+		Date:     Date,
+		Exchange: "tse",
+	}
+}
+
+// NewOTC 建立一個上櫃股票
+func NewOTC(No string, Date time.Time) *StockRealTime {
+	return &StockRealTime{
+		No:       No,
+		Date:     Date,
+		Exchange: "otc",
+	}
+}
+
 // NewWeight 大盤指數
 func NewWeight(Date time.Time) *StockRealTime {
 	return &StockRealTime{
