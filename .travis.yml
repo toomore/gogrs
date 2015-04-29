@@ -13,9 +13,9 @@ before_install:
     - go get golang.org/x/tools/cmd/vet
     - go get golang.org/x/tools/cmd/goimports
     - go get github.com/golang/lint/golint
-    - go get github.com/mattn/goveralls
+#    - go get github.com/mattn/goveralls
 
 script:
     - sh ./goclean.sh
-    - $HOME/gopath/bin/goveralls -coverprofile=profile.cov -service=travis-ci
+#    - $HOME/gopath/bin/goveralls -coverprofile=profile.cov -service=travis-ci
     - go test -bench=. -benchmem ./...
