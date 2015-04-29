@@ -62,7 +62,7 @@ func TestStockRealTimeIndexs(*testing.T) {
 	var date = time.Date(2015, 4, 1, 0, 0, 0, 0, utils.TaipeiTimeZone)
 
 	weight := NewWeight(date)
-	otc := NewOTC(date)
+	otc := NewOTCI(date)
 	farmsa := NewFRMSA(date)
 	weight.Get()
 	otc.Get()
@@ -116,8 +116,8 @@ func ExampleStockRealTime_NewWeight() {
 	// {tse   發行量加權股價指數 t00.tw}
 }
 
-func ExampleStockRealTime_NewOTC() {
-	otc := NewOTC(time.Date(2015, 4, 1, 0, 0, 0, 0, utils.TaipeiTimeZone))
+func ExampleStockRealTime_NewOTCI() {
+	otc := NewOTCI(time.Date(2015, 4, 1, 0, 0, 0, 0, utils.TaipeiTimeZone))
 	data, _ := otc.Get()
 	fmt.Println(data.Info)
 	// output:

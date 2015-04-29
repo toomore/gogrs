@@ -164,8 +164,8 @@ func NewWeight(Date time.Time) *StockRealTime {
 	}
 }
 
-// NewOTC 上櫃指數
-func NewOTC(Date time.Time) *StockRealTime {
+// NewOTCI 上櫃指數
+func NewOTCI(Date time.Time) *StockRealTime {
 	return &StockRealTime{
 		No:       "o00",
 		Date:     Date,
