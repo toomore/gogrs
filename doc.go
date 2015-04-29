@@ -4,7 +4,7 @@ gogrs now is still in development. I will try my best to speed up to completed t
 
 gogrs 是擷取台灣上市股票股價資訊工具，目前還在大量的開發中。原始工具是用 grs（Python 套件），目標是將基本功能用 go 來實作。
 
-Paceage realtime
+Package realtime
 
 擷取盤中個股、指數即時股價資訊
 
