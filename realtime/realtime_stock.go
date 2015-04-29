@@ -63,6 +63,7 @@ type StockInfo struct {
 	Name     string // Stock name.
 	No       string // Stock no
 	Ticker   string // Ticker symbol（股票代號）
+	Category string // 股票類別代號
 }
 
 // Data is realtime return formated data.
@@ -80,6 +81,7 @@ type Data struct {
 	Volume         float64                // 該盤成交量
 	VolumeAcc      float64                // 累計成交量
 	YesterdayPrice float64                // 昨日收盤價格
+	TradeTime      time.Time              // 交易時間
 	Info           StockInfo              // 相關資訊
 	SysInfo        map[string]interface{} // 系統回傳資訊
 }
@@ -146,12 +148,15 @@ func (stock *StockRealTime) Get() (Data, error) {
 		result.Volume, _ = strconv.ParseFloat(value.MsgArray[0]["tv"], 10)
 		result.VolumeAcc, _ = strconv.ParseFloat(value.MsgArray[0]["v"], 10)
 		result.YesterdayPrice, _ = strconv.ParseFloat(value.MsgArray[0]["y"], 10)
+		tlong, _ := strconv.ParseInt(value.MsgArray[0]["tlong"], 10, 64)
+		result.TradeTime = time.Unix(tlong/1000, 0)
 
 		result.Info.No = value.MsgArray[0]["c"]
 		result.Info.FullName = value.MsgArray[0]["nf"]
 		result.Info.Name = value.MsgArray[0]["n"]
 		result.Info.Ticker = value.MsgArray[0]["ch"]
 		result.Info.Exchange = value.MsgArray[0]["ex"]
+		result.Info.Category = value.MsgArray[0]["i"]
 
 		result.SysInfo = make(map[string]interface{})
 		result.SysInfo = value.QueryTime
