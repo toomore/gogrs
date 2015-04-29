@@ -11,6 +11,7 @@ import (
 	"github.com/toomore/gogrs/utils"
 )
 
+// TaipeiNow show Taipei Now time.
 func TaipeiNow() time.Time {
 	d := time.Now()
 	return time.Date(d.Year(), d.Month(), d.Day(), 0, 0, 0, 0, utils.TaipeiTimeZone)
