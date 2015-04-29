@@ -52,9 +52,9 @@ func ExampleLists_Get_fmtData() {
 		Date: time.Date(2015, 4, 9, 0, 0, 0, 0, utils.TaipeiTimeZone),
 	}
 	l.Get("15") //航運業
-	fmt.Println(l.FmtData["2618"])
+	fmt.Printf("%+v", l.FmtData["2618"])
 	// output:
-	// {2618 長榮航 46670950 1136982254 24 24.65 24 24 0.55 11117 24 2027 24.1 10 0}
+	// {No:2618 Name:長榮航 Volume:46670950 TotalPrice:1136982254 Open:24 High:24.65 Low:24 Price:24 Range:0.55 Totalsale:11117 LastBuyPrice:24 LastBuyVolume:2027 LastSellPrice:24.1 LastSellVolume:10 PERatio:0}
 }
 
 func ExampleLists_Get() {
