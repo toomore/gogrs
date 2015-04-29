@@ -133,3 +133,19 @@ func ExampleStockRealTime_NewFRMSA() {
 	// output:
 	// {Exchange:tse FullName: Name:寶島股價指數 No:FRMSA Ticker:FRMSA.tw Category:tidx.tw}
 }
+
+func ExampleStockRealTime_NewTWSE() {
+	twse := NewTWSE("2618", time.Date(2015, 4, 1, 0, 0, 0, 0, utils.TaipeiTimeZone))
+	data, _ := twse.Get()
+	fmt.Printf("%+v", data.Info)
+	// output:
+	// {Exchange:tse FullName:長榮航空股份有限公司 Name:長榮航 No:2618 Ticker:2618.tw Category:15}
+}
+
+func ExampleStockRealTime_NewOTC() {
+	otc := NewOTC("8446", time.Date(2015, 4, 1, 0, 0, 0, 0, utils.TaipeiTimeZone))
+	data, _ := otc.Get()
+	fmt.Printf("%+v", data.Info)
+	// output:
+	// {Exchange:otc FullName:華研國際音樂股份有限公司 Name:華研 No:8446 Ticker:8446.tw Category:32}
+}
