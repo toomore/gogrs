@@ -3,7 +3,7 @@
 /*
 Install
 
-	go install -u github.com/toomore/gogrs/cmd/gogrs_example
+	go install github.com/toomore/gogrs/cmd/gogrs_example
 
 Usage:
 

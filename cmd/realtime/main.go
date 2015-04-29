@@ -4,7 +4,7 @@
 
 Install:
 
-	go install -u github.com/toomore/gogrs/cmd/realtime
+	go install github.com/toomore/gogrs/cmd/realtime
 
 Usage:
 
@@ -51,8 +51,15 @@ import (
 
 // TaipeiNow show Taipei Now time.
 func TaipeiNow() time.Time {
-	d := time.Now()
-	return time.Date(d.Year(), d.Month(), d.Day(), 0, 0, 0, 0, utils.TaipeiTimeZone)
+	d := time.Now().UTC()
+	day := d.Day()
+	if d.Before(time.Date(d.Year(), d.Month(), d.Day(), 1, 0, 0, 0, time.FixedZone("UTC", 0))) {
+		if d.Hour() == 0 && d.Minute() <= 59 {
+			day--
+		}
+	}
+
+	return time.Date(d.Year(), d.Month(), day, 0, 0, 0, 0, utils.TaipeiTimeZone)
 }
 
 func prettyprint(data realtime.Data) string {

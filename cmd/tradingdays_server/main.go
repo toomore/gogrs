@@ -5,7 +5,7 @@
 
 Install:
 
-	go install -u github.com/toomore/gogrs/cmd/tradingdays_server
+	go install github.com/toomore/gogrs/cmd/tradingdays_server
 
 Usage:
 
