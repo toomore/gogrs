@@ -92,7 +92,7 @@ func TradeOpen(w http.ResponseWriter, req *http.Request) {
 		date := time.Unix(data, 0)
 		jsonStr, _ = json.Marshal(&tradeJSON{
 			Date: date.UTC(),
-			Open: tradingdays.IsOpen(date.Year(), date.Month(), date.Day(), date.Location())})
+			Open: tradingdays.IsOpen(date.Year(), date.Month(), date.Day())})
 	}
 	w.Header().Set("Content-Type", "application/json")
 	w.Write(jsonStr)
