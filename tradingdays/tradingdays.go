@@ -17,9 +17,8 @@ import (
 )
 
 // IsOpen 判斷是否為開休日
-func IsOpen(year int, month time.Month, day int, loc *time.Location) bool {
-	// BUG(toomore) 其他時區轉換不是台灣時間 0 的 Unix time.
-	d := time.Date(year, month, day, 0, 0, 0, 0, loc)
+func IsOpen(year int, month time.Month, day int) bool {
+	d := time.Date(year, month, day, 0, 0, 0, 0, time.UTC)
 	if openornot, ok := exceptDays[d.Unix()]; ok {
 		return openornot
 	}
@@ -61,7 +60,7 @@ func processCSV(data io.Reader) {
 		if err == io.EOF {
 			break
 		}
-		if t, err := time.ParseInLocation(timeLayout, record[0], utils.TaipeiTimeZone); err == nil {
+		if t, err := time.ParseInLocation(timeLayout, record[0], time.UTC); err == nil {
 			var isopen bool
 			if record[1] == "1" {
 				isopen = true
