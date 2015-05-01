@@ -18,6 +18,7 @@ import (
 
 // IsOpen 判斷是否為開休日
 func IsOpen(year int, month time.Month, day int, loc *time.Location) bool {
+	// BUG(toomore) 其他時區轉換不是台灣時間 0 的 Unix time.
 	d := time.Date(year, month, day, 0, 0, 0, 0, loc)
 	if openornot, ok := exceptDays[d.Unix()]; ok {
 		return openornot
