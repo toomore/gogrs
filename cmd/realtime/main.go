@@ -105,11 +105,12 @@ func main() {
 		queue = append(queue, []*realtime.StockRealTime{realtime.NewWeight(TaipeiNow()),
 			realtime.NewOTCI(TaipeiNow()), realtime.NewFRMSA(TaipeiNow())}...)
 	}
-	result := make(chan string)
+	result := make(chan string, runtime.NumCPU())
 	var wg sync.WaitGroup
 	wg.Add(len(queue))
 	for _, r := range queue {
 		go func(r *realtime.StockRealTime) {
+			runtime.Gosched()
 			data, _ := r.Get()
 			result <- prettyprint(data)
 		}(r)
