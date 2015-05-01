@@ -46,20 +46,31 @@ import (
 	"time"
 
 	"github.com/toomore/gogrs/realtime"
+	"github.com/toomore/gogrs/tradingdays"
 	"github.com/toomore/gogrs/utils"
 )
 
+var cacheTime time.Time
+
 // TaipeiNow show Taipei Now time.
 func TaipeiNow() time.Time {
-	d := time.Now().UTC()
-	day := d.Day()
-	if d.Before(time.Date(d.Year(), d.Month(), d.Day(), 1, 0, 0, 0, time.FixedZone("UTC", 0))) {
-		if d.Hour() == 0 && d.Minute() <= 59 {
-			day--
+	if cacheTime.Year() == 1 {
+		d := time.Now().UTC()
+		days := d.Day()
+		for {
+			if tradingdays.IsOpen(d.Year(), d.Month(), days) {
+				break
+			}
+			days--
 		}
+		if d.Before(time.Date(d.Year(), d.Month(), days, 1, 0, 0, 0, time.FixedZone("UTC", 0))) {
+			if d.Hour() == 0 && d.Minute() <= 59 {
+				days--
+			}
+		}
+		cacheTime = time.Date(d.Year(), d.Month(), days, 0, 0, 0, 0, utils.TaipeiTimeZone)
 	}
-
-	return time.Date(d.Year(), d.Month(), day, 0, 0, 0, 0, utils.TaipeiTimeZone)
+	return cacheTime
 }
 
 func prettyprint(data realtime.Data) string {
