@@ -28,6 +28,18 @@ func IsOpen(year int, month time.Month, day int) bool {
 	return true
 }
 
+// FindRecentlyOpened 回傳最近一個開市時間
+func FindRecentlyOpened() time.Time {
+	d := time.Now().UTC()
+	days := d.Day()
+	for {
+		if IsOpen(d.Year(), d.Month(), days) {
+			return time.Date(d.Year(), d.Month(), days, 0, 0, 0, 0, time.UTC)
+		}
+		days--
+	}
+}
+
 var exceptDays map[int64]bool
 var timeLayout = "2006/1/2"
 
