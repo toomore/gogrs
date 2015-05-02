@@ -3,6 +3,7 @@ package tradingdays
 import (
 	"fmt"
 	"testing"
+	"time"
 )
 
 func ExampleIsOpen() {
@@ -11,6 +12,13 @@ func ExampleIsOpen() {
 	// output:
 	// true
 	// false
+}
+
+func TestFindRecentlyOpened(t *testing.T) {
+	result := FindRecentlyOpened()
+	if time.Now().UTC().Sub(result).Hours() > 24*7 {
+		t.Error("Should not more than 7 days")
+	}
 }
 
 func TestIsOpen(t *testing.T) {
@@ -29,14 +37,24 @@ func TestIsOpen(t *testing.T) {
 	}
 }
 
-func BenchmarkIsOpen(t *testing.B) {
-	for i := 0; i < t.N; i++ {
+func BenchmarkIsOpen(b *testing.B) {
+	for i := 0; i < b.N; i++ {
 		IsOpen(2015, 4, 19)
 	}
 }
 
-func BenchmarkDownloadCSV(t *testing.B) {
-	for i := 0; i < t.N; i++ {
+func BenchmarkDownloadCSV(b *testing.B) {
+	for i := 0; i < b.N; i++ {
 		DownloadCSV(true)
 	}
+}
+
+func BenchmarkFindRecentlyOpened(b *testing.B) {
+	for i := 0; i < b.N; i++ {
+		FindRecentlyOpened()
+	}
+}
+
+func init() {
+	DownloadCSV(true)
 }
