@@ -201,6 +201,13 @@ func TestCalDiff(t *testing.T) {
 	if result[2] != float64(13.3)-float64(10.0) {
 		t.Error("Wrong cal.")
 	}
+
+	var sampleC = []int64{10, 11, 12, 13}
+	var sampleD = []int64{12, 11, 10}
+	var result2 = CalDiffInt64(sampleC, sampleD)
+	if result2[2] != 13-10 {
+		t.Error("Wrong cal.")
+	}
 }
 
 func BenchmarkCalDiff(b *testing.B) {
