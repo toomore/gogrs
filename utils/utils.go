@@ -180,3 +180,19 @@ func CalDiffFloat(listA, listB []float64) []float64 {
 	}
 	return result
 }
+
+// CalDiffInt64 計算兩序列的差
+func CalDiffInt64(listA, listB []int64) []int64 {
+	var length int
+	var result []int64
+	if len(listA) <= len(listB) {
+		length = len(listA)
+	} else {
+		length = len(listB)
+	}
+	result = make([]int64, length)
+	for i := 1; i <= length; i++ {
+		result[length-i] = listA[len(listA)-i] - listB[len(listB)-i]
+	}
+	return result
+}
