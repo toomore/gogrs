@@ -60,10 +60,21 @@ func TestGetList(*testing.T) {
 	}
 }
 
-func TestMABR(*testing.T) {
+func TestMABR(t *testing.T) {
 	twse.Get()
-	twse.MABR(3, 6)
-	twse.MAVBR(3, 6)
+	var sample1mabr = twse.MABR(3, 6)
+	var sample1ma3 = twse.MA(3)
+	var sample1ma6 = twse.MA(6)
+	if sample1mabr[len(sample1mabr)-1] != sample1ma3[len(sample1ma3)-1]-sample1ma6[len(sample1ma6)-1] {
+		t.Error("Should be the sample")
+	}
+
+	var sample2mavbr = twse.MAVBR(3, 6)
+	var sample2mav3 = twse.MAV(3)
+	var sample2mav6 = twse.MAV(6)
+	if sample2mavbr[len(sample2mavbr)-1] != int64(sample2mav3[len(sample2mav3)-1]-sample2mav6[len(sample2mav6)-1]) {
+		t.Error("Should be the sample")
+	}
 }
 
 func BenchmarkMA(b *testing.B) {
