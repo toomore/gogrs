@@ -197,7 +197,7 @@ func TestCountCountine(t *testing.T) {
 func TestCalDiff(t *testing.T) {
 	var sampleA = []float64{10.0, 11.1, 12.2, 13.3}
 	var sampleB = []float64{12.2, 11.1, 10.0}
-	var result = CalDiff(sampleA, sampleB)
+	var result = CalDiffFloat(sampleA, sampleB)
 	if result[2] != float64(13.3)-float64(10.0) {
 		t.Error("Wrong cal.")
 	}
@@ -207,6 +207,6 @@ func BenchmarkCalDiff(b *testing.B) {
 	var sampleA = []float64{10.0, 11.1, 12.2, 13.3}
 	var sampleB = []float64{12.2, 11.1, 10.0}
 	for i := 0; i < b.N; i++ {
-		CalDiff(sampleA, sampleB)
+		CalDiffFloat(sampleA, sampleB)
 	}
 }
