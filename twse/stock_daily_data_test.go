@@ -68,11 +68,19 @@ func TestMABR(t *testing.T) {
 	if sample1mabr[len(sample1mabr)-1] != sample1ma3[len(sample1ma3)-1]-sample1ma6[len(sample1ma6)-1] {
 		t.Error("Should be the sample")
 	}
+	sample1mabr = twse.MABR(6, 3)
+	if sample1mabr[len(sample1mabr)-1] != sample1ma6[len(sample1ma6)-1]-sample1ma3[len(sample1ma3)-1] {
+		t.Error("Should be the sample")
+	}
 
 	var sample2mavbr = twse.MAVBR(3, 6)
 	var sample2mav3 = twse.MAV(3)
 	var sample2mav6 = twse.MAV(6)
 	if sample2mavbr[len(sample2mavbr)-1] != int64(sample2mav3[len(sample2mav3)-1]-sample2mav6[len(sample2mav6)-1]) {
+		t.Error("Should be the sample")
+	}
+	sample2mavbr = twse.MAVBR(6, 3)
+	if sample2mavbr[len(sample2mavbr)-1] != int64(sample2mav6[len(sample2mav6)-1]-sample2mav3[len(sample2mav3)-1]) {
 		t.Error("Should be the sample")
 	}
 }
