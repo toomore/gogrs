@@ -214,11 +214,20 @@ func (d Data) MAV(days int) []uint64 {
 func (d Data) MAVBR(days1, days2 int) []int64 {
 	MAV1 := d.MAV(days1)
 	MAV2 := d.MAV(days2)
-	result := make([]int64, len(MAV2))
-	for i := 1; i <= len(MAV2); i++ {
-		result[len(MAV2)-i] = int64(MAV1[len(MAV1)-i]) - int64(MAV2[len(MAV2)-i])
+	var length int
+	if len(MAV1) <= len(MAV2) {
+		length = len(MAV1)
+	} else {
+		length = len(MAV2)
 	}
-	return result
+	result1 := make([]int64, length)
+	result2 := make([]int64, length)
+	for i := 1; i <= length; i++ {
+		result1[length-i] = int64(MAV1[len(MAV1)-i])
+		result2[length-i] = int64(MAV2[len(MAV2)-i])
+	}
+
+	return utils.CalDiffInt64(result1, result2)
 }
 
 // IsRed 計算是否收紅 K
