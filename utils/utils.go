@@ -164,3 +164,18 @@ func CountCountineFloat64(data []float64) (int, bool) {
 	}
 	return counter, data[len(data)-1] > 0
 }
+
+func CalDiff(listA, listB []float64) []float64 {
+	var length int
+	var result []float64
+	if len(listA) <= len(listB) {
+		length = len(listA)
+	} else {
+		length = len(listB)
+	}
+	result = make([]float64, length)
+	for i := 1; i <= length; i++ {
+		result[length-i] = listA[len(listA)-i] - listB[len(listB)-i]
+	}
+	return result
+}
