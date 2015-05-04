@@ -47,6 +47,7 @@ import (
 
 	"github.com/toomore/gogrs/realtime"
 	"github.com/toomore/gogrs/tradingdays"
+	"github.com/toomore/gogrs/twse"
 	"github.com/toomore/gogrs/utils"
 )
 
@@ -85,6 +86,7 @@ func init() {
 }
 
 var twseNo = flag.String("twse", "", "上市股票代碼，可使用 ',' 分隔多組代碼，例：2618,2329")
+var twseCate = flag.String("twsecate", "", "上市股票類別，可使用 ',' 分隔多組代碼，例：11,15")
 var otcNo = flag.String("otc", "", "上櫃股票代碼，可使用 ',' 分隔多組代碼，例：8446,2719")
 var index = flag.Bool("index", false, "顯示大盤、上櫃、寶島指數（default: false）")
 
@@ -94,6 +96,14 @@ func main() {
 	if *twseNo != "" {
 		for _, no := range strings.Split(*twseNo, ",") {
 			queue = append(queue, realtime.NewTWSE(no, TaipeiNow()))
+		}
+	}
+	if *twseCate != "" {
+		l := &twse.Lists{Date: TaipeiNow()}
+		for _, no := range strings.Split(*twseCate, ",") {
+			for _, s := range l.GetCategoryList(no) {
+				queue = append(queue, realtime.NewTWSE(s.No, TaipeiNow()))
+			}
 		}
 	}
 	if *otcNo != "" {
