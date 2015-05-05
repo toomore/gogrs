@@ -97,7 +97,10 @@ var index = flag.Bool("index", false, "顯示大盤、上櫃、寶島指數（de
 
 func main() {
 	flag.Parse()
-	queue := []*realtime.StockRealTime{}
+	queue := make(chan *realtime.StockRealTime, runtime.NumCPU())
+	defer close(queue)
+	var wg sync.WaitGroup
+
 	if *showtwsecatelist {
 		var index = 1
 		for cateNo, cateName := range twse.TWSECLASS {
@@ -111,44 +114,56 @@ func main() {
 	}
 	if *twseNo != "" {
 		for _, no := range strings.Split(*twseNo, ",") {
-			queue = append(queue, realtime.NewTWSE(no, TaipeiNow()))
+			go func(no string) {
+				runtime.Gosched()
+				wg.Add(1)
+				queue <- realtime.NewTWSE(no, TaipeiNow())
+			}(no)
 		}
 	}
 	if *twseCate != "" {
 		l := &twse.Lists{Date: TaipeiNow()}
 		for _, no := range strings.Split(*twseCate, ",") {
 			for _, s := range l.GetCategoryList(no) {
-				queue = append(queue, realtime.NewTWSE(s.No, TaipeiNow()))
+				go func(s twse.StockInfo) {
+					runtime.Gosched()
+					wg.Add(1)
+					queue <- realtime.NewTWSE(s.No, TaipeiNow())
+				}(s)
 			}
 		}
 	}
 	if *otcNo != "" {
 		for _, no := range strings.Split(*otcNo, ",") {
-			queue = append(queue, realtime.NewOTC(no, TaipeiNow()))
+			go func(no string) {
+				runtime.Gosched()
+				wg.Add(1)
+				queue <- realtime.NewOTC(no, TaipeiNow())
+			}(no)
 		}
 	}
 	if *index {
-		queue = append(queue, []*realtime.StockRealTime{realtime.NewWeight(TaipeiNow()),
-			realtime.NewOTCI(TaipeiNow()), realtime.NewFRMSA(TaipeiNow())}...)
-	}
-	result := make(chan string, runtime.NumCPU())
-	var wg sync.WaitGroup
-	wg.Add(len(queue))
-	for _, r := range queue {
-		go func(r *realtime.StockRealTime) {
-			runtime.Gosched()
-			data, _ := r.Get()
-			result <- prettyprint(data)
-		}(r)
+		for _, r := range []*realtime.StockRealTime{realtime.NewWeight(TaipeiNow()), realtime.NewOTCI(TaipeiNow()), realtime.NewFRMSA(TaipeiNow())} {
+			go func(r *realtime.StockRealTime) {
+				runtime.Gosched()
+				wg.Add(1)
+				queue <- r
+			}(r)
+		}
 	}
 	go func() {
-		for v := range result {
-			wg.Done()
-			log.Println(v)
+		runtime.Gosched()
+		for r := range queue {
+			go func(r *realtime.StockRealTime) {
+				runtime.Gosched()
+				data, _ := r.Get()
+				log.Println(prettyprint(data))
+				wg.Done()
+			}(r)
 		}
 	}()
-	wg.Wait()
 	if len(queue) == 0 {
 		flag.PrintDefaults()
 	}
+	wg.Wait()
 }
