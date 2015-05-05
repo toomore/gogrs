@@ -85,8 +85,11 @@ func prettyprint(data realtime.Data) string {
 		data.TradeTime, data.SysInfo["sysDate"], data.SysInfo["sysTime"])
 }
 
+var chanbuf int
+
 func init() {
 	runtime.GOMAXPROCS(runtime.NumCPU())
+	chanbuf = runtime.NumCPU() * 2
 }
 
 var twseNo = flag.String("twse", "", "上市股票代碼，可使用 ',' 分隔多組代碼，例：2618,2329")
@@ -97,7 +100,7 @@ var index = flag.Bool("index", false, "顯示大盤、上櫃、寶島指數（de
 
 func main() {
 	flag.Parse()
-	queue := make(chan *realtime.StockRealTime, runtime.NumCPU())
+	queue := make(chan *realtime.StockRealTime, chanbuf)
 	defer close(queue)
 	var wg sync.WaitGroup
 
