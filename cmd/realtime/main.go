@@ -18,6 +18,8 @@ The flags are:
 		上櫃股票代碼，可使用 ',' 分隔多組代碼，例：8446,2719
 	-index
 		顯示大盤、上櫃、寶島指數（default: false）
+	-twsecate
+		上市股票類別，可使用 ',' 分隔多組代碼，例：11,15
 
 範例
 
@@ -87,12 +89,24 @@ func init() {
 
 var twseNo = flag.String("twse", "", "上市股票代碼，可使用 ',' 分隔多組代碼，例：2618,2329")
 var twseCate = flag.String("twsecate", "", "上市股票類別，可使用 ',' 分隔多組代碼，例：11,15")
+var showtwsecatelist = flag.Bool("showcatelist", false, "顯示上市分類表")
 var otcNo = flag.String("otc", "", "上櫃股票代碼，可使用 ',' 分隔多組代碼，例：8446,2719")
 var index = flag.Bool("index", false, "顯示大盤、上櫃、寶島指數（default: false）")
 
 func main() {
 	flag.Parse()
 	queue := []*realtime.StockRealTime{}
+	if *showtwsecatelist {
+		var index = 1
+		for cateNo, cateName := range twse.TWSECLASS {
+			fmt.Printf("%s(%s)\t\t", cateName, cateNo)
+			if index%3 == 0 {
+				fmt.Println("")
+			}
+			index++
+		}
+		fmt.Println("")
+	}
 	if *twseNo != "" {
 		for _, no := range strings.Split(*twseNo, ",") {
 			queue = append(queue, realtime.NewTWSE(no, TaipeiNow()))
