@@ -20,10 +20,12 @@ The flags are:
 		顯示大盤、上櫃、寶島指數（default: false）
 	-twsecate
 		上市股票類別，可使用 ',' 分隔多組代碼，例：11,15
+	-showtwsecatelist
+		顯示上市分類表（default: false）
 
 範例
 
-	/realtime -twse=2618,2329 -otc=8446,2719 -index=true
+	realtime -twse=2618,2329 -otc=8446,2719 -index
 
 回傳內容
 
