@@ -22,6 +22,10 @@ The flags are:
 		上市股票類別，可使用 ',' 分隔多組代碼，例：11,15
 	-showtwsecatelist
 		顯示上市分類表（default: false）
+	-ncpu
+		指定 CPU 數量，預設為實際 CPU 數量
+	-pt
+		計算花費時間
 
 範例
 
@@ -95,7 +99,7 @@ var twseCate = flag.String("twsecate", "", "上市股票類別，可使用 ',' �
 var showtwsecatelist = flag.Bool("showcatelist", false, "顯示上市分類表")
 var otcNo = flag.String("otc", "", "上櫃股票代碼，可使用 ',' 分隔多組代碼，例：8446,2719")
 var index = flag.Bool("index", false, "顯示大盤、上櫃、寶島指數（default: false）")
-var ncpu = flag.Int("ncpu", runtime.NumCPU(), "指定 CPU 數量")
+var ncpu = flag.Int("ncpu", runtime.NumCPU(), "指定 CPU 數量，預設為實際 CPU 數量")
 var pt = flag.Bool("pt", false, "計算花費時間")
 
 func main() {
