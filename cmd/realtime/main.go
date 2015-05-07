@@ -88,8 +88,6 @@ func prettyprint(data realtime.Data) string {
 var chanbuf int
 
 func init() {
-	runtime.GOMAXPROCS(runtime.NumCPU())
-	chanbuf = runtime.NumCPU() * 2
 }
 
 var twseNo = flag.String("twse", "", "上市股票代碼，可使用 ',' 分隔多組代碼，例：2618,2329")
@@ -97,9 +95,14 @@ var twseCate = flag.String("twsecate", "", "上市股票類別，可使用 ',' �
 var showtwsecatelist = flag.Bool("showcatelist", false, "顯示上市分類表")
 var otcNo = flag.String("otc", "", "上櫃股票代碼，可使用 ',' 分隔多組代碼，例：8446,2719")
 var index = flag.Bool("index", false, "顯示大盤、上櫃、寶島指數（default: false）")
+var ncpu = flag.Int("ncpu", runtime.NumCPU(), "指定 CPU 數量")
 
 func main() {
 	flag.Parse()
+
+	runtime.GOMAXPROCS(*ncpu)
+	chanbuf = *ncpu * 2
+
 	queue := make(chan *realtime.StockRealTime, chanbuf)
 	defer close(queue)
 	var wg sync.WaitGroup
