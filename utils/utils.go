@@ -3,6 +3,7 @@
 package utils
 
 import (
+	"math"
 	"regexp"
 	"strconv"
 	"time"
@@ -195,4 +196,17 @@ func CalDiffInt64(listA, listB []int64) []int64 {
 		result[length-i] = listA[len(listA)-i] - listB[len(listB)-i]
 	}
 	return result
+}
+
+func SD(list []uint64) float64 {
+	var data = make([]float64, len(list))
+	for i := 0; i < len(list); i++ {
+		data[i] = float64(list[i])
+	}
+	var avg = AvgFloat64(data)
+	for i := 0; i < len(data); i++ {
+		data[i] -= avg
+		data[i] *= data[i]
+	}
+	return math.Sqrt(AvgFloat64(data))
 }
