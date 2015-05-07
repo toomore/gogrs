@@ -225,3 +225,18 @@ func BenchmarkCalDiff(b *testing.B) {
 		CalDiffFloat(sampleA, sampleB)
 	}
 }
+
+func TestSD(t *testing.T) {
+	var sample = []uint64{1, 2, 3, 4, 5, 6, 7, 8, 9, 10}
+
+	if SD(sample) != 2.8722813232690143 {
+		t.Error("Should be 2.8722813232690143")
+	}
+}
+
+func BenchmarkSD(b *testing.B) {
+	var sample = []uint64{1, 2, 3, 4, 5, 6, 7, 8, 9, 10}
+	for i := 0; i < b.N; i++ {
+		SD(sample)
+	}
+}
