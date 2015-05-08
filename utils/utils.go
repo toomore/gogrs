@@ -198,6 +198,7 @@ func CalDiffInt64(listA, listB []int64) []int64 {
 	return result
 }
 
+// SD 計算標準差
 func SD(list []uint64) float64 {
 	var data = make([]float64, len(list))
 	for i := 0; i < len(list); i++ {
