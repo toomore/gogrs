@@ -93,14 +93,29 @@ func processCSV(data io.Reader) {
 證交所會在 13:30 後產生一次報表，14:30 盤後盤零股交易後還會再產生一次報表。
 */
 type TimePeriod struct {
-	Date time.Time
+	target      int64
+	zero        int64
+	start       int64
+	firstclose  int64
+	secondclose int64
+	night       int64
+}
+
+func NewTimePeriod(date time.Time) *TimePeriod {
+	var d = &lazyTime{date: date.In(utils.TaipeiTimeZone)}
+	return &TimePeriod{
+		target:      d.date.Unix(),
+		zero:        d.time(0, 0).Unix(),
+		start:       d.time(9, 0).Unix(),
+		firstclose:  d.time(13, 30).Unix(),
+		secondclose: d.time(14, 30).Unix(),
+		night:       d.time(24, 0).Unix(),
+	}
 }
 
 // AtBefore 檢查是否為 開盤前（0000-0900） 期間
 func (t TimePeriod) AtBefore() bool {
-	var d = &lazyTime{date: t.Date.In(utils.TaipeiTimeZone)}
-
-	if d.date.Unix() >= d.time(0, 0).Unix() && d.date.Unix() < d.time(9, 0).Unix() {
+	if t.target >= t.zero && t.target < t.start {
 		return true
 	}
 
@@ -109,9 +124,7 @@ func (t TimePeriod) AtBefore() bool {
 
 // AtOpen 檢查是否為 開盤（0900-1330） 期間
 func (t TimePeriod) AtOpen() bool {
-	var d = &lazyTime{date: t.Date.In(utils.TaipeiTimeZone)}
-
-	if d.date.Unix() >= d.time(9, 0).Unix() && d.date.Unix() < d.time(13, 30).Unix() {
+	if t.target >= t.start && t.target < t.firstclose {
 		return true
 	}
 	return false
@@ -119,9 +132,7 @@ func (t TimePeriod) AtOpen() bool {
 
 // AtAfterOpen 檢查是否為 盤後盤（1330-1430） 期間
 func (t TimePeriod) AtAfterOpen() bool {
-	var d = &lazyTime{date: t.Date.In(utils.TaipeiTimeZone)}
-
-	if d.date.Unix() >= d.time(13, 30).Unix() && d.date.Unix() < d.time(14, 30).Unix() {
+	if t.target >= t.firstclose && t.target < t.secondclose {
 		return true
 	}
 	return false
@@ -129,9 +140,7 @@ func (t TimePeriod) AtAfterOpen() bool {
 
 // AtClose 檢查是否為 收盤（1430-2400）期間
 func (t TimePeriod) AtClose() bool {
-	var d = &lazyTime{date: t.Date.In(utils.TaipeiTimeZone)}
-
-	if d.date.Unix() >= d.time(14, 30).Unix() && d.date.Unix() < d.time(24, 0).Unix() {
+	if t.target >= t.secondclose && t.target < t.night {
 		return true
 	}
 	return false
