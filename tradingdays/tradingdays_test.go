@@ -40,10 +40,10 @@ func TestIsOpen(t *testing.T) {
 }
 
 func TestTimePerid(t *testing.T) {
-	var tp1 = &TimePeriod{Date: time.Date(2015, 5, 8, 0, 0, 0, 0, utils.TaipeiTimeZone)}
-	var tp2 = &TimePeriod{Date: time.Date(2015, 5, 8, 10, 0, 0, 0, utils.TaipeiTimeZone)}
-	var tp3 = &TimePeriod{Date: time.Date(2015, 5, 8, 14, 0, 0, 0, utils.TaipeiTimeZone)}
-	var tp4 = &TimePeriod{Date: time.Date(2015, 5, 8, 20, 0, 0, 0, utils.TaipeiTimeZone)}
+	var tp1 = NewTimePeriod(time.Date(2015, 5, 8, 0, 0, 0, 0, utils.TaipeiTimeZone))
+	var tp2 = NewTimePeriod(time.Date(2015, 5, 8, 10, 0, 0, 0, utils.TaipeiTimeZone))
+	var tp3 = NewTimePeriod(time.Date(2015, 5, 8, 14, 0, 0, 0, utils.TaipeiTimeZone))
+	var tp4 = NewTimePeriod(time.Date(2015, 5, 8, 20, 0, 0, 0, utils.TaipeiTimeZone))
 
 	if tp1.AtBefore() != true {
 		t.Error("Should be `true`")
@@ -79,10 +79,12 @@ func TestTimePerid(t *testing.T) {
 }
 
 func BenchmarkTimePeriod(b *testing.B) {
-	var tp1 = &TimePeriod{Date: time.Date(2015, 5, 8, 0, 0, 0, 0, utils.TaipeiTimeZone)}
+	var tp = NewTimePeriod(time.Date(2015, 5, 8, 20, 0, 0, 0, utils.TaipeiTimeZone))
 	for i := 0; i < b.N; i++ {
-		tp1.AtBefore()
-		tp1.AtClose()
+		tp.AtBefore()
+		tp.AtOpen()
+		tp.AtAfterOpen()
+		tp.AtClose()
 	}
 }
 

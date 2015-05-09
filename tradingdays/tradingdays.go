@@ -101,6 +101,7 @@ type TimePeriod struct {
 	night       int64
 }
 
+// NewTimePeriod 建立一個時間區間判斷
 func NewTimePeriod(date time.Time) *TimePeriod {
 	var d = &lazyTime{date: date.In(utils.TaipeiTimeZone)}
 	return &TimePeriod{
