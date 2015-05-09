@@ -91,9 +91,6 @@ func prettyprint(data realtime.Data) string {
 
 var chanbuf int
 
-func init() {
-}
-
 var twseNo = flag.String("twse", "", "上市股票代碼，可使用 ',' 分隔多組代碼，例：2618,2329")
 var twseCate = flag.String("twsecate", "", "上市股票類別，可使用 ',' 分隔多組代碼，例：11,15")
 var showtwsecatelist = flag.Bool("showcatelist", false, "顯示上市分類表")
