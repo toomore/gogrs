@@ -110,6 +110,15 @@ func (t TimePeriod) AtOpen() bool {
 	return false
 }
 
+func (t TimePeriod) AtAfterOpen() bool {
+	var d = &ezTime{date: t.Date.In(utils.TaipeiTimeZone)}
+
+	if d.date.Unix() >= d.time(13, 30).Unix() && d.date.Unix() < d.time(14, 30).Unix() {
+		return true
+	}
+	return false
+}
+
 type ezTime struct {
 	date time.Time
 }
