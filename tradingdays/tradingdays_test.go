@@ -4,6 +4,8 @@ import (
 	"fmt"
 	"testing"
 	"time"
+
+	"github.com/toomore/gogrs/utils"
 )
 
 func ExampleIsOpen() {
@@ -34,6 +36,53 @@ func TestIsOpen(t *testing.T) {
 	}
 	if IsOpen(2015, 5, 1) != false {
 		t.Error("Should be `false`")
+	}
+}
+
+func TestTimePerid(t *testing.T) {
+	var tp1 = &TimePeriod{Date: time.Date(2015, 5, 8, 0, 0, 0, 0, utils.TaipeiTimeZone)}
+	var tp2 = &TimePeriod{Date: time.Date(2015, 5, 8, 10, 0, 0, 0, utils.TaipeiTimeZone)}
+	var tp3 = &TimePeriod{Date: time.Date(2015, 5, 8, 14, 0, 0, 0, utils.TaipeiTimeZone)}
+	var tp4 = &TimePeriod{Date: time.Date(2015, 5, 8, 20, 0, 0, 0, utils.TaipeiTimeZone)}
+
+	if tp1.AtBefore() != true {
+		t.Error("Should be `true`")
+	}
+
+	if tp1.AtOpen() != false {
+		t.Error("Should be `false`")
+	}
+
+	if tp1.AtAfterOpen() != false {
+		t.Error("Should be `false`")
+	}
+
+	if tp1.AtClose() != false {
+		t.Error("Should be `false`")
+	}
+
+	if tp2.AtOpen() != true {
+		t.Error("Should be `true`")
+	}
+
+	if tp2.AtBefore() != false {
+		t.Error("Should be `false`")
+	}
+
+	if tp3.AtAfterOpen() != true {
+		t.Error("Should be `true`")
+	}
+
+	if tp4.AtClose() != true {
+		t.Error("Should be `true`")
+	}
+}
+
+func BenchmarkTimePeriod(b *testing.B) {
+	var tp1 = &TimePeriod{Date: time.Date(2015, 5, 8, 0, 0, 0, 0, utils.TaipeiTimeZone)}
+	for i := 0; i < b.N; i++ {
+		tp1.AtBefore()
+		tp1.AtClose()
 	}
 }
 
