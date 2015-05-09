@@ -28,16 +28,23 @@ func IsOpen(year int, month time.Month, day int) bool {
 	return true
 }
 
-// FindRecentlyOpened 回傳最近一個開市時間
+// FindRecentlyOpened 回傳最近一個開市時間（UTC 0）
 func FindRecentlyOpened() time.Time {
 	d := time.Now().UTC()
 	days := d.Day()
+	var result time.Time
+	var tp *TimePeriod
 	for {
 		if IsOpen(d.Year(), d.Month(), days) {
-			return time.Date(d.Year(), d.Month(), days, 0, 0, 0, 0, time.UTC)
+			result = time.Date(d.Year(), d.Month(), days, 0, 0, 0, 0, time.UTC)
+			tp = NewTimePeriod(time.Date(d.Year(), d.Month(), days, d.Hour(), d.Minute(), d.Second(), d.Nanosecond(), time.UTC))
+			if tp.AtAfterOpen() || tp.AtClose() {
+				return result
+			}
 		}
 		days--
 	}
+
 }
 
 var exceptDays map[int64]bool
