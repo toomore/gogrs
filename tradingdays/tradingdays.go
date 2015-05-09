@@ -98,7 +98,7 @@ type TimePeriod struct {
 
 // AtBefore 檢查是否為 開盤前（0000-0900） 期間
 func (t TimePeriod) AtBefore() bool {
-	var d = &ezTime{date: t.Date.In(utils.TaipeiTimeZone)}
+	var d = &lazyTime{date: t.Date.In(utils.TaipeiTimeZone)}
 
 	if d.date.Unix() >= d.time(0, 0).Unix() && d.date.Unix() < d.time(9, 0).Unix() {
 		return true
@@ -109,7 +109,7 @@ func (t TimePeriod) AtBefore() bool {
 
 // AtOpen 檢查是否為 開盤（0900-1330） 期間
 func (t TimePeriod) AtOpen() bool {
-	var d = &ezTime{date: t.Date.In(utils.TaipeiTimeZone)}
+	var d = &lazyTime{date: t.Date.In(utils.TaipeiTimeZone)}
 
 	if d.date.Unix() >= d.time(9, 0).Unix() && d.date.Unix() < d.time(13, 30).Unix() {
 		return true
@@ -119,7 +119,7 @@ func (t TimePeriod) AtOpen() bool {
 
 // AtAfterOpen 檢查是否為 盤後盤（1330-1430） 期間
 func (t TimePeriod) AtAfterOpen() bool {
-	var d = &ezTime{date: t.Date.In(utils.TaipeiTimeZone)}
+	var d = &lazyTime{date: t.Date.In(utils.TaipeiTimeZone)}
 
 	if d.date.Unix() >= d.time(13, 30).Unix() && d.date.Unix() < d.time(14, 30).Unix() {
 		return true
@@ -129,7 +129,7 @@ func (t TimePeriod) AtAfterOpen() bool {
 
 // AtClose 檢查是否為 收盤（1430-2400）期間
 func (t TimePeriod) AtClose() bool {
-	var d = &ezTime{date: t.Date.In(utils.TaipeiTimeZone)}
+	var d = &lazyTime{date: t.Date.In(utils.TaipeiTimeZone)}
 
 	if d.date.Unix() >= d.time(14, 30).Unix() && d.date.Unix() < d.time(24, 0).Unix() {
 		return true
@@ -137,11 +137,11 @@ func (t TimePeriod) AtClose() bool {
 	return false
 }
 
-type ezTime struct {
+type lazyTime struct {
 	date time.Time
 }
 
-func (t ezTime) time(hour, min int) time.Time {
+func (t lazyTime) time(hour, min int) time.Time {
 	return time.Date(t.date.Year(), t.date.Month(), t.date.Day(), hour, min, 0, 0, t.date.Location())
 }
 
