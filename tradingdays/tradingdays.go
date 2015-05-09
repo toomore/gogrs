@@ -82,6 +82,33 @@ func processCSV(data io.Reader) {
 	}
 }
 
+type TimePeriod struct {
+	DateTime time.Time
+}
+
+// before open 0000-0900
+// open 0900-1330
+// afterOpen 1330-1430
+// close 1430-0000
+
+func (t TimePeriod) AtBefore() bool {
+	var d = &ezTime{date: t.DateTime.In(utils.TaipeiTimeZone)}
+
+	if d.date.Unix() >= d.time(0, 0).Unix() && d.date.Unix() < d.time(9, 0).Unix() {
+		return true
+	}
+
+	return false
+}
+
+type ezTime struct {
+	date time.Time
+}
+
+func (t ezTime) time(hour, min int) time.Time {
+	return time.Date(t.date.Year(), t.date.Month(), t.date.Day(), hour, min, 0, 0, t.date.Location())
+}
+
 func init() {
 	exceptDays = make(map[int64]bool)
 	readCSV()
