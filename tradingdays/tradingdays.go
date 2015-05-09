@@ -1,4 +1,4 @@
-// Package tradingdays - Check the day is open or not and at witch period time
+// Package tradingdays - Check the day is open or not and at which period time
 // 股市開休市判斷（支援非國定假日：颱風假）與當日區間判斷（盤中、盤後、盤後盤）
 //
 package tradingdays
