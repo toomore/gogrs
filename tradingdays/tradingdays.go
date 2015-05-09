@@ -82,15 +82,21 @@ func processCSV(data io.Reader) {
 	}
 }
 
+// TimePeriod 簡單計算時間是否在當日的開盤前、盤中、盤後盤、收盤的時間
+/*
+相關時間：
+	- 開盤前	00:00 ~ 09:00
+	- 盤中	09:00 ~ 13:30
+	- 盤後盤	13:30 ~ 14:30
+	- 收盤	14:30 ~ 24:00
+
+證交所會在 13:30 後產生一次報表，14:30 盤後盤零股交易後還會再產生一次報表。
+*/
 type TimePeriod struct {
 	Date time.Time
 }
 
-// before open 0000-0900
-// open 0900-1330
-// afterOpen 1330-1430
-// close 1430-0000
-
+// AtBefore 檢查是否為 開盤前（0000-0900） 期間
 func (t TimePeriod) AtBefore() bool {
 	var d = &ezTime{date: t.Date.In(utils.TaipeiTimeZone)}
 
@@ -101,6 +107,7 @@ func (t TimePeriod) AtBefore() bool {
 	return false
 }
 
+// AtOpen 檢查是否為 開盤（0900-1330） 期間
 func (t TimePeriod) AtOpen() bool {
 	var d = &ezTime{date: t.Date.In(utils.TaipeiTimeZone)}
 
@@ -110,6 +117,7 @@ func (t TimePeriod) AtOpen() bool {
 	return false
 }
 
+// AtAfterOpen 檢查是否為 盤後盤（1330-1430） 期間
 func (t TimePeriod) AtAfterOpen() bool {
 	var d = &ezTime{date: t.Date.In(utils.TaipeiTimeZone)}
 
@@ -119,6 +127,7 @@ func (t TimePeriod) AtAfterOpen() bool {
 	return false
 }
 
+// AtClose 檢查是否為 收盤（1430-2400）期間
 func (t TimePeriod) AtClose() bool {
 	var d = &ezTime{date: t.Date.In(utils.TaipeiTimeZone)}
 
