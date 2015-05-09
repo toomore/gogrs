@@ -83,7 +83,7 @@ func processCSV(data io.Reader) {
 }
 
 type TimePeriod struct {
-	DateTime time.Time
+	Date time.Time
 }
 
 // before open 0000-0900
@@ -92,7 +92,7 @@ type TimePeriod struct {
 // close 1430-0000
 
 func (t TimePeriod) AtBefore() bool {
-	var d = &ezTime{date: t.DateTime.In(utils.TaipeiTimeZone)}
+	var d = &ezTime{date: t.Date.In(utils.TaipeiTimeZone)}
 
 	if d.date.Unix() >= d.time(0, 0).Unix() && d.date.Unix() < d.time(9, 0).Unix() {
 		return true
