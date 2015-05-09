@@ -1,5 +1,5 @@
-// Package tradingdays - Check the day is open or not
-// 股市開休市判斷（支援非國定假日：颱風假）
+// Package tradingdays - Check the day is open or not and at witch period time
+// 股市開休市判斷（支援非國定假日：颱風假）與當日區間判斷（盤中、盤後、盤後盤）
 //
 package tradingdays
 
@@ -94,11 +94,11 @@ func processCSV(data io.Reader) {
 */
 type TimePeriod struct {
 	target      int64
-	zero        int64
-	start       int64
-	firstclose  int64
-	secondclose int64
-	night       int64
+	zero        int64 // 00:00
+	start       int64 // 09:00
+	firstclose  int64 // 13:30
+	secondclose int64 // 14:40
+	night       int64 // 24:00
 }
 
 // NewTimePeriod 建立一個時間區間判斷

@@ -88,6 +88,13 @@ func BenchmarkTimePeriod(b *testing.B) {
 	}
 }
 
+func ExampleNewTimePeriod() {
+	var tp = NewTimePeriod(time.Date(2015, 5, 8, 20, 0, 0, 0, utils.TaipeiTimeZone))
+	fmt.Println(tp.AtBefore(), tp.AtOpen(), tp.AtAfterOpen(), tp.AtClose())
+	// output:
+	// false false false true
+}
+
 func BenchmarkIsOpen(b *testing.B) {
 	for i := 0; i < b.N; i++ {
 		IsOpen(2015, 4, 19)

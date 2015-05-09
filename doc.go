@@ -14,7 +14,7 @@ Package twse
 
 Package tradingdays
 
-股市開休市判斷（支援非國定假日：颱風假）
+股市開休市判斷（支援非國定假日：颱風假）與當日區間判斷（盤中、盤後、盤後盤）
 
 Package utils
 
