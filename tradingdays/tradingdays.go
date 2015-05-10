@@ -32,17 +32,26 @@ func IsOpen(year int, month time.Month, day int) bool {
 func FindRecentlyOpened() time.Time {
 	d := time.Now().UTC()
 	days := d.Day()
-	var result time.Time
+	var index int
 	var tp *TimePeriod
 	for {
 		if IsOpen(d.Year(), d.Month(), days) {
-			result = time.Date(d.Year(), d.Month(), days, 0, 0, 0, 0, time.UTC)
-			tp = NewTimePeriod(time.Date(d.Year(), d.Month(), days, d.Hour(), d.Minute(), d.Second(), d.Nanosecond(), time.UTC))
-			if tp.AtAfterOpen() || tp.AtClose() {
-				return result
+			if index == 0 {
+				tp = NewTimePeriod(time.Date(d.Year(), d.Month(), days, d.Hour(), d.Minute(), d.Second(), d.Nanosecond(), time.UTC))
+				if tp.AtBefore() {
+					days--
+					for {
+						if IsOpen(d.Year(), d.Month(), days) {
+							break
+						}
+						days--
+					}
+				}
 			}
+			return time.Date(d.Year(), d.Month(), days, 0, 0, 0, 0, time.UTC)
 		}
 		days--
+		index++
 	}
 
 }

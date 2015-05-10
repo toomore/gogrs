@@ -61,21 +61,33 @@ import (
 
 var cacheTime time.Time
 
+func init() {
+	TaipeiNow()
+}
+
 // TaipeiNow show Taipei Now time.
 func TaipeiNow() time.Time {
 	if cacheTime.Year() == 1 {
 		d := time.Now().UTC()
 		days := d.Day()
+		var index int
 		for {
 			if tradingdays.IsOpen(d.Year(), d.Month(), days) {
+				if index == 0 {
+					if tradingdays.NewTimePeriod(time.Date(d.Year(), d.Month(), days, d.Hour(), d.Minute(), d.Second(), d.Nanosecond(), d.Location())).AtBefore() {
+						days--
+						for {
+							if tradingdays.IsOpen(d.Year(), d.Month(), days) {
+								break
+							}
+							days--
+						}
+					}
+				}
 				break
 			}
 			days--
-		}
-		if d.Before(time.Date(d.Year(), d.Month(), days, 1, 0, 0, 0, time.FixedZone("UTC", 0))) {
-			if d.Hour() == 0 && d.Minute() <= 59 {
-				days--
-			}
+			index++
 		}
 		cacheTime = time.Date(d.Year(), d.Month(), days, 0, 0, 0, 0, utils.TaipeiTimeZone)
 	}
