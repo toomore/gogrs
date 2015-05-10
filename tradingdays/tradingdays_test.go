@@ -17,9 +17,15 @@ func ExampleIsOpen() {
 }
 
 func TestFindRecentlyOpened(t *testing.T) {
-	result := FindRecentlyOpened()
+	result := FindRecentlyOpened(time.Now())
 	if time.Now().UTC().Sub(result).Hours() > 24*7 {
 		t.Error("Should not more than 7 days")
+	}
+
+	var date = time.Date(2015, 5, 11, 8, 30, 0, 0, utils.TaipeiTimeZone)
+	result2 := FindRecentlyOpened(date)
+	if result2.Unix() != time.Date(2015, 5, 8, 0, 0, 0, 0, time.UTC).Unix() {
+		t.Error("Should be at 2015/5/8")
 	}
 }
 
@@ -108,8 +114,9 @@ func BenchmarkDownloadCSV(b *testing.B) {
 }
 
 func BenchmarkFindRecentlyOpened(b *testing.B) {
+	var now = time.Now()
 	for i := 0; i < b.N; i++ {
-		FindRecentlyOpened()
+		FindRecentlyOpened(now)
 	}
 }
 

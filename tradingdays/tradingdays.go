@@ -29,11 +29,12 @@ func IsOpen(year int, month time.Month, day int) bool {
 }
 
 // FindRecentlyOpened 回傳最近一個開市時間（UTC 0）
-func FindRecentlyOpened() time.Time {
-	d := time.Now().UTC()
-	days := d.Day()
+func FindRecentlyOpened(date time.Time) time.Time {
+	var d = date.UTC()
+	var days = d.Day()
 	var index int
 	var tp *TimePeriod
+
 	for {
 		if IsOpen(d.Year(), d.Month(), days) {
 			if index == 0 {
