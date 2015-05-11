@@ -39,7 +39,7 @@ func FindRecentlyOpened(date time.Time) time.Time {
 		if IsOpen(d.Year(), d.Month(), days) {
 			if index == 0 {
 				tp = NewTimePeriod(time.Date(d.Year(), d.Month(), days, d.Hour(), d.Minute(), d.Second(), d.Nanosecond(), time.UTC))
-				if tp.AtBefore() {
+				if tp.AtBefore() || tp.AtOpen() {
 					days--
 					for {
 						if IsOpen(d.Year(), d.Month(), days) {
