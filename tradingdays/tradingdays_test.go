@@ -27,6 +27,12 @@ func TestFindRecentlyOpened(t *testing.T) {
 	if result2.Unix() != time.Date(2015, 5, 8, 0, 0, 0, 0, time.UTC).Unix() {
 		t.Error("Should be at 2015/5/8")
 	}
+
+	date = time.Date(2015, 5, 10, 8, 30, 0, 0, utils.TaipeiTimeZone)
+	result2 = FindRecentlyOpened(date)
+	if result2.Unix() != time.Date(2015, 5, 8, 0, 0, 0, 0, time.UTC).Unix() {
+		t.Error("Should be at 2015/5/8")
+	}
 }
 
 func TestIsOpen(t *testing.T) {
