@@ -97,8 +97,8 @@ func (l *Lists) Get(category string) ([][]string, error) {
 		return nil, fmt.Errorf("Network fail: %s", err)
 	}
 
-	dataContentBig5, _ := ioutil.ReadAll(data.Body)
-	dataContent, _ := iconv.ConvertString(string(dataContentBig5), "big5", "utf-8")
+	dataContentCp950, _ := ioutil.ReadAll(data.Body)
+	dataContent, _ := iconv.ConvertString(string(dataContentCp950), "cp950", "utf-8")
 	csvArrayContent := strings.Split(dataContent, "\n")
 
 	if category == "MS" {
