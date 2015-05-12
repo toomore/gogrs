@@ -110,6 +110,7 @@ var otcNo = flag.String("otc", "", "上櫃股票代碼，可使用 ',' 分隔多
 var index = flag.Bool("index", false, "顯示大盤、上櫃、寶島指數（default: false）")
 var ncpu = flag.Int("ncpu", runtime.NumCPU(), "指定 CPU 數量，預設為實際 CPU 數量")
 var pt = flag.Bool("pt", false, "計算花費時間")
+var count = flag.Bool("count", true, "計算此次查詢的漲跌家數")
 
 func main() {
 	flag.Parse()
@@ -120,6 +121,9 @@ func main() {
 	queue := make(chan *realtime.StockRealTime, chanbuf)
 	defer close(queue)
 	var wg sync.WaitGroup
+	var counter int
+	var up int
+	var down int
 
 	var startTime time.Time
 	if *pt {
@@ -186,10 +190,22 @@ func main() {
 				runtime.Gosched()
 				data, _ := r.Get()
 				log.Println(prettyprint(data))
+				if *count {
+					counter++
+					if data.Price-data.Open > 0 {
+						up++
+					} else if data.Price-data.Open < 0 {
+						down++
+					}
+				}
 			}(r)
 		}
 	}()
 	wg.Wait()
+	if *count {
+		fmt.Printf("All: %d, Up: %d, Down: %d, Same: %d\n",
+			counter, up, down, counter-up-down)
+	}
 	if *pt {
 		defer fmt.Println(time.Now().Sub(startTime))
 	}
