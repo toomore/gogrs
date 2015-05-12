@@ -26,6 +26,8 @@ The flags are:
 		指定 CPU 數量，預設為實際 CPU 數量
 	-pt
 		計算花費時間
+	-count
+		計算此次查詢的漲跌家數（default: true）
 
 範例
 
