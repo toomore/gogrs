@@ -6,7 +6,6 @@ import (
 	"math"
 	"regexp"
 	"strconv"
-	"sync"
 	"time"
 )
 
@@ -215,14 +214,8 @@ func SD(list []uint64) float64 {
 
 func DeltaFloat64(data []float64) []float64 {
 	var result = make([]float64, len(data)-1)
-	var wg sync.WaitGroup
-	wg.Add(len(data) - 1)
 	for i := 0; i < (len(data) - 1); i++ {
-		go func(i int, result *[]float64) {
-			defer wg.Done()
-			(*result)[i] = data[i+1] - data[i]
-		}(i, &result)
+		result[i] = data[i+1] - data[i]
 	}
-	wg.Wait()
 	return result
 }
