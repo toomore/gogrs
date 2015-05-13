@@ -212,6 +212,7 @@ func SD(list []uint64) float64 {
 	return math.Sqrt(AvgFloat64(data))
 }
 
+// DeltaFloat64 計算數列間距差
 func DeltaFloat64(data []float64) []float64 {
 	var result = make([]float64, len(data)-1)
 	for i := 0; i < (len(data) - 1); i++ {

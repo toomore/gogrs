@@ -218,6 +218,18 @@ func TestCalDiff(t *testing.T) {
 	}
 }
 
+func TestDelta(t *testing.T) {
+	var sample = []float64{10.0, 11.0, 9.0}
+	t.Log(DeltaFloat64(sample))
+}
+
+func BenchmarkDelta(b *testing.B) {
+	var sample = []float64{10.0, 11.0, 9.0}
+	for i := 0; i < b.N; i++ {
+		DeltaFloat64(sample)
+	}
+}
+
 func BenchmarkCalDiff(b *testing.B) {
 	var sampleA = []float64{10.0, 11.1, 12.2, 13.3}
 	var sampleB = []float64{12.2, 11.1, 10.0}
