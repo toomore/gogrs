@@ -220,9 +220,9 @@ func TestCalDiff(t *testing.T) {
 
 func TestDelta(t *testing.T) {
 	var sample1 = []float64{10.0, 11.0, 9.0}
-	var sample2 = []float64{10, 11, 9}
+	var sample2 = []int64{10, 11, 9}
 	t.Log(DeltaFloat64(sample1))
-	t.Log(DeltaFloat64(sample2))
+	t.Log(DeltaInt64(sample2))
 }
 
 func BenchmarkDeltafloat64(b *testing.B) {
