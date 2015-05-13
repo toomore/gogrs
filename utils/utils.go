@@ -220,3 +220,12 @@ func DeltaFloat64(data []float64) []float64 {
 	}
 	return result
 }
+
+// DeltaInt64 計算數列間距差
+func DeltaInt64(data []int64) []int64 {
+	var result = make([]int64, len(data)-1)
+	for i := 0; i < (len(data) - 1); i++ {
+		result[i] = data[i+1] - data[i]
+	}
+	return result
+}
