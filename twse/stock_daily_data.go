@@ -196,7 +196,7 @@ func (d Data) MA(days int) []float64 {
 
 // MABR 計算 收盤價移動平均 的乖離
 func (d Data) MABR(days1, days2 int) []float64 {
-	return utils.CalDiffFloat(d.MA(days1), d.MA(days2))
+	return utils.CalDiffFloat64(d.MA(days1), d.MA(days2))
 }
 
 // MAV 計算 成交股數 的移動平均

@@ -197,11 +197,11 @@ func TestCountCountine(t *testing.T) {
 func TestCalDiff(t *testing.T) {
 	var sampleA = []float64{10.0, 11.1, 12.2, 13.3}
 	var sampleB = []float64{12.2, 11.1, 10.0}
-	var result = CalDiffFloat(sampleA, sampleB)
+	var result = CalDiffFloat64(sampleA, sampleB)
 	if result[2] != float64(13.3)-float64(10.0) {
 		t.Error("Wrong cal.")
 	}
-	result = CalDiffFloat(sampleB, sampleA)
+	result = CalDiffFloat64(sampleB, sampleA)
 	if result[2] != float64(10.0)-float64(13.3) {
 		t.Error("Wrong cal.")
 	}
@@ -218,11 +218,32 @@ func TestCalDiff(t *testing.T) {
 	}
 }
 
+func TestDelta(t *testing.T) {
+	var sample1 = []float64{10.0, 11.0, 9.0}
+	var sample2 = []int64{10, 11, 9}
+	t.Log(DeltaFloat64(sample1))
+	t.Log(DeltaInt64(sample2))
+}
+
+func BenchmarkDeltafloat64(b *testing.B) {
+	var sample = []float64{10.0, 11.0, 9.0}
+	for i := 0; i < b.N; i++ {
+		DeltaFloat64(sample)
+	}
+}
+
+func BenchmarkDeltaInt64(b *testing.B) {
+	var sample = []int64{10, 11, 9}
+	for i := 0; i < b.N; i++ {
+		DeltaInt64(sample)
+	}
+}
+
 func BenchmarkCalDiff(b *testing.B) {
 	var sampleA = []float64{10.0, 11.1, 12.2, 13.3}
 	var sampleB = []float64{12.2, 11.1, 10.0}
 	for i := 0; i < b.N; i++ {
-		CalDiffFloat(sampleA, sampleB)
+		CalDiffFloat64(sampleA, sampleB)
 	}
 }
 

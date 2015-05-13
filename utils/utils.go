@@ -166,8 +166,8 @@ func CountCountineFloat64(data []float64) (int, bool) {
 	return counter, data[len(data)-1] > 0
 }
 
-// CalDiffFloat 計算兩序列的差
-func CalDiffFloat(listA, listB []float64) []float64 {
+// CalDiffFloat64 計算兩序列的差
+func CalDiffFloat64(listA, listB []float64) []float64 {
 	var length int
 	var result []float64
 	if len(listA) <= len(listB) {
@@ -210,4 +210,22 @@ func SD(list []uint64) float64 {
 		data[i] *= data[i]
 	}
 	return math.Sqrt(AvgFloat64(data))
+}
+
+// DeltaFloat64 計算數列間距差
+func DeltaFloat64(data []float64) []float64 {
+	var result = make([]float64, len(data)-1)
+	for i := 0; i < (len(data) - 1); i++ {
+		result[i] = data[i+1] - data[i]
+	}
+	return result
+}
+
+// DeltaInt64 計算數列間距差
+func DeltaInt64(data []int64) []int64 {
+	var result = make([]int64, len(data)-1)
+	for i := 0; i < (len(data) - 1); i++ {
+		result[i] = data[i+1] - data[i]
+	}
+	return result
 }
