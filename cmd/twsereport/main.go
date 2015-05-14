@@ -2,7 +2,7 @@ package main
 
 import (
 	"flag"
-	"log"
+	"fmt"
 	"runtime"
 	"strings"
 	"sync"
@@ -69,12 +69,14 @@ func main() {
 
 	if len(datalist) > 0 {
 		for _, checkfunc := range []func(base) bool{check01, check02} {
-			log.Printf("----- %v -----", checkfunc)
+			fmt.Printf("----- %v -----\n", checkfunc)
 			for _, stock := range datalist {
 				wg.Add(1)
 				go func(checkfunc func(base) bool, stock *twse.Data) {
 					runtime.Gosched()
-					log.Println(checkfunc(base(stock)))
+					if checkfunc(base(stock)) {
+						fmt.Printf("%s\n", stock.No)
+					}
 				}(checkfunc, stock)
 			}
 			wg.Wait()
