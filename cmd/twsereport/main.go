@@ -19,22 +19,28 @@ type base interface {
 	PlusData()
 }
 
-// MA 3 > 6 > 18
-func check01(b base) bool {
+type check01 struct{}
+
+func (check01) String() string {
+	return "MA 3 > 6 > 18"
+}
+
+func (check01) CheckFunc(b ...base) bool {
 	defer wg.Done()
-	var start = b.Len()
+	var d = b[0]
+	var start = d.Len()
 	for {
-		if b.Len() >= 18 {
+		if d.Len() >= 18 {
 			break
 		}
-		b.PlusData()
-		if (b.Len() - start) == 0 {
+		d.PlusData()
+		if (d.Len() - start) == 0 {
 			break
 		}
 	}
-	var ma3 = b.MA(3)
-	var ma6 = b.MA(6)
-	var ma18 = b.MA(18)
+	var ma3 = d.MA(3)
+	var ma6 = d.MA(6)
+	var ma18 = d.MA(18)
 	//log.Println(ma3[len(ma3)-1], ma6[len(ma6)-1], ma18[len(ma18)-1])
 	if ma3[len(ma3)-1] > ma6[len(ma6)-1] && ma6[len(ma6)-1] > ma18[len(ma18)-1] {
 		return true
@@ -42,13 +48,23 @@ func check01(b base) bool {
 	return false
 }
 
-func check02(b base) bool {
+type check02 struct{}
+
+func (check02) String() string {
+	return "check02"
+}
+func (check02) CheckFunc(b ...base) bool {
 	defer wg.Done()
-	days, up := utils.CountCountineFloat64(utils.DeltaFloat64(b.MA(3)))
+	days, up := utils.CountCountineFloat64(utils.DeltaFloat64(b[0].MA(3)))
 	if up && days > 1 {
 		return true
 	}
 	return false
+}
+
+type CheckGroup interface {
+	String() string
+	CheckFunc(...base) bool
 }
 
 var wg sync.WaitGroup
@@ -68,16 +84,16 @@ func main() {
 	}
 
 	if len(datalist) > 0 {
-		for _, checkfunc := range []func(base) bool{check01, check02} {
-			fmt.Printf("----- %v -----\n", checkfunc)
+		for _, check := range []CheckGroup{CheckGroup(check01{}), CheckGroup(check02{})} {
+			fmt.Printf("----- %v -----\n", check)
 			for _, stock := range datalist {
 				wg.Add(1)
-				go func(checkfunc func(base) bool, stock *twse.Data) {
+				go func(check CheckGroup, stock *twse.Data) {
 					runtime.Gosched()
-					if checkfunc(base(stock)) {
+					if check.CheckFunc(stock) {
 						fmt.Printf("%s\n", stock.No)
 					}
-				}(checkfunc, stock)
+				}(check, stock)
 			}
 			wg.Wait()
 		}
