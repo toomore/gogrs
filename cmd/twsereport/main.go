@@ -3,7 +3,9 @@ package main
 import (
 	"flag"
 	"log"
+	"runtime"
 	"strings"
+	"sync"
 	"time"
 
 	"github.com/toomore/gogrs/tradingdays"
@@ -19,6 +21,7 @@ type base interface {
 
 // MA 3 > 6 > 18
 func check01(b base) bool {
+	defer wg.Done()
 	var start = b.Len()
 	for {
 		if b.Len() >= 18 {
@@ -41,6 +44,7 @@ func check01(b base) bool {
 }
 
 func check02(b base) bool {
+	defer wg.Done()
 	days, up := utils.CountCountineFloat64(utils.DeltaFloat64(b.MA(3)))
 	log.Println(days, up, b.MA(3))
 	if up && days > 1 {
@@ -49,6 +53,7 @@ func check02(b base) bool {
 	return false
 }
 
+var wg sync.WaitGroup
 var twseNo = flag.String("twse", "", "上市股票代碼，可使用 ',' 分隔多組代碼，例：2618,2329")
 
 func main() {
@@ -67,8 +72,13 @@ func main() {
 	for _, checkfunc := range []func(base) bool{check01, check02} {
 		log.Printf("----- %v -----", checkfunc)
 		for _, stock := range datalist {
-			log.Println(checkfunc(base(stock)))
+			wg.Add(1)
+			go func(checkfunc func(base) bool, stock *twse.Data) {
+				runtime.Gosched()
+				log.Println(checkfunc(base(stock)))
+			}(checkfunc, stock)
 		}
+		wg.Wait()
 	}
 
 }
