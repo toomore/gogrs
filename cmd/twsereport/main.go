@@ -86,8 +86,8 @@ func main() {
 	if len(datalist) > 0 {
 		for _, check := range []checkGroup{checkGroup(check01{}), checkGroup(check02{})} {
 			fmt.Printf("----- %v -----\n", check)
+			wg.Add(len(datalist))
 			for _, stock := range datalist {
-				wg.Add(1)
 				go func(check checkGroup, stock *twse.Data) {
 					runtime.Gosched()
 					if check.CheckFunc(stock) {
