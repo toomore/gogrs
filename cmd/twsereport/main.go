@@ -1,7 +1,9 @@
 package main
 
 import (
+	"flag"
 	"log"
+	"strings"
 	"time"
 
 	"github.com/toomore/gogrs/tradingdays"
@@ -47,8 +49,26 @@ func check02(b base) bool {
 	return false
 }
 
+var twseNo = flag.String("twse", "", "上市股票代碼，可使用 ',' 分隔多組代碼，例：2618,2329")
+
 func main() {
-	stock := twse.NewTWSE("2329", tradingdays.FindRecentlyOpened(time.Now()))
-	log.Println(check01(base(stock)))
-	log.Println(check02(base(stock)))
+	flag.Parse()
+	var datalist []*twse.Data
+
+	if *twseNo != "" {
+		twselist := strings.Split(*twseNo, ",")
+		datalist = make([]*twse.Data, len(twselist))
+
+		for i, no := range twselist {
+			datalist[i] = twse.NewTWSE(no, tradingdays.FindRecentlyOpened(time.Now()))
+		}
+	}
+
+	for _, checkfunc := range []func(base) bool{check01, check02} {
+		log.Printf("----- %v -----", checkfunc)
+		for _, stock := range datalist {
+			log.Println(checkfunc(base(stock)))
+		}
+	}
+
 }
