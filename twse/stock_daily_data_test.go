@@ -235,3 +235,11 @@ func TestData_FormatData(*testing.T) {
 	d.Get()
 	d.FormatData()
 }
+
+func TestLen(t *testing.T) {
+	var d = NewTWSE("2618", time.Date(2014, 12, 26, 0, 0, 0, 0, utils.TaipeiTimeZone))
+	d.Get()
+	if len(d.RawData) != d.Len() {
+		t.Error("Should be the same.")
+	}
+}

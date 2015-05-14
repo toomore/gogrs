@@ -236,6 +236,11 @@ func (d Data) IsRed() bool {
 	return rangeList[len(rangeList)-1] > 0
 }
 
+// Len 返回資料序列長度
+func (d Data) Len() int {
+	return len(d.RawData)
+}
+
 // FmtData is struct for daily data format.
 type FmtData struct {
 	Date       time.Time
