@@ -27,7 +27,6 @@ func check01(b base) bool {
 		if b.Len() >= 18 {
 			break
 		}
-		log.Println("In PlusData")
 		b.PlusData()
 		if (b.Len() - start) == 0 {
 			break
@@ -46,7 +45,6 @@ func check01(b base) bool {
 func check02(b base) bool {
 	defer wg.Done()
 	days, up := utils.CountCountineFloat64(utils.DeltaFloat64(b.MA(3)))
-	log.Println(days, up, b.MA(3))
 	if up && days > 1 {
 		return true
 	}
@@ -69,16 +67,19 @@ func main() {
 		}
 	}
 
-	for _, checkfunc := range []func(base) bool{check01, check02} {
-		log.Printf("----- %v -----", checkfunc)
-		for _, stock := range datalist {
-			wg.Add(1)
-			go func(checkfunc func(base) bool, stock *twse.Data) {
-				runtime.Gosched()
-				log.Println(checkfunc(base(stock)))
-			}(checkfunc, stock)
+	if len(datalist) > 0 {
+		for _, checkfunc := range []func(base) bool{check01, check02} {
+			log.Printf("----- %v -----", checkfunc)
+			for _, stock := range datalist {
+				wg.Add(1)
+				go func(checkfunc func(base) bool, stock *twse.Data) {
+					runtime.Gosched()
+					log.Println(checkfunc(base(stock)))
+				}(checkfunc, stock)
+			}
+			wg.Wait()
 		}
-		wg.Wait()
+	} else {
+		flag.PrintDefaults()
 	}
-
 }
