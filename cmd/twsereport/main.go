@@ -69,18 +69,31 @@ type checkGroup interface {
 
 var wg sync.WaitGroup
 var twseNo = flag.String("twse", "", "上市股票代碼，可使用 ',' 分隔多組代碼，例：2618,2329")
+var twseCate = flag.String("twsecate", "", "上市股票類別，可使用 ',' 分隔多組代碼，例：11,15")
 
 func main() {
 	flag.Parse()
 	var datalist []*twse.Data
+	var catelist []twse.StockInfo
+	var twselist []string
+	var catenolist []string
+
+	if *twseCate != "" {
+		l := &twse.Lists{Date: tradingdays.FindRecentlyOpened(time.Now())}
+		catelist = l.GetCategoryList(*twseCate)
+		catenolist = make([]string, len(catelist))
+		for i, s := range catelist {
+			catenolist[i] = s.No
+		}
+	}
 
 	if *twseNo != "" {
-		twselist := strings.Split(*twseNo, ",")
-		datalist = make([]*twse.Data, len(twselist))
+		twselist = strings.Split(*twseNo, ",")
+	}
+	datalist = make([]*twse.Data, len(twselist)+len(catelist))
 
-		for i, no := range twselist {
-			datalist[i] = twse.NewTWSE(no, tradingdays.FindRecentlyOpened(time.Now()))
-		}
+	for i, no := range append(twselist, catenolist...) {
+		datalist[i] = twse.NewTWSE(no, tradingdays.FindRecentlyOpened(time.Now()))
 	}
 
 	if len(datalist) > 0 {
