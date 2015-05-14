@@ -62,7 +62,7 @@ func (check02) CheckFunc(b ...base) bool {
 	return false
 }
 
-type CheckGroup interface {
+type checkGroup interface {
 	String() string
 	CheckFunc(...base) bool
 }
@@ -84,11 +84,11 @@ func main() {
 	}
 
 	if len(datalist) > 0 {
-		for _, check := range []CheckGroup{CheckGroup(check01{}), CheckGroup(check02{})} {
+		for _, check := range []checkGroup{checkGroup(check01{}), checkGroup(check02{})} {
 			fmt.Printf("----- %v -----\n", check)
 			for _, stock := range datalist {
 				wg.Add(1)
-				go func(check CheckGroup, stock *twse.Data) {
+				go func(check checkGroup, stock *twse.Data) {
 					runtime.Gosched()
 					if check.CheckFunc(stock) {
 						fmt.Printf("%s\n", stock.No)
