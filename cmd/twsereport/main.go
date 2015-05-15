@@ -16,6 +16,7 @@ import (
 type base interface {
 	MA(days int) []float64
 	Len() int
+	Get() ([][]string, error)
 	PlusData()
 }
 
@@ -29,6 +30,7 @@ func (check01) CheckFunc(b ...base) bool {
 	defer wg.Done()
 	var d = b[0]
 	var start = d.Len()
+	d.Get()
 	for {
 		if d.Len() >= 18 {
 			break
@@ -126,7 +128,10 @@ func main() {
 				go func(check checkGroup, stock *twse.Data) {
 					runtime.Gosched()
 					if check.CheckFunc(stock) {
-						fmt.Printf("%s\n", stock.No)
+						fmt.Printf("%s %s $%.2f %d\n", stock.No, stock.Name,
+							stock.GetPriceList()[len(stock.GetPriceList())-1],
+							stock.GetVolumeList()[len(stock.GetVolumeList())-1],
+						)
 					}
 				}(check, stock)
 			}
