@@ -67,9 +67,25 @@ type checkGroup interface {
 	CheckFunc(...base) bool
 }
 
+type checkGroupList []checkGroup
+
+func (c *checkGroupList) Add(f checkGroup) {
+	if (*c)[0] == nil {
+		(*c)[0] = f
+	} else {
+		*c = append(*c, f)
+	}
+}
+
 var wg sync.WaitGroup
 var twseNo = flag.String("twse", "", "上市股票代碼，可使用 ',' 分隔多組代碼，例：2618,2329")
 var twseCate = flag.String("twsecate", "", "上市股票類別，可使用 ',' 分隔多組代碼，例：11,15")
+var ckList = make(checkGroupList, 1)
+
+func init() {
+	ckList.Add(checkGroup(check01{}))
+	ckList.Add(checkGroup(check02{}))
+}
 
 func main() {
 	flag.Parse()
@@ -97,7 +113,7 @@ func main() {
 	}
 
 	if len(datalist) > 0 {
-		for _, check := range []checkGroup{checkGroup(check01{}), checkGroup(check02{})} {
+		for _, check := range ckList {
 			fmt.Printf("----- %v -----\n", check)
 			wg.Add(len(datalist))
 			for _, stock := range datalist {
