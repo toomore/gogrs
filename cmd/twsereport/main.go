@@ -38,6 +38,9 @@ func (check01) CheckFunc(b ...base) bool {
 			break
 		}
 	}
+	if d.Len() < 18 {
+		return false
+	}
 	var ma3 = d.MA(3)
 	var ma6 = d.MA(6)
 	var ma18 = d.MA(18)
@@ -55,6 +58,9 @@ func (check02) String() string {
 }
 func (check02) CheckFunc(b ...base) bool {
 	defer wg.Done()
+	if b[0].Len() < 3 {
+		return false
+	}
 	days, up := utils.CountCountineFloat64(utils.DeltaFloat64(b[0].MA(3)))
 	if up && days > 1 {
 		return true
