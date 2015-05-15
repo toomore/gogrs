@@ -31,11 +31,20 @@ func ExampleData() {
 	// [103/12/01 64,418,143 1,350,179,448 20.20 21.40 20.20 21.35 +1.35 13,249]
 }
 
-func TestData_Get(*testing.T) {
+func TestData_Get(t *testing.T) {
 	var d = NewTWSE("2618", time.Date(2014, 12, 26, 0, 0, 0, 0, utils.TaipeiTimeZone))
-
 	d.Get()
 	d.Get() // Test Cache.
+	if d.Name != "長榮航" {
+		t.Error("Should be `長榮航`")
+	}
+
+	var o = NewOTC("8446", time.Date(2014, 12, 26, 0, 0, 0, 0, utils.TaipeiTimeZone))
+	o.Get()
+	o.Get() // Test Cache.
+	if o.Name != "華研" {
+		t.Error("Should be `華研`")
+	}
 }
 
 var twse = NewTWSE("2329", time.Date(2015, 03, 20, 0, 0, 0, 0, utils.TaipeiTimeZone))
