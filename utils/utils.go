@@ -198,12 +198,17 @@ func CalDiffInt64(listA, listB []int64) []int64 {
 	return result
 }
 
-// SD 計算標準差
-func SD(list []uint64) float64 {
+// SDUint64 計算標準差
+func SDUint64(list []uint64) float64 {
 	var data = make([]float64, len(list))
 	for i := 0; i < len(list); i++ {
 		data[i] = float64(list[i])
 	}
+	return SD(data)
+}
+
+// SD 計算標準差
+func SD(data []float64) float64 {
 	var avg = AvgFloat64(data)
 	for i := 0; i < len(data); i++ {
 		data[i] -= avg
