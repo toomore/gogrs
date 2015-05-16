@@ -62,23 +62,6 @@ func (check02) String() string {
 }
 func (check02) CheckFunc(b ...*twse.Data) bool {
 	defer wg.Done()
-	//var start = b[0].Len()
-	//if start == 0 {
-	//	b[0].Get()
-	//}
-	//for {
-	//	if b[0].Len() > 4 {
-	//		break
-	//	}
-	//	b[0].PlusData()
-	//	if b[0].Len()-start == 0 {
-	//		break
-	//	}
-	//	start = b[0].Len()
-	//}
-	//if b[0].Len() < 4 {
-	//	return false
-	//}
 	return utils.ThanSumPastUint64((*b[0]).GetVolumeList(), 3, true) && (*b[0]).IsRed()
 }
 
