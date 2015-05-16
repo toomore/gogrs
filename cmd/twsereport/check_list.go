@@ -1,12 +1,13 @@
 package main
 
-import "github.com/toomore/gogrs/utils"
+import (
+	"github.com/toomore/gogrs/twse"
+	"github.com/toomore/gogrs/utils"
+)
 
-type base interface {
-	MA(days int) []float64
-	Len() int
-	Get() ([][]string, error)
-	PlusData()
+type checkGroup interface {
+	String() string
+	CheckFunc(...*twse.Data) bool
 }
 
 type check01 struct{}
@@ -15,11 +16,13 @@ func (check01) String() string {
 	return "MA 3 > 6 > 18"
 }
 
-func (check01) CheckFunc(b ...base) bool {
+func (check01) CheckFunc(b ...*twse.Data) bool {
 	defer wg.Done()
 	var d = b[0]
 	var start = d.Len()
-	d.Get()
+	if start == 0 {
+		d.Get()
+	}
 	for {
 		if d.Len() >= 18 {
 			break
@@ -28,6 +31,7 @@ func (check01) CheckFunc(b ...base) bool {
 		if (d.Len() - start) == 0 {
 			break
 		}
+		start = d.Len()
 	}
 	if d.Len() < 18 {
 		return false
@@ -54,18 +58,28 @@ func (check01) CheckFunc(b ...base) bool {
 type check02 struct{}
 
 func (check02) String() string {
-	return "check02"
+	return "量大於前三天 K 線收紅"
 }
-func (check02) CheckFunc(b ...base) bool {
+func (check02) CheckFunc(b ...*twse.Data) bool {
 	defer wg.Done()
-	if b[0].Len() < 3 {
-		return false
-	}
-	days, up := utils.CountCountineFloat64(utils.DeltaFloat64(b[0].MA(3)))
-	if up && days > 1 {
-		return true
-	}
-	return false
+	//var start = b[0].Len()
+	//if start == 0 {
+	//	b[0].Get()
+	//}
+	//for {
+	//	if b[0].Len() > 4 {
+	//		break
+	//	}
+	//	b[0].PlusData()
+	//	if b[0].Len()-start == 0 {
+	//		break
+	//	}
+	//	start = b[0].Len()
+	//}
+	//if b[0].Len() < 4 {
+	//	return false
+	//}
+	return utils.ThanSumPastUint64((*b[0]).GetVolumeList(), 3, true) && (*b[0]).IsRed()
 }
 
 func init() {

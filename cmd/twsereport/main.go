@@ -33,11 +33,6 @@ import (
 	"github.com/toomore/gogrs/twse"
 )
 
-type checkGroup interface {
-	String() string
-	CheckFunc(...base) bool
-}
-
 type checkGroupList []checkGroup
 
 func (c *checkGroupList) Add(f checkGroup) {
