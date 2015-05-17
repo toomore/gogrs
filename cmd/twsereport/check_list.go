@@ -91,7 +91,7 @@ func prepareData(b ...*twse.Data) []bool {
 		}
 	}
 
-	for i, _ := range b {
+	for i := range b {
 		result = make([]bool, len(b))
 		b[i].Get()
 		if b[i].Len() < mindata {
