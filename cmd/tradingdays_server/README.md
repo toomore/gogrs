@@ -1,7 +1,7 @@
 gogrs - tradingdays_server
 ===========================
 
-[![GoDoc](https://godoc.org/github.com/toomore/gogrs?status.svg)](https://godoc.org/github.com/toomore/gogrs/tradingdays/tradingdays_server)
+[![GoDoc](https://godoc.org/github.com/toomore/gogrs?status.svg)](https://godoc.org/github.com/toomore/gogrs/cmd/tradingdays_server)
 [![Build Status](https://travis-ci.org/toomore/gogrs.svg?branch=master)](https://travis-ci.org/toomore/gogrs)
 
 主要支援動態更新 CSV 檔案讀取，解決非預定開休市狀況（如：颱風假）
@@ -23,7 +23,7 @@ The flags are:
 
 URL Path:
 
-	/open?q={timestamp}
+	http://127.0.0.1:58123/open?q={timestamp}
 
 回傳 JSON 格式
 
