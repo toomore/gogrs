@@ -103,7 +103,7 @@ Run:
 	} else {
 		flag.PrintDefaults()
 	}
-	fmt.Println("\n再次計算(Y/n)\n")
+	fmt.Println("\n再次計算(Y/n)")
 	in := bufio.NewReader(os.Stdin)
 	stdString, _ := in.ReadString('\n')
 	if strings.Split(stdString, "\n")[0] == "Y" {
