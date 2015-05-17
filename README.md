@@ -13,10 +13,10 @@ Packages
 3. tradingdays - [股市開休市判斷（支援非國定假日：颱風假）與當日區間判斷（盤中、盤後、盤後盤）](https://godoc.org/github.com/toomore/gogrs/tradingdays)
 4. utils - [套件所需的公用工具](https://godoc.org/github.com/toomore/gogrs/utils)
 
-
 Cmd
 ----
 
 1. gogrs_example - [簡單範例測試](https://godoc.org/github.com/toomore/gogrs/cmd/gogrs_example)
 2. realtime - [擷取盤中即時資訊與大盤、上櫃、寶島指數](https://godoc.org/github.com/toomore/gogrs/cmd/realtime)
-3. tradingdays_server - [提供簡單的日期查詢 API Server](https://godoc.org/github.com/toomore/gogrs/cmd/tradingdays_server)
+3. twsereport - [每日收盤後產生符合選股條件的報告](https://godoc.org/github.com/toomore/gogrs/cmd/twsereport)
+4. tradingdays_server - [提供簡單的日期查詢 API Server](https://godoc.org/github.com/toomore/gogrs/cmd/tradingdays_server)
