@@ -96,6 +96,9 @@ func (l *Lists) Get(category string) ([][]string, error) {
 	if err != nil {
 		return nil, fmt.Errorf("Network fail: %s", err)
 	}
+	if l.categoryRawData == nil {
+		l.categoryRawData = make(map[string][][]string)
+	}
 
 	dataContentCp950, _ := ioutil.ReadAll(data.Body)
 	dataContent, _ := iconv.ConvertString(string(dataContentCp950), "cp950", "utf-8")
@@ -107,14 +110,21 @@ func (l *Lists) Get(category string) ([][]string, error) {
 			returnData, err := csvReader.ReadAll()
 			return returnData, err
 		}
+	} else if category == "ALLBUT0999" {
+		if len(csvArrayContent) > 155 {
+			csvReader := csv.NewReader(strings.NewReader(strings.Join(csvArrayContent[154:len(csvArrayContent)-9], "\n")))
+			returnData, err := csvReader.ReadAll()
+			if err == nil {
+				l.categoryRawData[category] = returnData
+				l.formatData(category)
+			}
+			return returnData, err
+		}
 	} else {
 		if len(csvArrayContent) > 9 {
 			csvReader := csv.NewReader(strings.NewReader(strings.Join(csvArrayContent[4:len(csvArrayContent)-7], "\n")))
 			returnData, err := csvReader.ReadAll()
 			if err == nil {
-				if l.categoryRawData == nil {
-					l.categoryRawData = make(map[string][][]string)
-				}
 				l.categoryRawData[category] = returnData
 				l.formatData(category)
 			}
