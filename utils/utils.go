@@ -208,8 +208,9 @@ func SDUint64(list []uint64) float64 {
 }
 
 // SD 計算標準差
-func SD(data []float64) float64 {
-	var avg = AvgFloat64(data)
+func SD(list []float64) float64 {
+	var avg = AvgFloat64(list)
+	var data = make([]float64, len(list))
 	for i := 0; i < len(data); i++ {
 		data[i] -= avg
 		data[i] *= data[i]
