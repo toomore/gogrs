@@ -91,7 +91,9 @@ Run:
 				go func(check checkGroup, stock *twse.Data) {
 					runtime.Gosched()
 					if check.CheckFunc(stock) {
-						fmt.Printf("%s %s $%.2f %d\n", stock.No, stock.Name,
+						fmt.Printf("[%s] %s %s $%.2f %d\n",
+							check,
+							stock.No, stock.Name,
 							stock.GetPriceList()[len(stock.GetPriceList())-1],
 							stock.GetVolumeList()[len(stock.GetVolumeList())-1],
 						)

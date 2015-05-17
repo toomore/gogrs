@@ -68,7 +68,7 @@ func (check02) CheckFunc(b ...*twse.Data) bool {
 type check03 struct{}
 
 func (check03) String() string {
-	return "量價走平 45 天"
+	return "量或價走平 45 天"
 }
 
 func (check03) CheckFunc(b ...*twse.Data) bool {
@@ -91,7 +91,7 @@ func (check03) CheckFunc(b ...*twse.Data) bool {
 	}
 	var price = b[0].GetPriceList()
 	var volume = b[0].GetVolumeList()
-	return utils.SD(price) < 0.25 && utils.SDUint64(volume) < 0.25
+	return utils.SD(price[:45]) < 0.25 || utils.SDUint64(volume[:45]) < 0.25
 }
 
 func init() {
