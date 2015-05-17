@@ -212,7 +212,7 @@ func SD(list []float64) float64 {
 	var avg = AvgFloat64(list)
 	var data = make([]float64, len(list))
 	for i := 0; i < len(data); i++ {
-		data[i] -= avg
+		data[i] = list[i] - avg
 		data[i] *= data[i]
 	}
 	return math.Sqrt(AvgFloat64(data))
