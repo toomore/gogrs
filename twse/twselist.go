@@ -104,13 +104,14 @@ func (l *Lists) Get(category string) ([][]string, error) {
 	dataContent, _ := iconv.ConvertString(string(dataContentCp950), "cp950", "utf-8")
 	csvArrayContent := strings.Split(dataContent, "\n")
 
-	if category == "MS" {
+	switch category {
+	case "MS":
 		if len(csvArrayContent) > 6 {
 			csvReader := csv.NewReader(strings.NewReader(strings.Join(csvArrayContent[4:51], "\n")))
 			returnData, err := csvReader.ReadAll()
 			return returnData, err
 		}
-	} else if category == "ALLBUT0999" {
+	case "ALLBUT0999":
 		if len(csvArrayContent) > 155 {
 			csvReader := csv.NewReader(strings.NewReader(strings.Join(csvArrayContent[154:len(csvArrayContent)-9], "\n")))
 			returnData, err := csvReader.ReadAll()
@@ -120,7 +121,7 @@ func (l *Lists) Get(category string) ([][]string, error) {
 			}
 			return returnData, err
 		}
-	} else {
+	default:
 		if len(csvArrayContent) > 9 {
 			csvReader := csv.NewReader(strings.NewReader(strings.Join(csvArrayContent[4:len(csvArrayContent)-7], "\n")))
 			returnData, err := csvReader.ReadAll()
