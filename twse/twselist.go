@@ -121,9 +121,13 @@ func (l *Lists) Get(category string) ([][]string, error) {
 	}
 	if csvReader != nil {
 		returnData, err := csvReader.ReadAll()
-		if err == nil {
-			l.categoryRawData[category] = returnData
-			l.formatData(category)
+		switch category {
+		default:
+			if err == nil {
+				l.categoryRawData[category] = returnData
+				l.formatData(category)
+			}
+		case "MS":
 		}
 		return returnData, err
 	}
