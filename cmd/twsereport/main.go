@@ -55,6 +55,15 @@ func init() {
 	runtime.GOMAXPROCS(*ncpu)
 }
 
+func prettyprint(stock *twse.Data, check checkGroup) string {
+	return fmt.Sprintf("[%s] %s %s $%.2f %d",
+		check,
+		stock.No, stock.Name,
+		stock.GetPriceList()[len(stock.GetPriceList())-1],
+		stock.GetVolumeList()[len(stock.GetVolumeList())-1],
+	)
+}
+
 func main() {
 	flag.Parse()
 	var datalist []*twse.Data
@@ -91,12 +100,7 @@ Run:
 				go func(check checkGroup, stock *twse.Data) {
 					runtime.Gosched()
 					if check.CheckFunc(stock) {
-						fmt.Printf("[%s] %s %s $%.2f %d\n",
-							check,
-							stock.No, stock.Name,
-							stock.GetPriceList()[len(stock.GetPriceList())-1],
-							stock.GetVolumeList()[len(stock.GetVolumeList())-1],
-						)
+						fmt.Println(prettyprint(stock, check))
 					}
 				}(check, stock)
 			}
