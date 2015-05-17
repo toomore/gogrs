@@ -65,7 +65,37 @@ func (check02) CheckFunc(b ...*twse.Data) bool {
 	return utils.ThanSumPastUint64((*b[0]).GetVolumeList(), 3, true) && (*b[0]).IsRed()
 }
 
+type check03 struct{}
+
+func (check03) String() string {
+	return "量價走平 45 天"
+}
+
+func (check03) CheckFunc(b ...*twse.Data) bool {
+	defer wg.Done()
+	if b[0].Len() < 45 {
+		start := b[0].Len()
+		for {
+			b[0].PlusData()
+			if b[0].Len() > 45 {
+				break
+			}
+			if b[0].Len() == start {
+				break
+			}
+			start = b[0].Len()
+		}
+		if b[0].Len() < 45 {
+			return false
+		}
+	}
+	var price = b[0].GetPriceList()
+	var volume = b[0].GetVolumeList()
+	return utils.SD(price) < 0.25 && utils.SDUint64(volume) < 0.25
+}
+
 func init() {
 	ckList.Add(checkGroup(check01{}))
 	ckList.Add(checkGroup(check02{}))
+	ckList.Add(checkGroup(check03{}))
 }
