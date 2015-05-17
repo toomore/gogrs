@@ -91,7 +91,9 @@ func (check03) CheckFunc(b ...*twse.Data) bool {
 	}
 	var price = b[0].GetPriceList()
 	var volume = b[0].GetVolumeList()
-	return utils.SD(price[:45]) < 0.25 || utils.SDUint64(volume[:45]) < 0.25
+	return price[len(price)-1] > 10 &&
+		(utils.SD(price[len(price)-46:]) < 0.25 ||
+			utils.SDUint64(volume[len(volume)-46:]) < 0.25)
 }
 
 func init() {
