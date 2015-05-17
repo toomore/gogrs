@@ -23,20 +23,18 @@ func (check01) Mindata() int {
 
 func (check01) CheckFunc(b ...*twse.Data) bool {
 	defer wg.Done()
-	var d = b[0]
-	prepareCheck := prepareData(b...)
-	if prepareCheck[0] != true {
+	if prepareData(b...)[0] != true {
 		return false
 	}
-	var ma3 = d.MA(3)
+	var ma3 = b[0].MA(3)
 	if days, ok := utils.CountCountineFloat64(utils.DeltaFloat64(ma3)); !ok || days == 0 {
 		return false
 	}
-	var ma6 = d.MA(6)
+	var ma6 = b[0].MA(6)
 	if days, ok := utils.CountCountineFloat64(utils.DeltaFloat64(ma6)); !ok || days == 0 {
 		return false
 	}
-	var ma18 = d.MA(18)
+	var ma18 = b[0].MA(18)
 	if days, ok := utils.CountCountineFloat64(utils.DeltaFloat64(ma18)); !ok || days == 0 {
 		return false
 	}
@@ -113,6 +111,8 @@ func prepareData(b ...*twse.Data) []bool {
 			if b[i].Len() < mindata {
 				result[i] = false
 			}
+		} else {
+			result[i] = true
 		}
 	}
 	return result

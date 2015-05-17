@@ -56,8 +56,9 @@ func init() {
 }
 
 func prettyprint(stock *twse.Data, check checkGroup) string {
-	return fmt.Sprintf("[%s] %s %s $%.2f %d",
+	return fmt.Sprintf("[%s] %s %s %s $%.2f %d",
 		check,
+		stock.RawData[stock.Len()-1][0],
 		stock.No, stock.Name,
 		stock.GetPriceList()[len(stock.GetPriceList())-1],
 		stock.GetVolumeList()[len(stock.GetVolumeList())-1],
