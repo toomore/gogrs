@@ -86,14 +86,21 @@ func (check03) CheckFunc(b ...*twse.Data) bool {
 
 func prepareData(b ...*twse.Data) []bool {
 	var result []bool
+	var mindata int
+	for i := range ckList {
+		if ckList[i].Mindata() > mindata {
+			mindata = ckList[i].Mindata()
+		}
+	}
+
 	for i, _ := range b {
 		result = make([]bool, len(b))
 		b[i].Get()
-		if b[i].Len() < 45 {
+		if b[i].Len() < mindata {
 			start := b[i].Len()
 			for {
 				b[i].PlusData()
-				if b[i].Len() > 45 {
+				if b[i].Len() > mindata {
 					result[i] = true
 					break
 				}
@@ -103,7 +110,7 @@ func prepareData(b ...*twse.Data) []bool {
 				}
 				start = b[i].Len()
 			}
-			if b[i].Len() < 45 {
+			if b[i].Len() < mindata {
 				result[i] = false
 			}
 		}
