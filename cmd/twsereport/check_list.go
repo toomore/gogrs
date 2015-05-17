@@ -8,6 +8,7 @@ import (
 type checkGroup interface {
 	String() string
 	CheckFunc(...*twse.Data) bool
+	Mindata() int
 }
 
 type check01 struct{}
@@ -16,24 +17,15 @@ func (check01) String() string {
 	return "MA 3 > 6 > 18"
 }
 
+func (check01) Mindata() int {
+	return 18
+}
+
 func (check01) CheckFunc(b ...*twse.Data) bool {
 	defer wg.Done()
 	var d = b[0]
-	var start = d.Len()
-	if start == 0 {
-		d.Get()
-	}
-	for {
-		if d.Len() >= 18 {
-			break
-		}
-		d.PlusData()
-		if (d.Len() - start) == 0 {
-			break
-		}
-		start = d.Len()
-	}
-	if d.Len() < 18 {
+	prepareCheck := prepareData(b...)
+	if prepareCheck[0] != true {
 		return false
 	}
 	var ma3 = d.MA(3)
@@ -60,6 +52,11 @@ type check02 struct{}
 func (check02) String() string {
 	return "量大於前三天 K 線收紅"
 }
+
+func (check02) Mindata() int {
+	return 4
+}
+
 func (check02) CheckFunc(b ...*twse.Data) bool {
 	defer wg.Done()
 	return utils.ThanSumPastUint64((*b[0]).GetVolumeList(), 3, true) && (*b[0]).IsRed()
@@ -71,29 +68,47 @@ func (check03) String() string {
 	return "量或價走平 45 天"
 }
 
+func (check03) Mindata() int {
+	return 45
+}
+
 func (check03) CheckFunc(b ...*twse.Data) bool {
 	defer wg.Done()
-	if b[0].Len() < 45 {
-		start := b[0].Len()
-		for {
-			b[0].PlusData()
-			if b[0].Len() > 45 {
-				break
-			}
-			if b[0].Len() == start {
-				break
-			}
-			start = b[0].Len()
-		}
-		if b[0].Len() < 45 {
-			return false
-		}
+	if !prepareData(b...)[0] {
+		return false
 	}
 	var price = b[0].GetPriceList()
 	var volume = b[0].GetVolumeList()
 	return price[len(price)-1] > 10 &&
 		(utils.SD(price[len(price)-46:]) < 0.25 ||
 			utils.SDUint64(volume[len(volume)-46:]) < 0.25)
+}
+
+func prepareData(b ...*twse.Data) []bool {
+	var result []bool
+	for i, _ := range b {
+		result = make([]bool, len(b))
+		b[i].Get()
+		if b[i].Len() < 45 {
+			start := b[i].Len()
+			for {
+				b[i].PlusData()
+				if b[i].Len() > 45 {
+					result[i] = true
+					break
+				}
+				if b[i].Len() == start {
+					result[i] = false
+					break
+				}
+				start = b[i].Len()
+			}
+			if b[i].Len() < 45 {
+				result[i] = false
+			}
+		}
+	}
+	return result
 }
 
 func init() {
