@@ -151,7 +151,7 @@ func (d Data) getColsListFloat64(colsNo int) []float64 {
 	var result []float64
 	result = make([]float64, len(d.RawData))
 	for i, v := range d.getColsList(colsNo) {
-		result[i], _ = strconv.ParseFloat(v, 64)
+		result[i], _ = strconv.ParseFloat(strings.Replace(v, ",", "", -1), 64)
 	}
 	return result
 }
