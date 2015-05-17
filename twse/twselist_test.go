@@ -30,6 +30,8 @@ func TestLists_Get_categoryNoList(t *testing.T) {
 	t.Log(l.categoryRawData)
 	t.Log(l.categoryNoList)
 	t.Log(l.GetCategoryList("15"))
+	t.Log(l.Get("ALLBUT0999"))
+	t.Log(l.GetCategoryList("ALLBUT0999"))
 }
 
 func ExampleLists_GetCategoryList() {

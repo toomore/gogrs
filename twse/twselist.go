@@ -96,30 +96,40 @@ func (l *Lists) Get(category string) ([][]string, error) {
 	if err != nil {
 		return nil, fmt.Errorf("Network fail: %s", err)
 	}
+	if l.categoryRawData == nil {
+		l.categoryRawData = make(map[string][][]string)
+	}
 
 	dataContentCp950, _ := ioutil.ReadAll(data.Body)
 	dataContent, _ := iconv.ConvertString(string(dataContentCp950), "cp950", "utf-8")
 	csvArrayContent := strings.Split(dataContent, "\n")
 
-	if category == "MS" {
+	var csvReader *csv.Reader
+	switch category {
+	case "MS":
 		if len(csvArrayContent) > 6 {
-			csvReader := csv.NewReader(strings.NewReader(strings.Join(csvArrayContent[4:51], "\n")))
-			returnData, err := csvReader.ReadAll()
-			return returnData, err
+			csvReader = csv.NewReader(strings.NewReader(strings.Join(csvArrayContent[4:51], "\n")))
 		}
-	} else {
+	case "ALLBUT0999":
+		if len(csvArrayContent) > 155 {
+			csvReader = csv.NewReader(strings.NewReader(strings.Join(csvArrayContent[154:len(csvArrayContent)-9], "\n")))
+		}
+	default:
 		if len(csvArrayContent) > 9 {
-			csvReader := csv.NewReader(strings.NewReader(strings.Join(csvArrayContent[4:len(csvArrayContent)-7], "\n")))
-			returnData, err := csvReader.ReadAll()
+			csvReader = csv.NewReader(strings.NewReader(strings.Join(csvArrayContent[4:len(csvArrayContent)-7], "\n")))
+		}
+	}
+	if csvReader != nil {
+		returnData, err := csvReader.ReadAll()
+		switch category {
+		default:
 			if err == nil {
-				if l.categoryRawData == nil {
-					l.categoryRawData = make(map[string][][]string)
-				}
 				l.categoryRawData[category] = returnData
 				l.formatData(category)
 			}
-			return returnData, err
+		case "MS":
 		}
+		return returnData, err
 	}
 	return nil, errors.New("Not enough data.")
 }
