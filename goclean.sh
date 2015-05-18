@@ -42,6 +42,7 @@ go tool cover -func profile.cov
 # goveralls -coverprofile=profile.cov -service=travis-ci
 
 # Test build cmd.
-go install -v github.com/toomore/gogrs/cmd/gogrs_example;
-go install -v github.com/toomore/gogrs/cmd/realtime;
-go install -v github.com/toomore/gogrs/cmd/tradingdays_server;
+go install -v -x -a github.com/toomore/gogrs/cmd/gogrs_example;
+go install -v -x -a github.com/toomore/gogrs/cmd/realtime;
+go install -v -x -a github.com/toomore/gogrs/cmd/tradingdays_server;
+go install -v -x -a github.com/toomore/gogrs/cmd/twsereport;
