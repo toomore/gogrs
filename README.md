@@ -20,3 +20,18 @@ Cmd
 2. realtime - [擷取盤中即時資訊與大盤、上櫃、寶島指數](https://godoc.org/github.com/toomore/gogrs/cmd/realtime)
 3. twsereport - [每日收盤後產生符合選股條件的報告](https://godoc.org/github.com/toomore/gogrs/cmd/twsereport)
 4. tradingdays_server - [提供簡單的日期查詢 API Server](https://godoc.org/github.com/toomore/gogrs/cmd/tradingdays_server)
+
+License
+--------
+
+The MIT License (MIT)
+
+Copyright © 2015 Toomore Chiang, http://toomore.net/ <toomore0929@gmail.com>
+
+Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the “Software”), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED “AS IS”, WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+
+http://toomore.mit-license.org/
