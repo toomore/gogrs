@@ -242,6 +242,13 @@ func (d Data) MAVBR(days1, days2 int) []int64 {
 
 // IsRed 計算是否收紅 K
 func (d Data) IsRed() bool {
+	var openList = d.GetOpenList()
+	var priceList = d.GetPriceList()
+	return priceList[len(priceList)-1] > openList[len(openList)-1]
+}
+
+// IsThanYesterday 計算漲跌與昨日收盤相比
+func (d Data) IsThanYesterday() bool {
 	var rangeList = d.GetRangeList()
 	return rangeList[len(rangeList)-1] > 0
 }

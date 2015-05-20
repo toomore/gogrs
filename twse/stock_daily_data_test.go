@@ -66,6 +66,7 @@ func TestGetList(*testing.T) {
 		stock.GetRangeList()
 		stock.GetOpenList()
 		stock.IsRed()
+		stock.IsThanYesterday()
 	}
 }
 
