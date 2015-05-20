@@ -108,13 +108,13 @@ Run:
 			}
 			wg.Wait()
 		}
+		fmt.Println("\n再次計算(Y/n)")
+		stdString, _ := bufio.NewReader(os.Stdin).ReadString('\n')
+		targetStr := strings.Split(stdString, "\n")[0]
+		if targetStr == "Y" || targetStr == "y" {
+			goto Run
+		}
 	} else {
 		flag.PrintDefaults()
-	}
-	fmt.Println("\n再次計算(Y/n)")
-	in := bufio.NewReader(os.Stdin)
-	stdString, _ := in.ReadString('\n')
-	if strings.Split(stdString, "\n")[0] == "Y" {
-		goto Run
 	}
 }
