@@ -57,7 +57,7 @@ func (check02) Mindata() int {
 
 func (check02) CheckFunc(b ...*twse.Data) bool {
 	defer wg.Done()
-	return utils.ThanSumPastUint64((*b[0]).GetVolumeList(), 3, true) && (*b[0]).IsRed()
+	return utils.ThanSumPastUint64((*b[0]).GetVolumeList(), 3, true) && ((*b[0]).IsRed() || (*b[0]).IsThanYesterday())
 }
 
 type check03 struct{}
