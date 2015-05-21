@@ -7,6 +7,9 @@ import (
 	"encoding/csv"
 	"errors"
 	"fmt"
+	"os"
+	"path/filepath"
+	"runtime"
 	"strconv"
 	"strings"
 	"time"
@@ -289,5 +292,14 @@ func (d Data) FormatData() []FmtData {
 var hCache *utils.HTTPCache
 
 func init() {
-	hCache = utils.NewHTTPCache("/Volumes/RamDisk/.gogrs")
+	var dir string
+	switch runtime.GOOS {
+	case "darwin":
+		dir = "/Volumes/RamDisk/"
+	case "linux":
+		dir = "/run/shm/"
+	default:
+		dir = os.TempDir()
+	}
+	hCache = utils.NewHTTPCache(filepath.Join(dir, ".gogrs"))
 }
