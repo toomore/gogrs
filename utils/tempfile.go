@@ -18,7 +18,10 @@ type HTTPCache struct {
 //
 // dir 為暫存位置
 func NewHTTPCache(dir string) *HTTPCache {
-	os.Mkdir(dir, 0700)
+	err := os.Mkdir(dir, 0700)
+	if os.IsNotExist(err) {
+		dir = os.TempDir()
+	}
 	return &HTTPCache{dir: dir}
 }
 
