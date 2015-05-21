@@ -12,7 +12,7 @@ func TestHTTPCache(t *testing.T) {
 	defer os.RemoveAll(dir)
 
 	t.Log("TempDir: ", dir)
-	hc := NewHTTPCache(dir, false)
+	hc := NewHTTPCache(dir)
 	hc.Get("http://toomore.net/?q=%d", true)
 	hc.Get("http://toomore.net/?q=%d", true)
 }

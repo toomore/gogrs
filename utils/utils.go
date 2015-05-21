@@ -20,8 +20,8 @@ const (
 	TWSEURL     string = "http://mis.tse.com.tw"
 	TWSEHOST    string = "http://www.twse.com.tw"
 	OTCHOST     string = "http://www.tpex.org.tw"
-	OTCCSV      string = "/ch/stock/aftertrading/daily_trading_info/st43_download.php?d=%d/%02d&stkno=%s&r=%d" // year, mon, stock, rand
-	TWSECSV     string = "/ch/trading/exchange/STOCK_DAY/STOCK_DAY_print.php?genpage=genpage/Report%d%02d/%d%02d_F3_1_8_%s.php&type=csv&r=%d"
+	OTCCSV      string = "/ch/stock/aftertrading/daily_trading_info/st43_download.php?d=%d/%02d&stkno=%s&r=%%d" // year, mon, stock, rand
+	TWSECSV     string = "/ch/trading/exchange/STOCK_DAY/STOCK_DAY_print.php?genpage=genpage/Report%d%02d/%d%02d_F3_1_8_%s.php&type=csv&r=%%d"
 	TWSELISTCSV string = "/ch/trading/exchange/MI_INDEX/MI_INDEX.php" // year, mon, day, type
 	TWSEREAL    string = "/stock/api/getStockInfo.jsp?ex_ch=%s_%s.tw_%s&json=1&delay=0&_=%d"
 )

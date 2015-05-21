@@ -17,7 +17,7 @@ type HTTPCache struct {
 // NewHTTPCache New 一個 HTTPCache.
 //
 // dir 為暫存位置
-func NewHTTPCache(dir string, rand bool) *HTTPCache {
+func NewHTTPCache(dir string) *HTTPCache {
 	os.Mkdir(dir, 0700)
 	return &HTTPCache{dir: dir}
 }

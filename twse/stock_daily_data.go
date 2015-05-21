@@ -7,8 +7,6 @@ import (
 	"encoding/csv"
 	"errors"
 	"fmt"
-	"io/ioutil"
-	"net/http"
 	"strconv"
 	"strings"
 	"time"
@@ -57,10 +55,10 @@ func (d Data) URL() string {
 	var host string
 
 	if d.exchange == "tse" {
-		path = fmt.Sprintf(utils.TWSECSV, d.Date.Year(), d.Date.Month(), d.Date.Year(), d.Date.Month(), d.No, utils.RandInt())
+		path = fmt.Sprintf(utils.TWSECSV, d.Date.Year(), d.Date.Month(), d.Date.Year(), d.Date.Month(), d.No)
 		host = utils.TWSEHOST
 	} else if d.exchange == "otc" {
-		path = fmt.Sprintf(utils.OTCCSV, d.Date.Year()-1911, d.Date.Month(), d.No, utils.RandInt())
+		path = fmt.Sprintf(utils.OTCCSV, d.Date.Year()-1911, d.Date.Month(), d.No)
 		host = utils.OTCHOST
 	}
 
@@ -92,12 +90,10 @@ func (d *Data) Get() ([][]string, error) {
 		d.UnixMapData = make(unixMapData)
 	}
 	if len(d.UnixMapData[d.Date.Unix()]) == 0 {
-		csvFiles, err := http.Get(d.URL())
+		data, err := hCache.Get(d.URL(), true)
 		if err != nil {
 			return nil, fmt.Errorf("Network fail: %s", err)
 		}
-		defer csvFiles.Body.Close()
-		data, _ := ioutil.ReadAll(csvFiles.Body)
 		csvArrayContent := strings.Split(string(data), "\n")
 		for i := range csvArrayContent {
 			csvArrayContent[i] = strings.TrimSpace(csvArrayContent[i])
@@ -288,4 +284,10 @@ func (d Data) FormatData() []FmtData {
 		result[i] = loopd
 	}
 	return result
+}
+
+var hCache *utils.HTTPCache
+
+func init() {
+	hCache = utils.NewHTTPCache("/Volumes/RamDisk/.gogrs")
 }
