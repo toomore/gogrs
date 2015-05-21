@@ -19,28 +19,42 @@ func NewHttpCache(dir string, rand bool) *HttpCache {
 	return &HttpCache{Dir: dir, Rand: rand}
 }
 
-func (hc HttpCache) Get(url string) {
+func (hc HttpCache) Get(url string) ([]byte, error) {
 	err := os.Mkdir(hc.Dir, 0700)
 	if os.IsExist(err) {
 		log.Println(err)
 	}
-	hc.saveFile(url)
+	filehash := fmt.Sprintf("%x", md5.Sum([]byte(url)))
+	content, err := hc.readFile(filehash)
+	if err != nil {
+		return hc.saveFile(url, filehash)
+	}
+	return content, nil
 }
 
-func (hc HttpCache) saveFile(url string) ([]byte, error) {
+func (hc HttpCache) readFile(filehash string) ([]byte, error) {
+	f, err := os.Open(filepath.Join(hc.Dir, filehash))
+	defer f.Close()
+	if err != nil {
+		return nil, err
+	}
+	return ioutil.ReadAll(f)
+}
+
+func (hc HttpCache) saveFile(url, filehash string) ([]byte, error) {
 	resp, err := http.Get(url)
 	defer resp.Body.Close()
 
 	if err != nil {
-		filehash := fmt.Sprintf("%x", md5.Sum([]byte(url)))
-		t, err := os.Create(filepath.Join(hc.Dir, filehash))
-		defer t.Close()
-
-		content, err := ioutil.ReadAll(resp.Body)
-		if err != nil {
-			t.Write(content)
-		}
-		return content, err
+		return nil, err
 	}
-	return nil, err
+
+	f, err := os.Create(filepath.Join(hc.Dir, filehash))
+	defer f.Close()
+
+	content, err := ioutil.ReadAll(resp.Body)
+	if err == nil {
+		f.Write(content)
+	}
+	return content, err
 }
