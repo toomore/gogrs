@@ -301,5 +301,5 @@ func init() {
 	default:
 		dir = os.TempDir()
 	}
-	hCache = utils.NewHTTPCache(filepath.Join(dir, ".gogrs"))
+	hCache = utils.NewHTTPCache(filepath.Join(dir, utils.TempFolderName))
 }

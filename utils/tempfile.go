@@ -11,6 +11,9 @@ import (
 	"path/filepath"
 )
 
+// TempFolderName 快取資料夾名稱
+const TempFolderName = ".gogrscache"
+
 // HTTPCache net/http 快取功能
 type HTTPCache struct {
 	Dir string
@@ -22,7 +25,7 @@ type HTTPCache struct {
 func NewHTTPCache(dir string) *HTTPCache {
 	err := os.Mkdir(dir, 0700)
 	if os.IsNotExist(err) {
-		dir = filepath.Join(os.TempDir(), ".gogrs")
+		dir = filepath.Join(os.TempDir(), TempFolderName)
 		os.Mkdir(dir, 0700)
 	}
 	return &HTTPCache{Dir: dir}
