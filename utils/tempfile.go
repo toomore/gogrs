@@ -11,7 +11,7 @@ import (
 
 // HTTPCache net/http 快取功能
 type HTTPCache struct {
-	dir string
+	Dir string
 }
 
 // NewHTTPCache New 一個 HTTPCache.
@@ -20,9 +20,10 @@ type HTTPCache struct {
 func NewHTTPCache(dir string) *HTTPCache {
 	err := os.Mkdir(dir, 0700)
 	if os.IsNotExist(err) {
-		dir = os.TempDir()
+		dir = filepath.Join(os.TempDir(), ".gogrs")
+		os.Mkdir(dir, 0700)
 	}
-	return &HTTPCache{dir: dir}
+	return &HTTPCache{Dir: dir}
 }
 
 // Get 透過 http.Get 取得檔案或從暫存中取得檔案
@@ -38,7 +39,7 @@ func (hc HTTPCache) Get(url string, rand bool) ([]byte, error) {
 }
 
 func (hc HTTPCache) readFile(filehash string) ([]byte, error) {
-	f, err := os.Open(filepath.Join(hc.dir, filehash))
+	f, err := os.Open(filepath.Join(hc.Dir, filehash))
 	defer f.Close()
 	if err != nil {
 		return nil, err
@@ -53,7 +54,7 @@ func (hc HTTPCache) saveFile(url, filehash string, rand bool) ([]byte, error) {
 	resp, _ := http.Get(url)
 	defer resp.Body.Close()
 
-	f, err := os.Create(filepath.Join(hc.dir, filehash))
+	f, err := os.Create(filepath.Join(hc.Dir, filehash))
 	defer f.Close()
 
 	content, err := ioutil.ReadAll(resp.Body)

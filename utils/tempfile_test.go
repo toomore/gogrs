@@ -8,11 +8,11 @@ import (
 )
 
 func TestHTTPCache(t *testing.T) {
-	var dir = filepath.Join(os.TempDir(), fmt.Sprintf("%d", RandInt()))
-	defer os.RemoveAll(dir)
+	var dir = filepath.Join("/Volumes/RamDisk/tmp/.gogrs", fmt.Sprintf("%d", RandInt()))
 
 	t.Log("TempDir: ", dir)
 	hc := NewHTTPCache(dir)
+	defer os.RemoveAll(hc.Dir)
 	hc.Get("http://toomore.net/?q=%d", true)
 	hc.Get("http://toomore.net/?q=%d", true)
 }
