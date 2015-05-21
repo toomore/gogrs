@@ -47,12 +47,8 @@ func (hc HTTPCache) saveFile(url, filehash string, rand bool) ([]byte, error) {
 	if rand {
 		url = fmt.Sprintf(url, RandInt())
 	}
-	resp, err := http.Get(url)
+	resp, _ := http.Get(url)
 	defer resp.Body.Close()
-
-	if err != nil {
-		return nil, err
-	}
 
 	f, err := os.Create(filepath.Join(hc.dir, filehash))
 	defer f.Close()
