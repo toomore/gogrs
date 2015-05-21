@@ -2,7 +2,7 @@ package utils
 
 import "testing"
 
-func TestHttpCache(*testing.T) {
-	hc := NewHttpCache("./.temp", false)
+func TestHTTPCache(*testing.T) {
+	hc := NewHTTPCache("./.temp", false)
 	hc.Get("http://toomore.net/")
 }

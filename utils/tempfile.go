@@ -4,26 +4,25 @@ import (
 	"crypto/md5"
 	"fmt"
 	"io/ioutil"
-	"log"
 	"net/http"
 	"os"
 	"path/filepath"
 )
 
-type HttpCache struct {
+// HTTPCache Dir 為暫存位置，Rand 為是否支援網址帶入亂數值
+type HTTPCache struct {
 	Dir  string
 	Rand bool
 }
 
-func NewHttpCache(dir string, rand bool) *HttpCache {
-	return &HttpCache{Dir: dir, Rand: rand}
+// NewHTTPCache New 一個 HTTPCache
+func NewHTTPCache(dir string, rand bool) *HTTPCache {
+	os.Mkdir(dir, 0700)
+	return &HTTPCache{Dir: dir, Rand: rand}
 }
 
-func (hc HttpCache) Get(url string) ([]byte, error) {
-	err := os.Mkdir(hc.Dir, 0700)
-	if os.IsExist(err) {
-		log.Println(err)
-	}
+// Get 透過 http.Get 取得檔案或從暫存中取得檔案
+func (hc HTTPCache) Get(url string) ([]byte, error) {
 	filehash := fmt.Sprintf("%x", md5.Sum([]byte(url)))
 	content, err := hc.readFile(filehash)
 	if err != nil {
@@ -32,7 +31,7 @@ func (hc HttpCache) Get(url string) ([]byte, error) {
 	return content, nil
 }
 
-func (hc HttpCache) readFile(filehash string) ([]byte, error) {
+func (hc HTTPCache) readFile(filehash string) ([]byte, error) {
 	f, err := os.Open(filepath.Join(hc.Dir, filehash))
 	defer f.Close()
 	if err != nil {
@@ -41,7 +40,7 @@ func (hc HttpCache) readFile(filehash string) ([]byte, error) {
 	return ioutil.ReadAll(f)
 }
 
-func (hc HttpCache) saveFile(url, filehash string) ([]byte, error) {
+func (hc HTTPCache) saveFile(url, filehash string) ([]byte, error) {
 	resp, err := http.Get(url)
 	defer resp.Body.Close()
 
