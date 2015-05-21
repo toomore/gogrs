@@ -4,8 +4,6 @@ import (
 	"encoding/csv"
 	"errors"
 	"fmt"
-	"io/ioutil"
-	"net/http"
 	"net/url"
 	"strconv"
 	"strings"
@@ -88,10 +86,10 @@ func (l *Lists) Get(category string) ([][]string, error) {
 	}
 
 	year, month, day := l.Date.Date()
-	data, err := http.PostForm(fmt.Sprintf("%s%s", utils.TWSEHOST, utils.TWSELISTCSV),
+	dataContentCp950, err := hCache.PostForm(fmt.Sprintf("%s%s",
+		utils.TWSEHOST, utils.TWSELISTCSV),
 		url.Values{"download": {"csv"}, "selectType": {category},
 			"qdate": {fmt.Sprintf("%d/%02d/%02d", year-1911, month, day)}})
-	defer data.Body.Close()
 
 	if err != nil {
 		return nil, fmt.Errorf("Network fail: %s", err)
@@ -100,7 +98,6 @@ func (l *Lists) Get(category string) ([][]string, error) {
 		l.categoryRawData = make(map[string][][]string)
 	}
 
-	dataContentCp950, _ := ioutil.ReadAll(data.Body)
 	dataContent, _ := iconv.ConvertString(string(dataContentCp950), "cp950", "utf-8")
 	csvArrayContent := strings.Split(dataContent, "\n")
 
