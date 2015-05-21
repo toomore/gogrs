@@ -24,12 +24,23 @@ func (hc HttpCache) Get(url string) {
 	if os.IsExist(err) {
 		log.Println(err)
 	}
-	resp, _ := http.Get(url)
-	filehash := fmt.Sprintf("%x", md5.Sum([]byte(url)))
-	t, err := os.Create(filepath.Join(hc.Dir, filehash))
-	defer t.Close()
+	hc.saveFile(url)
+}
+
+func (hc HttpCache) saveFile(url string) ([]byte, error) {
+	resp, err := http.Get(url)
 	defer resp.Body.Close()
 
-	content, _ := ioutil.ReadAll(resp.Body)
-	t.Write(content)
+	if err != nil {
+		filehash := fmt.Sprintf("%x", md5.Sum([]byte(url)))
+		t, err := os.Create(filepath.Join(hc.Dir, filehash))
+		defer t.Close()
+
+		content, err := ioutil.ReadAll(resp.Body)
+		if err != nil {
+			t.Write(content)
+		}
+		return content, err
+	}
+	return nil, err
 }
