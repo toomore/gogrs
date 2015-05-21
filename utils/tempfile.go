@@ -10,15 +10,23 @@ import (
 	"path/filepath"
 )
 
-func GetWithTemp(url string) {
-	var dir = ".temp"
-	err := os.Mkdir(dir, 0700)
+type HttpCache struct {
+	Dir  string
+	Rand bool
+}
+
+func NewHttpCache(dir string, rand bool) *HttpCache {
+	return &HttpCache{Dir: dir, Rand: rand}
+}
+
+func (hc HttpCache) Get(url string) {
+	err := os.Mkdir(hc.Dir, 0700)
 	if os.IsExist(err) {
 		log.Println(err)
 	}
 	resp, _ := http.Get(url)
 	filehash := fmt.Sprintf("%x", md5.Sum([]byte(url)))
-	t, err := os.Create(filepath.Join(dir, filehash))
+	t, err := os.Create(filepath.Join(hc.Dir, filehash))
 	defer t.Close()
 	defer resp.Body.Close()
 
