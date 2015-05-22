@@ -23,7 +23,7 @@ func (check01) Mindata() int {
 
 func (check01) CheckFunc(b ...*twse.Data) bool {
 	defer wg.Done()
-	if prepareData(b...)[0] != true {
+	if !prepareData(b...)[0] {
 		return false
 	}
 	var ma3 = b[0].MA(3)
@@ -57,6 +57,9 @@ func (check02) Mindata() int {
 
 func (check02) CheckFunc(b ...*twse.Data) bool {
 	defer wg.Done()
+	if !prepareData(b...)[0] {
+		return false
+	}
 	return utils.ThanSumPastUint64((*b[0]).GetVolumeList(), 3, true) && ((*b[0]).IsRed() || (*b[0]).IsThanYesterday())
 }
 
