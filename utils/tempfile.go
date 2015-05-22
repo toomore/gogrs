@@ -18,19 +18,20 @@ const TempFolderName = ".gogrscache"
 
 // HTTPCache net/http 快取功能
 type HTTPCache struct {
-	Dir string
+	Dir            string
+	iconvConverter func([]byte) []byte
 }
 
 // NewHTTPCache New 一個 HTTPCache.
 //
-// dir 為暫存位置
-func NewHTTPCache(dir string) *HTTPCache {
+// dir 為暫存位置，fromEncoding 來源檔案的編碼，一律轉換為 utf8
+func NewHTTPCache(dir string, fromEncoding string) *HTTPCache {
 	err := os.Mkdir(dir, 0700)
 	if os.IsNotExist(err) {
 		dir = filepath.Join(os.TempDir(), TempFolderName)
 		os.Mkdir(dir, 0700)
 	}
-	return &HTTPCache{Dir: dir}
+	return &HTTPCache{Dir: dir, iconvConverter: renderIconvConverter(fromEncoding)}
 }
 
 // Get 透過 http.Get 取得檔案或從暫存中取得檔案
@@ -87,15 +88,23 @@ func (hc HTTPCache) saveFile(url, filehash string, rand bool, data url.Values) (
 
 	content, _ := ioutil.ReadAll(resp.Body)
 
-	var out []byte
-	out = make([]byte, len(content)*2)
-	_, outLen, _ := converter.Convert(content, out)
-	f.Write(out[:outLen])
-	return out[:outLen], err
+	out := hc.iconvConverter(content)
+	f.Write(out)
+	return out, err
 }
 
-var converter *iconv.Converter
-
-func init() {
-	converter, _ = iconv.NewConverter("cp950", "utf-8")
+// renderIconvConverter wrapper function for iconv converter.
+func renderIconvConverter(fromEncoding string) func([]byte) []byte {
+	if fromEncoding == "utf8" || fromEncoding == "utf-8" {
+		return func(str []byte) []byte {
+			return str
+		}
+	}
+	return func(content []byte) []byte {
+		converter, _ := iconv.NewConverter(fromEncoding, "utf-8")
+		var out []byte
+		out = make([]byte, len(content)*2)
+		_, outLen, _ := converter.Convert(content, out)
+		return out[:outLen]
+	}
 }

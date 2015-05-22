@@ -298,5 +298,5 @@ func init() {
 	default:
 		dir = os.TempDir()
 	}
-	hCache = utils.NewHTTPCache(filepath.Join(dir, utils.TempFolderName))
+	hCache = utils.NewHTTPCache(filepath.Join(dir, utils.TempFolderName), "cp950")
 }
