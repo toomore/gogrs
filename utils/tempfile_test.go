@@ -24,3 +24,14 @@ func TestHTTPCache(t *testing.T) {
 	hccp950 := NewHTTPCache(dir, "cp950")
 	hccp950.Get("http://toomore.net/", false)
 }
+
+// 目前可以支援 http.Get / http.PostForm 取得資料並儲存
+func ExampleHTTPCache() {
+	hc := NewHTTPCache("/run/shm/", "utf8") // linux
+
+	ex1, _ := hc.Get("http://httpbin.org/get", false)
+	ex2, _ := hc.Get("http://httpbin.org/get?q=%d", true)
+	ex3, _ := hc.PostForm("http://httpbin.org/post", url.Values{"name": {"Toomore"}})
+
+	fmt.Printf("%s %s %s", ex1, ex2, ex3)
+}
