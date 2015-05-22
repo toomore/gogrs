@@ -85,15 +85,13 @@ func (hc HTTPCache) saveFile(url, filehash string, rand bool, data url.Values) (
 	f, err := os.Create(filepath.Join(hc.Dir, filehash))
 	defer f.Close()
 
-	content, err := ioutil.ReadAll(resp.Body)
+	content, _ := ioutil.ReadAll(resp.Body)
+
 	var out []byte
-	if err == nil {
-		out = make([]byte, len(content)*2)
-		_, outLen, _ := converter.Convert(content, out)
-		f.Write(out[:outLen])
-		return out[:outLen], err
-	}
-	return out, err
+	out = make([]byte, len(content)*2)
+	_, outLen, _ := converter.Convert(content, out)
+	f.Write(out[:outLen])
+	return out[:outLen], err
 }
 
 var converter *iconv.Converter
