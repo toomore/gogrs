@@ -85,8 +85,7 @@ func (l *Lists) Get(category string) ([][]string, error) {
 	}
 
 	year, month, day := l.Date.Date()
-	dataContentCp950, err := hCache.PostForm(fmt.Sprintf("%s%s",
-		utils.TWSEHOST, utils.TWSELISTCSV),
+	data, err := hCache.PostForm(fmt.Sprintf("%s%s", utils.TWSEHOST, utils.TWSELISTCSV),
 		url.Values{"download": {"csv"}, "selectType": {category},
 			"qdate": {fmt.Sprintf("%d/%02d/%02d", year-1911, month, day)}})
 
@@ -97,7 +96,7 @@ func (l *Lists) Get(category string) ([][]string, error) {
 		l.categoryRawData = make(map[string][][]string)
 	}
 
-	csvArrayContent := strings.Split(string(dataContentCp950), "\n")
+	csvArrayContent := strings.Split(string(data), "\n")
 
 	var csvReader *csv.Reader
 	switch category {
