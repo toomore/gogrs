@@ -14,7 +14,6 @@ import (
 	"strings"
 	"time"
 
-	iconv "github.com/djimenez/iconv-go"
 	"github.com/toomore/gogrs/utils"
 )
 
@@ -105,14 +104,12 @@ func (d *Data) Get() ([][]string, error) {
 		if (d.exchange == "tse" && len(csvArrayContent) > 2) || (d.exchange == "otc" && len(csvArrayContent) > 5) {
 			if d.exchange == "tse" {
 				if d.Name == "" {
-					parseTitle, _ := iconv.ConvertString(csvArrayContent[0], "cp950", "utf-8")
-					d.Name = strings.Split(parseTitle, " ")[2]
+					d.Name = strings.Split(csvArrayContent[0], " ")[2]
 				}
 				csvReader = csv.NewReader(strings.NewReader(strings.Join(csvArrayContent[2:], "\n")))
 			} else if d.exchange == "otc" {
 				if d.Name == "" {
-					parseTitle, _ := iconv.ConvertString(csvArrayContent[2], "cp950", "utf-8")
-					d.Name = strings.Split(parseTitle, ":")[1]
+					d.Name = strings.Split(csvArrayContent[2], ":")[1]
 				}
 				csvReader = csv.NewReader(strings.NewReader(strings.Join(csvArrayContent[5:len(csvArrayContent)-1], "\n")))
 			}

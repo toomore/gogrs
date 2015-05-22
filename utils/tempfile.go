@@ -9,6 +9,8 @@ import (
 	"net/url"
 	"os"
 	"path/filepath"
+
+	iconv "github.com/djimenez/iconv-go"
 )
 
 // TempFolderName 快取資料夾名稱
@@ -57,6 +59,7 @@ func (hc HTTPCache) PostForm(url string, data url.Values) ([]byte, error) {
 	return content, nil
 }
 
+// readFile 從快取資料裡面取得
 func (hc HTTPCache) readFile(filehash string) ([]byte, error) {
 	f, err := os.Open(filepath.Join(hc.Dir, filehash))
 	defer f.Close()
@@ -66,6 +69,7 @@ func (hc HTTPCache) readFile(filehash string) ([]byte, error) {
 	return ioutil.ReadAll(f)
 }
 
+// saveFile 從網路取得資料後放入快取資料夾
 func (hc HTTPCache) saveFile(url, filehash string, rand bool, data url.Values) ([]byte, error) {
 	if rand {
 		url = fmt.Sprintf(url, RandInt())
@@ -82,8 +86,18 @@ func (hc HTTPCache) saveFile(url, filehash string, rand bool, data url.Values) (
 	defer f.Close()
 
 	content, err := ioutil.ReadAll(resp.Body)
+	var out []byte
 	if err == nil {
-		f.Write(content)
+		out = make([]byte, len(content)*2)
+		_, outLen, _ := converter.Convert(content, out)
+		f.Write(out[:outLen])
+		return out[:outLen], err
 	}
-	return content, err
+	return out, err
+}
+
+var converter *iconv.Converter
+
+func init() {
+	converter, _ = iconv.NewConverter("cp950", "utf-8")
 }

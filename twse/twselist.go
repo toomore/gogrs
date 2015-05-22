@@ -9,7 +9,6 @@ import (
 	"strings"
 	"time"
 
-	iconv "github.com/djimenez/iconv-go"
 	"github.com/toomore/gogrs/utils"
 )
 
@@ -98,8 +97,7 @@ func (l *Lists) Get(category string) ([][]string, error) {
 		l.categoryRawData = make(map[string][][]string)
 	}
 
-	dataContent, _ := iconv.ConvertString(string(dataContentCp950), "cp950", "utf-8")
-	csvArrayContent := strings.Split(dataContent, "\n")
+	csvArrayContent := strings.Split(string(dataContentCp950), "\n")
 
 	var csvReader *csv.Reader
 	switch category {
