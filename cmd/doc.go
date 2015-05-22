@@ -11,6 +11,10 @@ Package realtime
 
 擷取盤中即時資訊與大盤、上櫃、寶島指數.
 
+Package twsereport
+
+每日收盤後產生符合選股條件的報告
+
 Package tradingdays-server
 
 提供簡單的日期查詢 API Server.

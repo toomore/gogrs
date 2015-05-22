@@ -1,4 +1,5 @@
-// Package utils - 套件所需的公用工具
+// Package utils - 套件所需的公用工具（總和、平均、序列差、持續天數、
+// 民國日期解析、簡單亂數、標準差、簡單 net/http 快取）.
 //
 package utils
 

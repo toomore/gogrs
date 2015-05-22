@@ -11,7 +11,7 @@ Packages
 1. realtime - [擷取盤中個股、指數即時股價資訊](https://godoc.org/github.com/toomore/gogrs/realtime)
 2. twse - [擷取台灣股市上市、上櫃股票資訊](https://godoc.org/github.com/toomore/gogrs/twse)
 3. tradingdays - [股市開休市判斷（支援非國定假日：颱風假）與當日區間判斷（盤中、盤後、盤後盤）](https://godoc.org/github.com/toomore/gogrs/tradingdays)
-4. utils - [套件所需的公用工具](https://godoc.org/github.com/toomore/gogrs/utils)
+4. utils - [套件所需的公用工具（總和、平均、序列差、持續天數、民國日期解析、簡單亂數、標準差、簡單 net/http 快取）](https://godoc.org/github.com/toomore/gogrs/utils)
 
 Cmd
 ----
