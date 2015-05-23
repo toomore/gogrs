@@ -73,16 +73,16 @@ func (hc HTTPCache) readFile(filehash string) ([]byte, error) {
 	return ioutil.ReadAll(f)
 }
 
-var transport = &http.Transport{
+// Fixed http too many open files.
+var httpClient = &http.Client{Transport: &http.Transport{
 	Proxy: http.ProxyFromEnvironment,
 	Dial: (&net.Dialer{
 		Timeout:   0,
 		KeepAlive: 0,
 	}).Dial,
 	TLSHandshakeTimeout: 10 * time.Second,
+},
 }
-
-var httpClient = &http.Client{Transport: transport}
 
 // saveFile 從網路取得資料後放入快取資料夾
 func (hc HTTPCache) saveFile(url, filehash string, rand bool, data url.Values) ([]byte, error) {
