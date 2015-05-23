@@ -95,14 +95,13 @@ func (hc HTTPCache) saveFile(url, filehash string, rand bool, data url.Values) (
 	if len(data) == 0 {
 		// http.Get
 		req, _ = http.NewRequest("GET", url, nil)
-		req.Header.Set("Connection", "close")
 	} else {
 		// http.PostForm
 		req, _ = http.NewRequest("POST", url, strings.NewReader(data.Encode()))
 		req.Header.Set("Content-Type", "application/x-www-form-urlencoded")
-		req.Header.Set("Connection", "close")
 	}
 
+	req.Header.Set("Connection", "close")
 	resp, _ = httpClient.Do(req)
 	defer resp.Body.Close()
 
