@@ -5,6 +5,7 @@ import (
 	"errors"
 	"fmt"
 	"net/url"
+	"regexp"
 	"strconv"
 	"strings"
 	"time"
@@ -104,9 +105,20 @@ func (l *Lists) Get(category string) ([][]string, error) {
 		if len(csvArrayContent) > 6 {
 			csvReader = csv.NewReader(strings.NewReader(strings.Join(csvArrayContent[4:51], "\n")))
 		}
-	case "ALLBUT0999":
+	case "ALLBUT0999", "ALL":
 		if len(csvArrayContent) > 155 {
-			csvReader = csv.NewReader(strings.NewReader(strings.Join(csvArrayContent[154:len(csvArrayContent)-9], "\n")))
+			re := regexp.MustCompile("^=?[\"]{1}[0-9A-Z]{4,}")
+			var pickdata []string
+			for _, v := range csvArrayContent {
+				if re.MatchString(v) {
+					if v[0] == 61 {
+						pickdata = append(pickdata, v[1:])
+					} else {
+						pickdata = append(pickdata, v)
+					}
+				}
+			}
+			csvReader = csv.NewReader(strings.NewReader(strings.Join(pickdata, "\n")))
 		}
 	default:
 		if len(csvArrayContent) > 9 {
