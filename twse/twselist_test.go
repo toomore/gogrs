@@ -30,8 +30,17 @@ func TestLists_Get_categoryNoList(t *testing.T) {
 	t.Log(l.categoryRawData)
 	t.Log(l.categoryNoList)
 	t.Log(l.GetCategoryList("15"))
-	t.Log(l.Get("ALLBUT0999"))
-	t.Log(l.GetCategoryList("ALLBUT0999"))
+	t.Log("ALLBUT0999:", len(l.GetCategoryList("ALLBUT0999")))
+	t.Log("ALL:", len(l.GetCategoryList("ALL")))
+	ll := &Lists{
+		Date: time.Date(2015, 5, 22, 0, 0, 0, 0, utils.TaipeiTimeZone),
+	}
+	if len(ll.GetCategoryList("ALLBUT0999")) < 10 {
+		t.Error("應該沒那麼少")
+	}
+	if len(ll.GetCategoryList("ALL")) < 10 {
+		t.Error("應該沒那麼少")
+	}
 }
 
 func ExampleLists_GetCategoryList() {

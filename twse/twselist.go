@@ -108,7 +108,7 @@ func (l *Lists) Get(category string) ([][]string, error) {
 	case "ALLBUT0999", "ALL":
 		if len(csvArrayContent) > 155 {
 			re := regexp.MustCompile("^=?[\"]{1}[0-9A-Z]{4,}")
-			pickdata := make([]string, 0)
+			var pickdata []string
 			for _, v := range csvArrayContent {
 				if re.MatchString(v) {
 					if v[0] == 61 {
