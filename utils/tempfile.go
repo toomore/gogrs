@@ -5,10 +5,13 @@ import (
 	"fmt"
 	"io"
 	"io/ioutil"
+	"net"
 	"net/http"
 	"net/url"
 	"os"
 	"path/filepath"
+	"strings"
+	"time"
 
 	iconv "github.com/djimenez/iconv-go"
 )
@@ -70,26 +73,47 @@ func (hc HTTPCache) readFile(filehash string) ([]byte, error) {
 	return ioutil.ReadAll(f)
 }
 
+var transport = &http.Transport{
+	Proxy: http.ProxyFromEnvironment,
+	Dial: (&net.Dialer{
+		Timeout:   0,
+		KeepAlive: 0,
+	}).Dial,
+	TLSHandshakeTimeout: 10 * time.Second,
+}
+
+var httpClient = &http.Client{Transport: transport}
+
 // saveFile 從網路取得資料後放入快取資料夾
 func (hc HTTPCache) saveFile(url, filehash string, rand bool, data url.Values) ([]byte, error) {
 	if rand {
 		url = fmt.Sprintf(url, RandInt())
 	}
 	var resp *http.Response
+	var req *http.Request
+	var err error
 	if len(data) == 0 {
-		resp, _ = http.Get(url)
+		// http.Get
+		req, _ = http.NewRequest("GET", url, nil)
+		req.Header.Set("Connection", "close")
 	} else {
-		resp, _ = http.PostForm(url, data)
+		// http.PostForm
+		req, _ = http.NewRequest("POST", url, strings.NewReader(data.Encode()))
+		req.Header.Set("Content-Type", "application/x-www-form-urlencoded")
+		req.Header.Set("Connection", "close")
 	}
-	defer resp.Body.Close()
 
-	f, err := os.Create(filepath.Join(hc.Dir, filehash))
-	defer f.Close()
+	resp, _ = httpClient.Do(req)
+	defer resp.Body.Close()
 
 	content, _ := ioutil.ReadAll(resp.Body)
 
+	f, _ := os.Create(filepath.Join(hc.Dir, filehash))
+	defer f.Close()
+
 	out := hc.iconvConverter(content)
 	f.Write(out)
+
 	return out, err
 }
 
