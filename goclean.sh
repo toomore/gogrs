@@ -19,27 +19,27 @@ go test -race ./...
 
 # Run test coverage on each subdirectories and merge the coverage profile.
 
-echo "mode: count" > profile.cov
+echo "mode: count" > coverage.cov
 
 # Standard go tooling behavior is to ignore dirs with leading underscors
 for dir in $(find . -maxdepth 10 -not -path './.git*' -not -path '*/_*' -type d);
 do
 if ls $dir/*.go &> /dev/null; then
-    #go test -v --benchmem --bench=. -covermode=count -coverprofile=$dir/profile.tmp $dir
-    go test -v -covermode=count -coverprofile=$dir/profile.tmp $dir
-    if [ -f $dir/profile.tmp ]
+    #go test -v --benchmem --bench=. -covermode=count -covercoverage=$dir/coverage.tmp $dir
+    go test -v -covermode=count -coverprofile=$dir/coverage.tmp $dir
+    if [ -f $dir/coverage.tmp ]
     then
-        cat $dir/profile.tmp | tail -n +2 >> profile.cov
-        rm $dir/profile.tmp
+        cat $dir/coverage.tmp | tail -n +2 >> coverage.cov
+        rm $dir/coverage.tmp
     fi
 fi
 done
 
-go tool cover -func profile.cov
+go tool cover -func coverage.cov
 
 # To submit the test coverage result to coveralls.io,
 # use goveralls (https://github.com/mattn/goveralls)
-# goveralls -coverprofile=profile.cov -service=travis-ci
+# goveralls -covercoverage=coverage.cov -service=travis-ci
 
 # Test build cmd.
 go install -v -a github.com/toomore/gogrs/cmd/gogrs_example;

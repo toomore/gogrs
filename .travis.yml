@@ -18,7 +18,7 @@ before_install:
 script:
     - go vet ./...
     - sh ./goclean.sh
-    - $HOME/gopath/bin/goveralls -coverprofile=profile.cov -service=travis-ci
+    - $HOME/gopath/bin/goveralls -coverprofile=coverage.cov -service=travis-ci
     - go test -bench=. -benchmem ./...
 
 after_success:
