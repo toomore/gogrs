@@ -89,28 +89,49 @@ func (hc HTTPCache) saveFile(url, filehash string, rand bool, data url.Values) (
 	if rand {
 		url = fmt.Sprintf(url, RandInt())
 	}
-	var resp *http.Response
-	var req *http.Request
-	var err error
+
+	var (
+		resp *http.Response
+		req  *http.Request
+		err  error
+		out  []byte
+	)
+
 	if len(data) == 0 {
 		// http.Get
-		req, _ = http.NewRequest("GET", url, nil)
+		req, err = http.NewRequest("GET", url, nil)
 	} else {
 		// http.PostForm
-		req, _ = http.NewRequest("POST", url, strings.NewReader(data.Encode()))
+		req, err = http.NewRequest("POST", url, strings.NewReader(data.Encode()))
 		req.Header.Set("Content-Type", "application/x-www-form-urlencoded")
 	}
 
+	if err != nil {
+		return out, err
+	}
+
 	req.Header.Set("Connection", "close")
-	resp, _ = httpClient.Do(req)
+	resp, err = httpClient.Do(req)
 	defer resp.Body.Close()
 
-	content, _ := ioutil.ReadAll(resp.Body)
+	if err != nil {
+		return out, err
+	}
 
-	f, _ := os.Create(filepath.Join(hc.Dir, filehash))
+	content, err := ioutil.ReadAll(resp.Body)
+
+	if err != nil {
+		return out, err
+	}
+
+	f, err := os.Create(filepath.Join(hc.Dir, filehash))
 	defer f.Close()
 
-	out := hc.iconvConverter(content)
+	if err != nil {
+		return out, err
+	}
+
+	out = hc.iconvConverter(content)
 	f.Write(out)
 
 	return out, err
