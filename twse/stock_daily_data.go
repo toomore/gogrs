@@ -8,7 +8,6 @@ import (
 	"errors"
 	"fmt"
 	"os"
-	"path/filepath"
 	"runtime"
 	"strconv"
 	"strings"
@@ -298,5 +297,5 @@ func init() {
 	default:
 		dir = os.TempDir()
 	}
-	hCache = utils.NewHTTPCache(filepath.Join(dir, utils.TempFolderName), "cp950")
+	hCache = utils.NewHTTPCache(dir, "cp950")
 }

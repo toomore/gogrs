@@ -14,7 +14,7 @@ func TestHTTPCache(t *testing.T) {
 	t.Log("TempDir: ", dir)
 	hc := NewHTTPCache(dir, "utf8")
 	t.Log("TempDir: ", hc.Dir)
-	defer os.RemoveAll(hc.Dir)
+	defer os.RemoveAll(filepath.Join(hc.Dir, TempFolderName))
 	hc.Get("http://toomore.net/?q=%d", true)
 	hc.Get("http://toomore.net/?q=%d", true)
 
@@ -23,6 +23,11 @@ func TestHTTPCache(t *testing.T) {
 
 	hccp950 := NewHTTPCache(dir, "cp950")
 	hccp950.Get("http://toomore.net/", false)
+}
+
+func TestHTTPCache_FlushALL(t *testing.T) {
+	hc := NewHTTPCache("/Volumes/RamDisk", "utf8")
+	hc.FlushAll()
 }
 
 // 目前可以支援 http.Get / http.PostForm 取得資料並儲存

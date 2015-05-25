@@ -22,6 +22,7 @@ const TempFolderName = ".gogrscache"
 // HTTPCache net/http 快取功能
 type HTTPCache struct {
 	Dir            string
+	fullpath       string
 	iconvConverter func([]byte) []byte
 }
 
@@ -29,12 +30,23 @@ type HTTPCache struct {
 //
 // dir 為暫存位置，fromEncoding 來源檔案的編碼，一律轉換為 utf8
 func NewHTTPCache(dir string, fromEncoding string) *HTTPCache {
-	err := os.Mkdir(dir, 0700)
-	if os.IsNotExist(err) {
-		dir = filepath.Join(os.TempDir(), TempFolderName)
-		os.Mkdir(dir, 0700)
+	dir = makeCacheDir(dir)
+	return &HTTPCache{
+		Dir:            dir,
+		fullpath:       filepath.Join(dir, TempFolderName),
+		iconvConverter: renderIconvConverter(fromEncoding)}
+}
+
+// makeCacheDir 建立快取資料夾
+func makeCacheDir(dir string) string {
+	var fullpath = filepath.Join(dir, TempFolderName)
+
+	if err := os.Mkdir(fullpath, 0700); os.IsNotExist(err) {
+		dir = os.TempDir()
+		fullpath = filepath.Join(os.TempDir(), TempFolderName)
+		os.Mkdir(fullpath, 0700)
 	}
-	return &HTTPCache{Dir: dir, iconvConverter: renderIconvConverter(fromEncoding)}
+	return dir
 }
 
 // Get 透過 http.Get 取得檔案或從暫存中取得檔案
@@ -42,8 +54,12 @@ func NewHTTPCache(dir string, fromEncoding string) *HTTPCache {
 // rand 為是否支援網址帶入亂數值，url 需有 '%d' 格式。
 func (hc HTTPCache) Get(url string, rand bool) ([]byte, error) {
 	filehash := fmt.Sprintf("%x", md5.Sum([]byte(url)))
-	content, err := hc.readFile(filehash)
-	if err != nil {
+	var (
+		content []byte
+		err     error
+	)
+
+	if content, err = hc.readFile(filehash); err != nil {
 		return hc.saveFile(url, filehash, rand, nil)
 	}
 	return content, nil
@@ -55,22 +71,35 @@ func (hc HTTPCache) PostForm(url string, data url.Values) ([]byte, error) {
 	io.WriteString(hash, url)
 	io.WriteString(hash, data.Encode())
 
+	var (
+		content []byte
+		err     error
+	)
+
 	filehash := fmt.Sprintf("%x", hash.Sum(nil))
-	content, err := hc.readFile(filehash)
-	if err != nil {
+	if content, err = hc.readFile(filehash); err != nil {
 		return hc.saveFile(url, filehash, false, data)
 	}
 	return content, nil
 }
 
+// FlushAll 清除快取
+func (hc *HTTPCache) FlushAll() {
+	os.RemoveAll(hc.fullpath)
+	hc.Dir = makeCacheDir(hc.Dir)
+}
+
 // readFile 從快取資料裡面取得
 func (hc HTTPCache) readFile(filehash string) ([]byte, error) {
-	f, err := os.Open(filepath.Join(hc.Dir, filehash))
-	defer f.Close()
-	if err != nil {
-		return nil, err
+	var (
+		f   *os.File
+		err error
+	)
+	if f, err = os.Open(filepath.Join(hc.fullpath, filehash)); err == nil {
+		defer f.Close()
+		return ioutil.ReadAll(f)
 	}
-	return ioutil.ReadAll(f)
+	return nil, err
 }
 
 // Fixed http too many open files.
@@ -91,10 +120,12 @@ func (hc HTTPCache) saveFile(url, filehash string, rand bool, data url.Values) (
 	}
 
 	var (
-		resp *http.Response
-		req  *http.Request
-		err  error
-		out  []byte
+		content []byte
+		err     error
+		f       *os.File
+		out     []byte
+		req     *http.Request
+		resp    *http.Response
 	)
 
 	if len(data) == 0 {
@@ -111,25 +142,19 @@ func (hc HTTPCache) saveFile(url, filehash string, rand bool, data url.Values) (
 	}
 
 	req.Header.Set("Connection", "close")
-	resp, err = httpClient.Do(req)
+	if resp, err = httpClient.Do(req); err != nil {
+		return out, err
+	}
 	defer resp.Body.Close()
 
-	if err != nil {
+	if content, err = ioutil.ReadAll(resp.Body); err != nil {
 		return out, err
 	}
 
-	content, err := ioutil.ReadAll(resp.Body)
-
-	if err != nil {
+	if f, err = os.Create(filepath.Join(hc.fullpath, filehash)); err != nil {
 		return out, err
 	}
-
-	f, err := os.Create(filepath.Join(hc.Dir, filehash))
 	defer f.Close()
-
-	if err != nil {
-		return out, err
-	}
 
 	out = hc.iconvConverter(content)
 	f.Write(out)
