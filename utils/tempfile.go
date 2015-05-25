@@ -29,12 +29,17 @@ type HTTPCache struct {
 //
 // dir 為暫存位置，fromEncoding 來源檔案的編碼，一律轉換為 utf8
 func NewHTTPCache(dir string, fromEncoding string) *HTTPCache {
-	err := os.Mkdir(dir, 0700)
+	makeCacheDir(dir)
+	return &HTTPCache{Dir: dir, iconvConverter: renderIconvConverter(fromEncoding)}
+}
+
+// makeCacheDir 建立快取資料夾
+func makeCacheDir(dir string) {
+	err := os.Mkdir(filepath.Join(dir, TempFolderName), 0700)
 	if os.IsNotExist(err) {
 		dir = filepath.Join(os.TempDir(), TempFolderName)
 		os.Mkdir(dir, 0700)
 	}
-	return &HTTPCache{Dir: dir, iconvConverter: renderIconvConverter(fromEncoding)}
 }
 
 // Get 透過 http.Get 取得檔案或從暫存中取得檔案
@@ -61,6 +66,12 @@ func (hc HTTPCache) PostForm(url string, data url.Values) ([]byte, error) {
 		return hc.saveFile(url, filehash, false, data)
 	}
 	return content, nil
+}
+
+// FlushAll 清除快取
+func (hc HTTPCache) FlushAll() {
+	os.RemoveAll(filepath.Join(hc.Dir, TempFolderName))
+	makeCacheDir(hc.Dir)
 }
 
 // readFile 從快取資料裡面取得

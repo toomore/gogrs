@@ -25,6 +25,11 @@ func TestHTTPCache(t *testing.T) {
 	hccp950.Get("http://toomore.net/", false)
 }
 
+func TestHTTPCache_FlushALL(t *testing.T) {
+	hc := NewHTTPCache("/Volumes/RamDisk", "utf8")
+	hc.FlushAll()
+}
+
 // 目前可以支援 http.Get / http.PostForm 取得資料並儲存
 func ExampleHTTPCache() {
 	hc := NewHTTPCache("/run/shm/", "utf8") // linux
