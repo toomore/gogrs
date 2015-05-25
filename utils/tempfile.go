@@ -96,8 +96,8 @@ func (hc HTTPCache) readFile(filehash string) ([]byte, error) {
 		err error
 	)
 	if f, err = os.Open(filepath.Join(hc.fullpath, filehash)); err == nil {
-		return ioutil.ReadAll(f)
 		defer f.Close()
+		return ioutil.ReadAll(f)
 	}
 	return nil, err
 }
