@@ -14,7 +14,7 @@ func TestHTTPCache(t *testing.T) {
 	t.Log("TempDir: ", dir)
 	hc := NewHTTPCache(dir, "utf8")
 	t.Log("TempDir: ", hc.Dir)
-	defer os.RemoveAll(hc.Dir)
+	defer os.RemoveAll(filepath.Join(hc.Dir, TempFolderName))
 	hc.Get("http://toomore.net/?q=%d", true)
 	hc.Get("http://toomore.net/?q=%d", true)
 
