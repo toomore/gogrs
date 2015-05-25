@@ -50,6 +50,7 @@ func BenchmarkThanPast(t *testing.B) {
 	var sample = []float64{20.2, 20.3, 100.25, 100.75}
 	for i := 0; i < t.N; i++ {
 		thanPast(sample, true)
+		//ThanPast(sample, 3, true)
 	}
 }
 
@@ -133,7 +134,7 @@ func TestSum(t *testing.T) {
 
 func TestThanPast(t *testing.T) {
 	var sample1 = []float64{10.1, 11.1, 12.1, 13.1}
-	if !ThanPastFloat64(sample1, 3, true) {
+	if !ThanPast(sample1, 3, true) {
 		t.Error("Should be `true`")
 	}
 	var sample2 = []float64{10.1, 11.1, 12.1, 9.1}

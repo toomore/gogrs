@@ -5,6 +5,7 @@ package utils
 
 import (
 	"math"
+	"reflect"
 	"regexp"
 	"strconv"
 	"time"
@@ -93,6 +94,26 @@ func ThanPastUint64(data []uint64, days int, max bool) bool {
 // ThanPastFloat64 計算最後一個數值是否為過去幾天最大或最小（float64）
 func ThanPastFloat64(data []float64, days int, max bool) bool {
 	return thanPast(data[len(data)-1-days:], max)
+}
+
+func ThanPast(data interface{}, days int, max bool) bool {
+	var dataValue = reflect.ValueOf(data)
+	switch dataValue.Index(0).Type().String() {
+	case "float64":
+		var d = make([]float64, dataValue.Len())
+		for i := 0; i < dataValue.Len(); i++ {
+			d[i] = dataValue.Index(i).Float()
+		}
+		return ThanPastFloat64(d, days, max)
+	case "uint64":
+		var d = make([]uint64, dataValue.Len())
+		for i := 0; i < dataValue.Len(); i++ {
+			d[i] = dataValue.Index(i).Uint()
+		}
+		return ThanPastUint64(d, days, max)
+	default:
+		return false
+	}
 }
 
 func thanPast(data []float64, max bool) bool {
