@@ -40,9 +40,3 @@ go tool cover -func coverage.cov
 # To submit the test coverage result to coveralls.io,
 # use goveralls (https://github.com/mattn/goveralls)
 # goveralls -covercoverage=coverage.cov -service=travis-ci
-
-# Test build cmd.
-go install -v -a github.com/toomore/gogrs/cmd/gogrs_example;
-go install -v -a github.com/toomore/gogrs/cmd/realtime;
-go install -v -a github.com/toomore/gogrs/cmd/tradingdays_server;
-go install -v -a github.com/toomore/gogrs/cmd/twsereport;

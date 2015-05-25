@@ -20,6 +20,7 @@ script:
     - sh ./goclean.sh
     - $HOME/gopath/bin/goveralls -coverprofile=coverage.cov -service=travis-ci
     - go test -bench=. -benchmem ./...
+    - sh ./install_all_cmd.sh
 
 after_success:
     - bash <(curl -s https://codecov.io/bash)
