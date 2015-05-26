@@ -27,6 +27,7 @@ const (
 	TWSEREAL    string = "/stock/api/getStockInfo.jsp?ex_ch=%s_%s.tw_%s&json=1&delay=0&_=%d"
 	QFIISTOP20  string = "/ch/trading/fund/MI_QFIIS_sort_20/MI_QFIIS_sort_20_PD.php?filename=%d%02d%d.php&type=csv"                            // yyyymmdd
 	BFI82U      string = "/ch/trading/fund/BFI82U/BFI82U_print.php?begin_date=%d%02d%d&end_date=%d%02d%d&report_type=day&language=ch&save=csv" // yyyymmdd
+	T86         string = "/ch/trading/fund/T86/print.php?edition=ch&filename=genpage/%s/%s_2by_issue.dat&type=csv&select2=%s&qdate=%s"
 )
 
 // RandInt return random int.

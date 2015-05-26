@@ -52,3 +52,17 @@ func (b BFI82U) Get() ([][]string, error) {
 	data, _ := hCache.Get(b.URL(), false)
 	return csv.NewReader(strings.NewReader(strings.Join(strings.Split(string(data), "\n")[2:], "\n"))).ReadAll()
 }
+
+// T86 取得「三大法人買賣超日報(股)」
+type T86 struct {
+	Date time.Time
+}
+
+// URL 擷取網址
+func (t T86) URL(cate string) string {
+	var ym = fmt.Sprintf("%d%02d", t.Date.Year(), t.Date.Month())
+	var ymd = fmt.Sprintf("%s%d", ym, t.Date.Day())
+	return fmt.Sprintf("%s%s", utils.TWSEHOST,
+		fmt.Sprintf(utils.T86,
+			ym, ymd, cate, ymd))
+}
