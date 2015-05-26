@@ -66,3 +66,13 @@ func (t T86) URL(cate string) string {
 		fmt.Sprintf(utils.T86,
 			ym, ymd, cate, ymd))
 }
+
+// Get 擷取資料
+func (t T86) Get(cate string) ([][]string, error) {
+	data, _ := hCache.Get(t.URL(cate), false)
+	csvArrayContent := strings.Split(string(data), "\n")[2:]
+	for i, v := range csvArrayContent {
+		csvArrayContent[i] = strings.Replace(v, "=", "", -1)
+	}
+	return csv.NewReader(strings.NewReader(strings.Join(csvArrayContent, "\n"))).ReadAll()
+}

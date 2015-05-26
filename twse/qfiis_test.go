@@ -25,4 +25,6 @@ func TestBFI82U_Get(t *testing.T) {
 func TestT86_Get(t *testing.T) {
 	t86 := &T86{Date: time.Date(2015, 5, 25, 0, 0, 0, 0, utils.TaipeiTimeZone)}
 	t.Log(t86.URL("01"))
+	data, _ := t86.Get("ALLBUT0999")
+	t.Log(data, len(data), data[:5])
 }
