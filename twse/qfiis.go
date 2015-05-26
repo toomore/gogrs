@@ -31,3 +31,18 @@ func (q *QFIISTOP20) Get() ([][]string, error) {
 	csvReader := csv.NewReader(strings.NewReader(strings.Join(csvArrayContent[:len(csvArrayContent)-3], "\n")))
 	return csvReader.ReadAll()
 }
+
+// BFI82U 取得「三大法人買賣金額統計表」
+type BFI82U struct {
+	Begin time.Time
+	End   time.Time
+}
+
+// URL 擷取網址
+func (b BFI82U) URL() string {
+	return fmt.Sprintf("%s%s", utils.TWSEHOST,
+		fmt.Sprintf(utils.BFI82U,
+			b.Begin.Year(), b.Begin.Month(), b.Begin.Day(),
+			b.End.Year(), b.End.Month(), b.End.Day(),
+		))
+}
