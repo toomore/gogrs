@@ -23,12 +23,12 @@ func (q QFIISTOP20) URL() string {
 func (q *QFIISTOP20) Get() ([][]string, error) {
 	data, _ := hCache.Get(q.URL(), false)
 
-	csvArrayContent := strings.Split(string(data), "\n")
-	for i, v := range csvArrayContent[2:] {
+	csvArrayContent := strings.Split(string(data), "\n")[2:]
+	for i, v := range csvArrayContent {
 		csvArrayContent[i] = strings.Replace(v, "=", "", -1)
 	}
 
-	csvReader := csv.NewReader(strings.NewReader(strings.Join(csvArrayContent[:len(csvArrayContent)-3], "\n")))
+	csvReader := csv.NewReader(strings.NewReader(strings.Join(csvArrayContent, "\n")))
 	return csvReader.ReadAll()
 }
 
