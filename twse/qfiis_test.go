@@ -19,4 +19,5 @@ func TestBFI82U_Get(t *testing.T) {
 		End:   time.Date(2015, 5, 26, 0, 0, 0, 0, utils.TaipeiTimeZone),
 	}
 	t.Log(bfi.URL())
+	t.Log(bfi.Get())
 }

@@ -24,7 +24,7 @@ func (q *QFIISTOP20) Get() ([][]string, error) {
 	data, _ := hCache.Get(q.URL(), false)
 
 	csvArrayContent := strings.Split(string(data), "\n")
-	for i, v := range csvArrayContent[2 : len(csvArrayContent)-1] {
+	for i, v := range csvArrayContent[2:] {
 		csvArrayContent[i] = strings.Replace(v, "=", "", -1)
 	}
 
@@ -45,4 +45,10 @@ func (b BFI82U) URL() string {
 			b.Begin.Year(), b.Begin.Month(), b.Begin.Day(),
 			b.End.Year(), b.End.Month(), b.End.Day(),
 		))
+}
+
+// Get 擷取資料
+func (b BFI82U) Get() ([][]string, error) {
+	data, _ := hCache.Get(b.URL(), false)
+	return csv.NewReader(strings.NewReader(strings.Join(strings.Split(string(data), "\n")[2:], "\n"))).ReadAll()
 }
