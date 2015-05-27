@@ -21,7 +21,7 @@ func (q QFIISTOP20) URL() string {
 }
 
 // Get 擷取資料
-func (q *QFIISTOP20) Get() ([][]string, error) {
+func (q QFIISTOP20) Get() ([][]string, error) {
 	data, _ := hCache.Get(q.URL(), false)
 
 	csvArrayContent := strings.Split(string(data), "\n")[2:]
