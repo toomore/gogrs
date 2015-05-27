@@ -3,6 +3,7 @@ package twse
 import (
 	"encoding/csv"
 	"fmt"
+	"net/url"
 	"strings"
 	"time"
 
@@ -75,4 +76,53 @@ func (t T86) Get(cate string) ([][]string, error) {
 		csvArrayContent[i] = strings.Replace(v, "=", "", -1)
 	}
 	return csv.NewReader(strings.NewReader(strings.Join(csvArrayContent, "\n"))).ReadAll()
+}
+
+// TWTXXU 產生 自營商、投信、外資及陸資買賣超彙總表
+type TWTXXU struct {
+	Date time.Time
+	fund string
+}
+
+// NewTWT43U 自營商買賣超彙總表
+func NewTWT43U(date time.Time) *TWTXXU {
+	return &TWTXXU{Date: date, fund: "TWT43U"}
+}
+
+// NewTWT44U 投信買賣超彙總表
+func NewTWT44U(date time.Time) *TWTXXU {
+	return &TWTXXU{Date: date, fund: "TWT44U"}
+}
+
+// NewTWT38U 外資及陸資買賣超彙總表
+func NewTWT38U(date time.Time) *TWTXXU {
+	return &TWTXXU{Date: date, fund: "TWT38U"}
+}
+
+// URL 擷取網址
+func (t TWTXXU) URL() string {
+	return fmt.Sprintf("%s%s", utils.TWSEHOST,
+		fmt.Sprintf(utils.TWTXXU,
+			t.fund, t.fund, t.Date.Year()-1911, t.Date.Month(), t.Date.Day()))
+}
+
+func (t TWTXXU) Get() ([][]string, error) {
+	path := t.URL()
+	if r, err := url.Parse(path); err == nil {
+		rawquery, _ := url.ParseQuery(r.RawQuery)
+		data, _ := hCache.PostForm(path, rawquery)
+
+		var csvArrayContent = strings.Split(string(data), "\n")
+		switch t.fund {
+		case "TWT43U":
+			csvArrayContent = csvArrayContent[3 : len(csvArrayContent)-4]
+		}
+
+		for i, v := range csvArrayContent {
+			csvArrayContent[i] = strings.Replace(v, "=", "", -1)
+		}
+		csvReader := csv.NewReader(strings.NewReader(strings.Join(csvArrayContent, "\n")))
+		return csvReader.ReadAll()
+	}
+	return nil, nil
 }

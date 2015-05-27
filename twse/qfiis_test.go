@@ -28,3 +28,10 @@ func TestT86_Get(t *testing.T) {
 	data, _ := t86.Get("ALLBUT0999")
 	t.Log(data, len(data), data[:5])
 }
+
+func TestTWTXXU_Get(t *testing.T) {
+	date := time.Date(2015, 5, 26, 0, 0, 0, 0, utils.TaipeiTimeZone)
+	twt43u := NewTWT43U(date)
+	t.Log(twt43u.URL())
+	t.Log(twt43u.Get())
+}
