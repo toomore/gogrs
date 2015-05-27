@@ -106,9 +106,14 @@ func (t TWTXXU) URL() string {
 			t.fund, t.fund, t.Date.Year()-1911, t.Date.Month(), t.Date.Day()))
 }
 
+// Get 擷取資料
 func (t TWTXXU) Get() ([][]string, error) {
+	var (
+		r   *url.URL
+		err error
+	)
 	path := t.URL()
-	if r, err := url.Parse(path); err == nil {
+	if r, err = url.Parse(path); err == nil {
 		rawquery, _ := url.ParseQuery(r.RawQuery)
 		data, _ := hCache.PostForm(path, rawquery)
 
@@ -116,15 +121,16 @@ func (t TWTXXU) Get() ([][]string, error) {
 		switch t.fund {
 		case "TWT43U":
 			csvArrayContent = csvArrayContent[3 : len(csvArrayContent)-4]
-		case "TWT44U":
+		case "TWT44U", "TWT38U":
 			csvArrayContent = csvArrayContent[2 : len(csvArrayContent)-5]
 		}
 
 		for i, v := range csvArrayContent {
 			csvArrayContent[i] = strings.Replace(v, "=", "", -1)
 		}
+
 		csvReader := csv.NewReader(strings.NewReader(strings.Join(csvArrayContent, "\n")))
 		return csvReader.ReadAll()
 	}
-	return nil, nil
+	return nil, err
 }

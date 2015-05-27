@@ -31,7 +31,7 @@ func TestT86_Get(t *testing.T) {
 
 func TestTWTXXU_Get(t *testing.T) {
 	date := time.Date(2015, 5, 26, 0, 0, 0, 0, utils.TaipeiTimeZone)
-	twt := NewTWT44U(date)
+	twt := NewTWT38U(date)
 	t.Log(twt.URL())
 	t.Log(twt.Get())
 }
