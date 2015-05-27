@@ -38,6 +38,11 @@ type BFI82U struct {
 	End   time.Time
 }
 
+// NewBFI82U 三大法人買賣金額統計表
+func NewBFI82U(begin, end time.Time) *BFI82U {
+	return &BFI82U{Begin: begin, End: end}
+}
+
 // URL 擷取網址
 func (b BFI82U) URL() string {
 	return fmt.Sprintf("%s%s", utils.TWSEHOST,
