@@ -116,6 +116,8 @@ func (t TWTXXU) Get() ([][]string, error) {
 		switch t.fund {
 		case "TWT43U":
 			csvArrayContent = csvArrayContent[3 : len(csvArrayContent)-4]
+		case "TWT44U":
+			csvArrayContent = csvArrayContent[2 : len(csvArrayContent)-5]
 		}
 
 		for i, v := range csvArrayContent {
