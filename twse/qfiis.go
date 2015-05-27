@@ -29,8 +29,7 @@ func (q *QFIISTOP20) Get() ([][]string, error) {
 		csvArrayContent[i] = strings.Replace(v, "=", "", -1)
 	}
 
-	csvReader := csv.NewReader(strings.NewReader(strings.Join(csvArrayContent, "\n")))
-	return csvReader.ReadAll()
+	return csv.NewReader(strings.NewReader(strings.Join(csvArrayContent, "\n"))).ReadAll()
 }
 
 // BFI82U 取得「三大法人買賣金額統計表」
@@ -109,10 +108,13 @@ func (t TWTXXU) URL() string {
 // Get 擷取資料
 func (t TWTXXU) Get() ([][]string, error) {
 	var (
-		r   *url.URL
-		err error
+		r      *url.URL
+		err    error
+		result [][]string
 	)
+
 	path := t.URL()
+
 	if r, err = url.Parse(path); err == nil {
 		rawquery, _ := url.ParseQuery(r.RawQuery)
 		data, _ := hCache.PostForm(path, rawquery)
@@ -129,8 +131,7 @@ func (t TWTXXU) Get() ([][]string, error) {
 			csvArrayContent[i] = strings.Replace(v, "=", "", -1)
 		}
 
-		csvReader := csv.NewReader(strings.NewReader(strings.Join(csvArrayContent, "\n")))
-		return csvReader.ReadAll()
+		result, err = csv.NewReader(strings.NewReader(strings.Join(csvArrayContent, "\n"))).ReadAll()
 	}
-	return nil, err
+	return result, err
 }
