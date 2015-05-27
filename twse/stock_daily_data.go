@@ -1,6 +1,3 @@
-// Package twse - Fetch stock data from TWSE, OTC
-// 擷取台灣股市上市、上櫃股票資訊
-//
 package twse
 
 import (
