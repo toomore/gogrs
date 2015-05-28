@@ -14,19 +14,22 @@ func TestQFIISTOP20_Get(t *testing.T) {
 }
 
 func TestBFI82U_Get(t *testing.T) {
-	bfi := &BFI82U{
-		Begin: time.Date(2015, 5, 25, 0, 0, 0, 0, utils.TaipeiTimeZone),
-		End:   time.Date(2015, 5, 26, 0, 0, 0, 0, utils.TaipeiTimeZone),
-	}
+	bfi := NewBFI82U(
+		time.Date(2015, 5, 25, 0, 0, 0, 0, utils.TaipeiTimeZone),
+		time.Date(2015, 5, 26, 0, 0, 0, 0, utils.TaipeiTimeZone),
+	)
 	t.Log(bfi.URL())
-	t.Log(bfi.Get())
+	data, _ := bfi.Get()
+	t.Logf("%+v", data)
 }
 
 func TestT86_Get(t *testing.T) {
 	t86 := &T86{Date: time.Date(2015, 5, 25, 0, 0, 0, 0, utils.TaipeiTimeZone)}
 	t.Log(t86.URL("01"))
 	data, _ := t86.Get("ALLBUT0999")
-	t.Log(data, len(data), data[:5])
+	for i, v := range data[:5] {
+		t.Logf("%d %+v", i, v)
+	}
 }
 
 func TestTWTXXU_Get(t *testing.T) {
