@@ -4,11 +4,20 @@ import (
 	"encoding/csv"
 	"fmt"
 	"net/url"
+	"strconv"
 	"strings"
 	"time"
 
 	"github.com/toomore/gogrs/utils"
 )
+
+// BaseSellBuy 買進賣出合計
+type BaseSellBuy struct {
+	Name  string
+	Buy   int64
+	Sell  int64
+	Total int64
+}
 
 // QFIISTOP20 取得「外資及陸資持股比率前二十名彙總表」
 type QFIISTOP20 struct {
@@ -53,9 +62,22 @@ func (b BFI82U) URL() string {
 }
 
 // Get 擷取資料
-func (b BFI82U) Get() ([][]string, error) {
+func (b BFI82U) Get() ([]BaseSellBuy, error) {
 	data, _ := hCache.Get(b.URL(), false)
-	return csv.NewReader(strings.NewReader(strings.Join(strings.Split(string(data), "\n")[2:], "\n"))).ReadAll()
+
+	var result []BaseSellBuy
+	var err error
+
+	if csvdata, err := csv.NewReader(strings.NewReader(strings.Join(strings.Split(string(data), "\n")[2:], "\n"))).ReadAll(); err == nil {
+		result = make([]BaseSellBuy, len(csvdata))
+		for i, v := range csvdata {
+			result[i].Name = v[0]
+			result[i].Buy, _ = strconv.ParseInt(strings.Replace(v[1], ",", "", -1), 10, 64)
+			result[i].Sell, _ = strconv.ParseInt(strings.Replace(v[2], ",", "", -1), 10, 64)
+			result[i].Total, _ = strconv.ParseInt(strings.Replace(v[3], ",", "", -1), 10, 64)
+		}
+	}
+	return result, err
 }
 
 // T86 取得「三大法人買賣超日報(股)」
