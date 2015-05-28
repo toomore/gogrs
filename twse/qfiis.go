@@ -15,9 +15,9 @@ import (
 type BaseSellBuy struct {
 	No    string
 	Name  string
-	Buy   int64
-	Sell  int64
-	Total int64
+	Buy   int64 // 買進
+	Sell  int64 // 賣出
+	Total int64 // 合計
 }
 
 // QFIISTOP20 取得「外資及陸資持股比率前二十名彙總表」
