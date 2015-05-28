@@ -94,14 +94,54 @@ func (t T86) URL(cate string) string {
 			ym, ymd, cate, ymd))
 }
 
+// T86Data 各欄位資料
+type T86Data struct {
+	No     string
+	Name   string
+	FII    BaseSellBuy // 外資
+	SIT    BaseSellBuy // 投信
+	DProp  BaseSellBuy // 自營商(自行買賣)
+	DHedge BaseSellBuy // 自營商(避險)
+	Diff   int64       // 三大法人買賣超股數
+}
+
 // Get 擷取資料
-func (t T86) Get(cate string) ([][]string, error) {
+func (t T86) Get(cate string) ([]T86Data, error) {
 	data, _ := hCache.Get(t.URL(cate), false)
 	csvArrayContent := strings.Split(string(data), "\n")[2:]
 	for i, v := range csvArrayContent {
 		csvArrayContent[i] = strings.Replace(v, "=", "", -1)
 	}
-	return csv.NewReader(strings.NewReader(strings.Join(csvArrayContent, "\n"))).ReadAll()
+
+	var result []T86Data
+	var err error
+
+	if csvdata, err := csv.NewReader(strings.NewReader(strings.Join(csvArrayContent, "\n"))).ReadAll(); err == nil {
+		result = make([]T86Data, len(csvdata))
+		for i, v := range csvdata {
+			result[i].No = v[0]
+			result[i].Name = v[1]
+
+			result[i].FII.Buy, _ = strconv.ParseInt(strings.Replace(v[2], ",", "", -1), 10, 64)
+			result[i].FII.Sell, _ = strconv.ParseInt(strings.Replace(v[3], ",", "", -1), 10, 64)
+			result[i].FII.Total = result[i].FII.Buy - result[i].FII.Sell
+
+			result[i].SIT.Buy, _ = strconv.ParseInt(strings.Replace(v[4], ",", "", -1), 10, 64)
+			result[i].SIT.Sell, _ = strconv.ParseInt(strings.Replace(v[5], ",", "", -1), 10, 64)
+			result[i].SIT.Total = result[i].SIT.Buy - result[i].SIT.Sell
+
+			result[i].DProp.Buy, _ = strconv.ParseInt(strings.Replace(v[6], ",", "", -1), 10, 64)
+			result[i].DProp.Sell, _ = strconv.ParseInt(strings.Replace(v[7], ",", "", -1), 10, 64)
+			result[i].DProp.Total = result[i].DProp.Buy - result[i].DProp.Sell
+
+			result[i].DHedge.Buy, _ = strconv.ParseInt(strings.Replace(v[8], ",", "", -1), 10, 64)
+			result[i].DHedge.Sell, _ = strconv.ParseInt(strings.Replace(v[9], ",", "", -1), 10, 64)
+			result[i].DHedge.Total = result[i].DHedge.Buy - result[i].DHedge.Sell
+
+			result[i].Diff, _ = strconv.ParseInt(strings.Replace(v[10], ",", "", -1), 10, 64)
+		}
+	}
+	return result, err
 }
 
 // TWTXXU 產生 自營商、投信、外資及陸資買賣超彙總表
