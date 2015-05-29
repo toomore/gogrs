@@ -97,6 +97,7 @@ func main() {
 			wg.Add(len(datalist))
 			for _, stock := range datalist {
 				go func(check checkGroup, stock *twse.Data) {
+					defer wg.Done()
 					runtime.Gosched()
 					if check.CheckFunc(stock) {
 						fmt.Println(prettyprint(stock, check))

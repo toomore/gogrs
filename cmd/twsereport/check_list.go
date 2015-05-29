@@ -22,7 +22,6 @@ func (check01) Mindata() int {
 }
 
 func (check01) CheckFunc(b ...*twse.Data) bool {
-	defer wg.Done()
 	if !prepareData(b...)[0] {
 		return false
 	}
@@ -56,7 +55,6 @@ func (check02) Mindata() int {
 }
 
 func (check02) CheckFunc(b ...*twse.Data) bool {
-	defer wg.Done()
 	if !prepareData(b...)[0] {
 		return false
 	}
@@ -74,7 +72,6 @@ func (check03) Mindata() int {
 }
 
 func (check03) CheckFunc(b ...*twse.Data) bool {
-	defer wg.Done()
 	if !prepareData(b...)[0] {
 		return false
 	}
@@ -97,7 +94,6 @@ func (check04) Mindata() int {
 }
 
 func (check04) CheckFunc(b ...*twse.Data) bool {
-	defer wg.Done()
 	if !prepareData(b...)[0] {
 		return false
 	}
@@ -126,7 +122,6 @@ func (check05) Mindata() int {
 }
 
 func (check05) CheckFunc(b ...*twse.Data) bool {
-	defer wg.Done()
 	if !prepareData(b...)[0] {
 		return false
 	}
