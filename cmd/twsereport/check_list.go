@@ -75,8 +75,11 @@ func (check03) CheckFunc(b ...*twse.Data) bool {
 	if !prepareData(b...)[0] {
 		return false
 	}
-	var price = b[0].GetPriceList()
-	var volume = b[0].GetVolumeList()
+
+	var (
+		price  = b[0].GetPriceList()
+		volume = b[0].GetVolumeList()
+	)
 
 	return price[len(price)-1] > 10 &&
 		(utils.SD(price[len(price)-45:]) < 0.25 ||
@@ -146,8 +149,11 @@ func (check05) CheckFunc(b ...*twse.Data) bool {
 }
 
 func prepareData(b ...*twse.Data) []bool {
-	var result []bool
-	var mindata int
+	var (
+		result  []bool
+		mindata int
+	)
+
 	for i := range ckList {
 		if ckList[i].Mindata() > mindata {
 			mindata = ckList[i].Mindata()
