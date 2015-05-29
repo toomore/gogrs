@@ -103,13 +103,13 @@ func (check04) CheckFunc(b ...*twse.Data) bool {
 	var ma3 = b[0].MA(3)
 	if days, up := utils.CountCountineFloat64(utils.DeltaFloat64(ma3)); up && days == 1 {
 		var (
-			ma6       = b[0].MA(6)
-			ma18      = b[0].MA(18)
-			ma3_last  = len(ma3) - 1
-			ma6_last  = len(ma6) - 1
-			ma18_last = len(ma18) - 1
+			ma6      = b[0].MA(6)
+			ma18     = b[0].MA(18)
+			ma3Last  = len(ma3) - 1
+			ma6Last  = len(ma6) - 1
+			ma18Last = len(ma18) - 1
 		)
-		return (ma3[ma3_last] > ma18[ma18_last] && ma6[ma6_last] > ma18[ma18_last]) && ma3[ma3_last] < ma6[ma6_last]
+		return (ma3[ma3Last] > ma18[ma18Last] && ma6[ma6Last] > ma18[ma18Last]) && ma3[ma3Last] < ma6[ma6Last]
 	}
 	return false
 }
