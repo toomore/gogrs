@@ -79,8 +79,8 @@ func (check03) CheckFunc(b ...*twse.Data) bool {
 	var volume = b[0].GetVolumeList()
 
 	return price[len(price)-1] > 10 &&
-		(utils.SD(price[len(price)-46:]) < 0.25 ||
-			utils.SDUint64(volume[len(volume)-46:]) < 0.25)
+		(utils.SD(price[len(price)-45:]) < 0.25 ||
+			utils.SDUint64(volume[len(volume)-45:]) < 0.25)
 }
 
 type check04 struct{}
@@ -166,7 +166,6 @@ func prepareData(b ...*twse.Data) []bool {
 					break
 				}
 				if b[i].Len() == start {
-					result[i] = false
 					break
 				}
 				start = b[i].Len()
