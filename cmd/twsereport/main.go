@@ -22,10 +22,8 @@ The flags are:
 package main
 
 import (
-	"bufio"
 	"flag"
 	"fmt"
-	"os"
 	"runtime"
 	"strings"
 	"sync"
@@ -93,7 +91,6 @@ func main() {
 		datalist[i] = twse.NewTWSE(no, tradingdays.FindRecentlyOpened(time.Now()))
 	}
 
-Run:
 	if len(datalist) > 0 {
 		for _, check := range ckList {
 			fmt.Printf("----- %v -----\n", check)
@@ -107,12 +104,6 @@ Run:
 				}(check, stock)
 			}
 			wg.Wait()
-		}
-		fmt.Println("\n再次計算(Y/n)")
-		stdString, _ := bufio.NewReader(os.Stdin).ReadString('\n')
-		targetStr := strings.Split(stdString, "\n")[0]
-		if targetStr == "Y" || targetStr == "y" {
-			goto Run
 		}
 	} else {
 		flag.PrintDefaults()
