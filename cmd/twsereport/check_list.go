@@ -115,6 +115,41 @@ func (check04) CheckFunc(b ...*twse.Data) bool {
 	return false
 }
 
+type check05 struct{}
+
+func (check05) String() string {
+	return "三日內最大量 K 線收紅 收在 MA18 之上"
+}
+
+func (check05) Mindata() int {
+	return 18
+}
+
+func (check05) CheckFunc(b ...*twse.Data) bool {
+	defer wg.Done()
+	if !prepareData(b...)[0] {
+		return false
+	}
+	var (
+		vols        = b[0].GetVolumeList()
+		volsFloat64 = make([]float64, 3)
+	)
+	for i, v := range vols[len(vols)-3:] {
+		volsFloat64[i] = float64(v)
+	}
+	if days, up := utils.CountCountineFloat64(utils.DeltaFloat64(volsFloat64)); up && days >= 1 && b[0].IsRed() {
+		var (
+			ma18      = b[0].MA(18)
+			priceList = b[0].GetPriceList()
+		)
+
+		if priceList[len(priceList)-1] > ma18[len(ma18)-1] {
+			return true
+		}
+	}
+	return false
+}
+
 func prepareData(b ...*twse.Data) []bool {
 	var result []bool
 	var mindata int
@@ -156,4 +191,5 @@ func init() {
 	ckList.Add(checkGroup(check02{}))
 	ckList.Add(checkGroup(check03{}))
 	ckList.Add(checkGroup(check04{}))
+	ckList.Add(checkGroup(check05{}))
 }
