@@ -80,9 +80,39 @@ func (check03) CheckFunc(b ...*twse.Data) bool {
 	}
 	var price = b[0].GetPriceList()
 	var volume = b[0].GetVolumeList()
+
 	return price[len(price)-1] > 10 &&
 		(utils.SD(price[len(price)-46:]) < 0.25 ||
 			utils.SDUint64(volume[len(volume)-46:]) < 0.25)
+}
+
+type check04 struct{}
+
+func (check04) String() string {
+	return "(MA3 < MA6) > MA18 and MA3UP(1)"
+}
+
+func (check04) Mindata() int {
+	return 18
+}
+
+func (check04) CheckFunc(b ...*twse.Data) bool {
+	defer wg.Done()
+	if !prepareData(b...)[0] {
+		return false
+	}
+	var ma3 = b[0].MA(3)
+	if days, up := utils.CountCountineFloat64(utils.DeltaFloat64(ma3)); up && days == 1 {
+		var (
+			ma6       = b[0].MA(6)
+			ma18      = b[0].MA(18)
+			ma3_last  = len(ma3) - 1
+			ma6_last  = len(ma6) - 1
+			ma18_last = len(ma18) - 1
+		)
+		return (ma3[ma3_last] > ma18[ma18_last] && ma6[ma6_last] > ma18[ma18_last]) && ma3[ma3_last] < ma6[ma6_last]
+	}
+	return false
 }
 
 func prepareData(b ...*twse.Data) []bool {
@@ -125,4 +155,5 @@ func init() {
 	ckList.Add(checkGroup(check01{}))
 	ckList.Add(checkGroup(check02{}))
 	ckList.Add(checkGroup(check03{}))
+	ckList.Add(checkGroup(check04{}))
 }
