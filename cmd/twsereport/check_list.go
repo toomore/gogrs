@@ -148,6 +148,33 @@ func (check05) CheckFunc(b ...*twse.Data) bool {
 	return false
 }
 
+type check06 struct{}
+
+func (check06) String() string {
+	return "漲幅 7% 以上"
+}
+
+func (check06) Mindata() int {
+	return 1
+}
+
+func (check06) CheckFunc(b ...*twse.Data) bool {
+	if !prepareData(b...)[0] {
+		return false
+	}
+
+	priceList := b[0].GetPriceList()
+	openList := b[0].GetOpenList()
+	price := priceList[len(priceList)-1]
+	open := openList[len(openList)-1]
+
+	if price > open && (price-open)/open > 0.068 {
+		return true
+	}
+
+	return false
+}
+
 func prepareData(b ...*twse.Data) []bool {
 	var (
 		result  []bool
@@ -192,4 +219,5 @@ func init() {
 	ckList.Add(checkGroup(check03{}))
 	ckList.Add(checkGroup(check04{}))
 	ckList.Add(checkGroup(check05{}))
+	ckList.Add(checkGroup(check06{}))
 }
