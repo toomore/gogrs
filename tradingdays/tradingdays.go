@@ -30,7 +30,7 @@ func IsOpen(year int, month time.Month, day int) bool {
 
 // FindRecentlyOpened 回傳最近一個開市時間（UTC 0）
 func FindRecentlyOpened(date time.Time) time.Time {
-	var d = date.UTC()
+	var d = date.In(utils.TaipeiTimeZone)
 	var days = d.Day()
 	var index int
 	var tp *TimePeriod
@@ -38,7 +38,7 @@ func FindRecentlyOpened(date time.Time) time.Time {
 	for {
 		if IsOpen(d.Year(), d.Month(), days) {
 			if index == 0 {
-				tp = NewTimePeriod(time.Date(d.Year(), d.Month(), days, d.Hour(), d.Minute(), d.Second(), d.Nanosecond(), time.UTC))
+				tp = NewTimePeriod(time.Date(d.Year(), d.Month(), days, d.Hour(), d.Minute(), d.Second(), d.Nanosecond(), utils.TaipeiTimeZone))
 				if tp.AtBefore() || tp.AtOpen() {
 					days--
 					for {

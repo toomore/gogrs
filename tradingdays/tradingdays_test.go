@@ -33,6 +33,20 @@ func TestFindRecentlyOpened(t *testing.T) {
 	if result2.Unix() != time.Date(2015, 5, 8, 0, 0, 0, 0, time.UTC).Unix() {
 		t.Error("Should be at 2015/5/8")
 	}
+
+	date0601 := time.Date(2015, 6, 1, 0, 0, 0, 0, time.UTC).Unix()
+	date0602 := time.Date(2015, 6, 2, 0, 0, 0, 0, time.UTC).Unix()
+	test06011 := FindRecentlyOpened(time.Date(2015, 6, 2, 7, 0, 0, 0, utils.TaipeiTimeZone)).Unix()
+	test06012 := FindRecentlyOpened(time.Date(2015, 6, 2, 8, 0, 0, 0, utils.TaipeiTimeZone)).Unix()
+	test06013 := FindRecentlyOpened(time.Date(2015, 6, 2, 9, 0, 0, 0, utils.TaipeiTimeZone)).Unix()
+	test06014 := FindRecentlyOpened(time.Date(2015, 6, 2, 10, 0, 0, 0, utils.TaipeiTimeZone)).Unix()
+	test06021 := FindRecentlyOpened(time.Date(2015, 6, 2, 14, 30, 0, 0, utils.TaipeiTimeZone)).Unix()
+	if !(date0601 == test06011 && date0601 == test06012 && date0601 == test06013 && date0601 == test06014) {
+		t.Error("Should be at 2015/6/1")
+	}
+	if !(date0602 == test06021) {
+		t.Error("Should be at 2015/6/2")
+	}
 }
 
 func TestIsOpen(t *testing.T) {
