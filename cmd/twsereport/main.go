@@ -17,6 +17,8 @@ The flags are:
 		上市股票類別，可使用 ',' 分隔多組代碼，例：11,15
 	-ncpu
 		指定 CPU 數量，預設為實際 CPU 數量
+	-color
+		色彩化
 
 */
 package main
@@ -48,6 +50,7 @@ var (
 	wg         sync.WaitGroup
 	twseNo     = flag.String("twse", "", "上市股票代碼，可使用 ',' 分隔多組代碼，例：2618,2329")
 	twseCate   = flag.String("twsecate", "", "上市股票類別，可使用 ',' 分隔多組代碼，例：11,15")
+	showcolor  = flag.Bool("color", true, "色彩化")
 	ncpu       = flag.Int("ncpu", runtime.NumCPU(), "指定 CPU 數量，預設為實際 CPU 數量")
 	ckList     = make(checkGroupList, 1)
 	white      = color.New(color.FgWhite, color.Bold).SprintfFunc()
@@ -95,6 +98,8 @@ func main() {
 	var catelist []twse.StockInfo
 	var twselist []string
 	var catenolist []string
+
+	color.NoColor = !*showcolor
 
 	if *twseCate != "" {
 		l := &twse.Lists{Date: tradingdays.FindRecentlyOpened(time.Now())}
