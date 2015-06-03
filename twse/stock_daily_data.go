@@ -4,8 +4,6 @@ import (
 	"encoding/csv"
 	"errors"
 	"fmt"
-	"os"
-	"runtime"
 	"strconv"
 	"strings"
 	"time"
@@ -285,14 +283,5 @@ func (d Data) FormatData() []FmtData {
 var hCache *utils.HTTPCache
 
 func init() {
-	var dir string
-	switch runtime.GOOS {
-	case "darwin":
-		dir = "/Volumes/RamDisk/"
-	case "linux":
-		dir = "/run/shm/"
-	default:
-		dir = os.TempDir()
-	}
-	hCache = utils.NewHTTPCache(dir, "cp950")
+	hCache = utils.NewHTTPCache(utils.GetOSRamdiskPath(), "cp950")
 }
