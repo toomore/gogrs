@@ -1,3 +1,20 @@
+// 清除 twse cache.
+//
+/*
+Install:
+
+	go install github.com/toomore/gogrs/cmd/twsecache
+
+Usage:
+
+	twsecache [flags]
+
+The flags are:
+
+	-flushall
+		Clear cache.
+
+*/
 package main
 
 import (

@@ -15,6 +15,10 @@ Package twsereport
 
 每日收盤後產生符合選股條件的報告
 
+Package twsecache
+
+清除 twse cache.
+
 Package tradingdays-server
 
 提供簡單的日期查詢 API Server.
