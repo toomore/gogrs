@@ -94,10 +94,12 @@ func prettyprint(stock *twse.Data, check checkGroup) string {
 
 func main() {
 	flag.Parse()
-	var datalist []*twse.Data
-	var catelist []twse.StockInfo
-	var twselist []string
-	var catenolist []string
+	var (
+		datalist   []*twse.Data
+		catelist   []twse.StockInfo
+		twselist   []string
+		catenolist []string
+	)
 
 	color.NoColor = !*showcolor
 
