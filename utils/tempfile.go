@@ -10,6 +10,7 @@ import (
 	"net/url"
 	"os"
 	"path/filepath"
+	"runtime"
 	"strings"
 	"time"
 
@@ -175,5 +176,17 @@ func renderIconvConverter(fromEncoding string) func([]byte) []byte {
 		out = make([]byte, len(content)*2)
 		_, outLen, _ := converter.Convert(content, out)
 		return out[:outLen]
+	}
+}
+
+// GetOSRamdiskPath try to get RamDisk path.
+func GetOSRamdiskPath() string {
+	switch runtime.GOOS {
+	case "darwin":
+		return "/Volumes/RamDisk/"
+	case "linux":
+		return "/run/shm/"
+	default:
+		return os.TempDir()
 	}
 }
