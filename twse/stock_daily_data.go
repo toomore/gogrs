@@ -15,16 +15,17 @@ type unixMapData map[int64][][]string
 
 // Data start with stock no, date.
 type Data struct {
-	No          string
-	Name        string
-	Date        time.Time
-	RawData     [][]string
-	UnixMapData unixMapData
-	exchange    string
-	openList    []float64
-	priceList   []float64
-	rangeList   []float64
-	volumeList  []uint64
+	No             string
+	Name           string
+	Date           time.Time
+	RawData        [][]string
+	UnixMapData    unixMapData
+	exchange       string
+	openList       []float64
+	priceList      []float64
+	rangeList      []float64
+	dailyRangeList []float64
+	volumeList     []uint64
 }
 
 // NewTWSE 建立一個 TWSE 上市股票
@@ -75,6 +76,7 @@ func (d *Data) PlusData() {
 
 func (d *Data) clearCache() {
 	d.rangeList = nil
+	d.dailyRangeList = nil
 	d.openList = nil
 	d.priceList = nil
 	d.volumeList = nil
@@ -185,7 +187,10 @@ func (d *Data) GetRangeList() []float64 {
 
 // GetDailyRangeList 計算收盤與開盤價差
 func (d *Data) GetDailyRangeList() []float64 {
-	return utils.CalDiffFloat64(d.GetPriceList(), d.GetOpenList())
+	if d.dailyRangeList == nil {
+		d.dailyRangeList = utils.CalDiffFloat64(d.GetPriceList(), d.GetOpenList())
+	}
+	return d.dailyRangeList
 }
 
 // MA 計算 收盤價 的移動平均

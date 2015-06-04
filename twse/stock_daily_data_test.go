@@ -64,6 +64,7 @@ func TestGetList(*testing.T) {
 		utils.ThanPastUint64(stock.GetVolumeList(), 3, true)
 		utils.ThanPastUint64(stock.GetVolumeList(), 3, false)
 		stock.GetRangeList()
+		stock.GetDailyRangeList()
 		stock.GetOpenList()
 		stock.IsRed()
 		stock.IsThanYesterday()
