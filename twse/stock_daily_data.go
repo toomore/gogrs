@@ -175,7 +175,7 @@ func (d *Data) GetPriceList() []float64 {
 	return d.priceList
 }
 
-// GetRangeList 取得 漲跌價差 序列
+// GetRangeList 取得 漲跌價差 序列（為當日收盤價與前一日收盤價比較）
 func (d *Data) GetRangeList() []float64 {
 	if d.rangeList == nil {
 		d.rangeList = d.getColsListFloat64(7)
