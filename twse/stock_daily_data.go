@@ -183,6 +183,11 @@ func (d *Data) GetRangeList() []float64 {
 	return d.rangeList
 }
 
+// GetDailyRangeList 計算收盤與開盤價差
+func (d *Data) GetDailyRangeList() []float64 {
+	return utils.CalDiffFloat64(d.GetPriceList(), d.GetOpenList())
+}
+
 // MA 計算 收盤價 的移動平均
 func (d Data) MA(days int) []float64 {
 	var result []float64
