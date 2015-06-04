@@ -67,8 +67,9 @@ func init() {
 
 func prettyprint(stock *twse.Data, check checkGroup) string {
 	var (
+		Open        = stock.GetOpenList()[len(stock.GetOpenList())-1]
 		Price       = stock.GetPriceList()[len(stock.GetPriceList())-1]
-		RangeValue  = stock.GetRangeList()[len(stock.GetRangeList())-1]
+		RangeValue  = stock.GetDailyRangeList()[len(stock.GetDailyRangeList())-1]
 		Volume      = stock.GetVolumeList()[len(stock.GetVolumeList())-1] / 1000
 		outputcolor func(string, ...interface{}) string
 	)
@@ -82,12 +83,13 @@ func prettyprint(stock *twse.Data, check checkGroup) string {
 		outputcolor = white
 	}
 
-	return fmt.Sprintf("%s %s %s %s%s %s",
+	return fmt.Sprintf("%s %s %s %s%s %s %s",
 		yellow("[%s]", check),
 		blue("%s", stock.RawData[stock.Len()-1][0]),
 		outputcolor("%s %s", stock.No, stock.Name),
 		outputcolor("$%.2f", Price),
 		outputcolor("(%.2f)", RangeValue),
+		outputcolor("%.2f%%", RangeValue/Open*100),
 		outputcolor("%d", Volume),
 	)
 }
