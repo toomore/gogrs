@@ -5,6 +5,7 @@ import (
 	"testing"
 	"time"
 
+	"github.com/toomore/gogrs/tradingdays"
 	"github.com/toomore/gogrs/utils"
 )
 
@@ -86,7 +87,7 @@ func BenchmarkGet(b *testing.B) {
 func ExampleStockRealTime_Get_twse() {
 	r := StockRealTime{
 		No:       "2618",
-		Date:     time.Date(2015, 4, 1, 0, 0, 0, 0, utils.TaipeiTimeZone),
+		Date:     tradingdays.FindRecentlyOpened(time.Now()),
 		Exchange: "tse",
 	}
 
@@ -100,7 +101,7 @@ func ExampleStockRealTime_Get_twse() {
 func ExampleStockRealTime_Get_otc() {
 	r := StockRealTime{
 		No:       "8446",
-		Date:     time.Date(2015, 4, 1, 0, 0, 0, 0, utils.TaipeiTimeZone),
+		Date:     tradingdays.FindRecentlyOpened(time.Now()),
 		Exchange: "otc",
 	}
 
@@ -111,7 +112,7 @@ func ExampleStockRealTime_Get_otc() {
 }
 
 func ExampleStockRealTime_NewWeight() {
-	weight := NewWeight(time.Date(2015, 4, 1, 0, 0, 0, 0, utils.TaipeiTimeZone))
+	weight := NewWeight(tradingdays.FindRecentlyOpened(time.Now()))
 	data, _ := weight.Get()
 	fmt.Printf("%+v", data.Info)
 	// output:
@@ -119,15 +120,15 @@ func ExampleStockRealTime_NewWeight() {
 }
 
 func ExampleStockRealTime_NewOTCI() {
-	otc := NewOTCI(time.Date(2015, 4, 1, 0, 0, 0, 0, utils.TaipeiTimeZone))
+	otc := NewOTCI(tradingdays.FindRecentlyOpened(time.Now()))
 	data, _ := otc.Get()
 	fmt.Printf("%+v", data.Info)
 	// output:
-	// {Exchange:otc FullName: Name:櫃檯指數 No:o00 Ticker:o00.tw Category:oidx.tw}
+	// {Exchange:otc FullName: Name:櫃買指數 No:o00 Ticker:o00.tw Category:oidx.tw}
 }
 
 func ExampleStockRealTime_NewFRMSA() {
-	farmsa := NewFRMSA(time.Date(2015, 4, 1, 0, 0, 0, 0, utils.TaipeiTimeZone))
+	farmsa := NewFRMSA(tradingdays.FindRecentlyOpened(time.Now()))
 	data, _ := farmsa.Get()
 	fmt.Printf("%+v", data.Info)
 	// output:
@@ -135,7 +136,7 @@ func ExampleStockRealTime_NewFRMSA() {
 }
 
 func ExampleStockRealTime_NewTWSE() {
-	twse := NewTWSE("2618", time.Date(2015, 4, 1, 0, 0, 0, 0, utils.TaipeiTimeZone))
+	twse := NewTWSE("2618", tradingdays.FindRecentlyOpened(time.Now()))
 	data, _ := twse.Get()
 	fmt.Printf("%+v", data.Info)
 	// output:
@@ -143,7 +144,7 @@ func ExampleStockRealTime_NewTWSE() {
 }
 
 func ExampleStockRealTime_NewOTC() {
-	otc := NewOTC("8446", time.Date(2015, 4, 1, 0, 0, 0, 0, utils.TaipeiTimeZone))
+	otc := NewOTC("8446", tradingdays.FindRecentlyOpened(time.Now()))
 	data, _ := otc.Get()
 	fmt.Printf("%+v", data.Info)
 	// output:
