@@ -5,8 +5,8 @@ RUN go get golang.org/x/tools/cmd/cover && \
     go get golang.org/x/tools/cmd/vet && \
     go get golang.org/x/tools/cmd/goimports && \
     go get github.com/golang/lint/golint && \
-    go get github.com/toomore/gogrs
-
-WORKDIR /go/src/github.com/toomore/gogrs
-
-RUN go get -v ./...
+    go get github.com/toomore/gogrs && \
+    cd /go/src/github.com/toomore/gogrs && \
+    go get -v ./... && \
+    cd /go/src && \
+    rm -rf ./*
