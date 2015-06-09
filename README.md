@@ -22,6 +22,23 @@ Cmd
 3. twsecache - [清除 twse cache](https://godoc.org/github.com/toomore/gogrs/cmd/twsecache)
 4. tradingdays_server - [提供簡單的日期查詢 API Server](https://godoc.org/github.com/toomore/gogrs/cmd/tradingdays_server)
 
+Docker
+-------
+
+Download image.
+
+    docker pull toomore/gogrs
+
+`tag:latest` bind to `branch:master`, more docker [info](https://registry.hub.docker.com/u/toomore/gogrs/).
+
+Run tradingdays_server.
+
+    docker run -d -p 80:59123 toomore/gogrs tradingdays_server
+
+Or login run other cmd
+
+    docker run -it toomore/gogrs
+
 License
 --------
 
