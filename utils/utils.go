@@ -171,7 +171,7 @@ func CountCountineFloat64(data []float64) (int, bool) {
 	return counter, data[len(data)-1] > 0
 }
 
-// CalDiffFloat64 計算兩序列的差
+// CalDiffFloat64 計算兩序列的差（listA - listB）
 func CalDiffFloat64(listA, listB []float64) []float64 {
 	var length int
 	var result []float64
@@ -187,7 +187,7 @@ func CalDiffFloat64(listA, listB []float64) []float64 {
 	return result
 }
 
-// CalDiffInt64 計算兩序列的差
+// CalDiffInt64 計算兩序列的差（listA - listB）
 func CalDiffInt64(listA, listB []int64) []int64 {
 	var length int
 	var result []int64

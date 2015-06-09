@@ -1,6 +1,7 @@
 package utils
 
 import (
+	"fmt"
 	"testing"
 	"time"
 )
@@ -260,4 +261,65 @@ func BenchmarkSD(b *testing.B) {
 	for i := 0; i < b.N; i++ {
 		SDUint64(sample)
 	}
+}
+
+func ExampleAvgFloat64() {
+	fmt.Println(AvgFloat64([]float64{1.1, 2.2, 9.9}))
+	// output:
+	// 4.4
+}
+
+func ExampleAvgUint64() {
+	fmt.Println(AvgUint64([]uint64{1, 2, 9}))
+	// output:
+	// 4
+}
+
+func ExampleCalDiffFloat64() {
+	var sample1 = []float64{1.1, 2.2, 3.3, 4.4, 5.5}
+	var sample2 = []float64{5.5, 4.4, 3.3, 2.2, 2.2}
+	fmt.Println(CalDiffFloat64(sample1, sample2))
+	// output:
+	// [-4.4 -2.2 0 2.2 3.3]
+}
+
+func ExampleCalDiffInt64() {
+	var sample1 = []int64{1, 2, 3, 4, 5}
+	var sample2 = []int64{5, 4, 3, 2, 2}
+	fmt.Println(CalDiffInt64(sample1, sample2))
+	// output:
+	// [-4 -2 0 2 3]
+}
+
+func ExampleCountCountineFloat64() {
+	var sample1 = []float64{-1, 0, 1, 2, 3}
+	fmt.Println(CountCountineFloat64(sample1))
+
+	var sample2 = []float64{1, 0, -1, -2, -3}
+	fmt.Println(CountCountineFloat64(sample2))
+	// output:
+	// 3 true
+	// 3 false
+}
+
+func ExampleDeltaFloat64() {
+	fmt.Println(DeltaFloat64([]float64{-1.1, 0, 1.1, 2.2, 3.3}))
+	// output:
+	// [1.1 1.1 1.1 1.0999999999999996]
+}
+
+func ExampleDeltaInt64() {
+	fmt.Println(DeltaInt64([]int64{-1, 0, 1, 2, 3}))
+	// output:
+	// [1 1 1 1]
+}
+
+func ExampleParseDate() {
+	fmt.Println(ParseDate("104/09/29"))
+	fmt.Println(ParseDate("104/9/29"))
+	fmt.Println(ParseDate("104/9/2"))
+	// output:
+	// 2015-09-29 00:00:00 +0800 Asia/Taipei
+	// 2015-09-29 00:00:00 +0800 Asia/Taipei
+	// 2015-09-02 00:00:00 +0800 Asia/Taipei
 }
