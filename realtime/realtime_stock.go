@@ -17,7 +17,7 @@ import (
 //STOCKPATH = '/stock/api/getStockInfo.jsp?ex_ch=%(exchange)s_%(no)s.tw_%(date)s&json=1&delay=%(delay)s&_=%(timestamp)s'
 
 type msgArray []map[string]string
-type unixMapData map[int64]msgArray
+type unixMapData map[int64]Data
 
 // StockRealTime start with No, Timestamp, Date.
 type StockRealTime struct {
@@ -87,26 +87,24 @@ type Data struct {
 }
 
 func (stock *StockRealTime) get() (StockBlob, error) {
-	var value StockBlob
-	url := stock.URL()
-	resp, err := http.Get(url)
-	if err != nil {
-		return value, fmt.Errorf("Network fail: %s", err)
-	}
-	defer resp.Body.Close()
-	json.NewDecoder(resp.Body).Decode(&value)
+	var (
+		err   error
+		resp  *http.Response
+		value StockBlob
+	)
 
-	if len(value.MsgArray) != 0 {
-		unixTime, _ := strconv.ParseInt(value.MsgArray[0]["tlong"], 10, 64)
-		if stock.UnixMapData == nil {
-			stock.UnixMapData = make(unixMapData)
+	if resp, err = http.Get(stock.URL()); err == nil {
+		defer resp.Body.Close()
+		json.NewDecoder(resp.Body).Decode(&value)
+
+		if len(value.MsgArray) == 0 {
+			err = fmt.Errorf("No Data.")
 		}
-
-		// Should format data.
-		stock.UnixMapData[unixTime/1000] = value.MsgArray
-		return value, nil
+	} else {
+		err = fmt.Errorf("Network fail: %s", err)
 	}
-	return value, fmt.Errorf("No Data.")
+
+	return value, err
 }
 
 // Get return stock realtime map data.
@@ -163,6 +161,14 @@ func (stock *StockRealTime) Get() (Data, error) {
 
 		result.SysInfo = make(map[string]interface{})
 		result.SysInfo = value.QueryTime
+
+		// Record
+		if stock.UnixMapData == nil {
+			stock.UnixMapData = make(unixMapData)
+		}
+
+		// Should format data.
+		stock.UnixMapData[tlong/1000] = result
 	}
 	return result, err
 }
