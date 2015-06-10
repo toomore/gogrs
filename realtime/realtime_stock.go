@@ -163,11 +163,6 @@ func (stock *StockRealTime) Get() (Data, error) {
 		result.SysInfo = value.QueryTime
 
 		// Record
-		if stock.UnixMapData == nil {
-			stock.UnixMapData = make(unixMapData)
-		}
-
-		// Should format data.
 		stock.UnixMapData[tlong/1000] = result
 	}
 	return result, err
@@ -176,9 +171,10 @@ func (stock *StockRealTime) Get() (Data, error) {
 // NewTWSE 建立一個上市股票
 func NewTWSE(No string, Date time.Time) *StockRealTime {
 	return &StockRealTime{
-		No:       No,
-		Date:     Date,
-		Exchange: "tse",
+		No:          No,
+		Date:        Date,
+		Exchange:    "tse",
+		UnixMapData: make(unixMapData),
 	}
 }
 
