@@ -9,24 +9,16 @@ import (
 	"github.com/toomore/gogrs/utils"
 )
 
-func TestStockRealTime(*testing.T) {
-	r := &StockRealTime{
-		No: "2618",
-		//Date:      time.Now(),
-		Date:     time.Date(2015, 4, 1, 0, 0, 0, 0, utils.TaipeiTimeZone),
-		Exchange: "tse",
-	}
+func TestStockRealTime(t *testing.T) {
+	r := NewTWSE("2618", tradingdays.FindRecentlyOpened(time.Now()))
 
-	r.URL()
+	t.Log(r.URL())
 	r.Get()
+	t.Logf("%+v", r)
 }
 
 func TestStockRealTime_noData(t *testing.T) {
-	r := &StockRealTime{
-		No:       "26188",
-		Date:     time.Date(2015, 4, 1, 0, 0, 0, 0, utils.TaipeiTimeZone),
-		Exchange: "tse",
-	}
+	r := NewTWSE("26188", tradingdays.FindRecentlyOpened(time.Now()))
 
 	_, err := r.Get()
 	if err.Error() != "No Data." {
@@ -35,32 +27,18 @@ func TestStockRealTime_noData(t *testing.T) {
 }
 
 func TestStockRealTime_URL(t *testing.T) {
-	r := &StockRealTime{
-		No:       "2618",
-		Date:     time.Date(2015, 4, 1, 0, 0, 0, 0, utils.TaipeiTimeZone),
-		Exchange: "TSE",
-	}
-
-	if r.URL() != "" {
-		t.Error("Should be \"\"")
-	}
-
+	r := NewTWSE("2618", time.Date(2015, 4, 1, 0, 0, 0, 0, utils.TaipeiTimeZone))
+	r.URL()
 }
 
-func TestStockRealTimeOTC(*testing.T) {
-	r := &StockRealTime{
-		No: "8446",
-		//Date:      time.Now(),
-		Date:     time.Date(2015, 4, 1, 0, 0, 0, 0, utils.TaipeiTimeZone),
-		Exchange: "otc",
-	}
-
+func TestStockRealTimeOTC(t *testing.T) {
+	r := NewOTC("8446", tradingdays.FindRecentlyOpened(time.Now()))
 	r.URL()
-	r.Get()
+	t.Log(r.Get())
 }
 
 func TestStockRealTimeIndexs(*testing.T) {
-	var date = time.Date(2015, 4, 1, 0, 0, 0, 0, utils.TaipeiTimeZone)
+	var date = tradingdays.FindRecentlyOpened(time.Now())
 
 	weight := NewWeight(date)
 	otc := NewOTCI(date)
@@ -71,12 +49,7 @@ func TestStockRealTimeIndexs(*testing.T) {
 }
 
 func BenchmarkGet(b *testing.B) {
-	r := &StockRealTime{
-		No: "2618",
-		//Date:      time.Now(),
-		Date:     time.Date(2015, 4, 1, 0, 0, 0, 0, utils.TaipeiTimeZone),
-		Exchange: "tse",
-	}
+	r := NewTWSE("2618", tradingdays.FindRecentlyOpened(time.Now()))
 
 	for i := 0; i <= b.N; i++ {
 		r.Get()
@@ -85,11 +58,7 @@ func BenchmarkGet(b *testing.B) {
 
 // 擷取 長榮航(2618) 上市即時盤股價資訊
 func ExampleStockRealTime_Get_twse() {
-	r := StockRealTime{
-		No:       "2618",
-		Date:     tradingdays.FindRecentlyOpened(time.Now()),
-		Exchange: "tse",
-	}
+	r := NewTWSE("2618", tradingdays.FindRecentlyOpened(time.Now()))
 
 	data, _ := r.Get()
 	fmt.Printf("%+v", data.Info)
@@ -99,11 +68,7 @@ func ExampleStockRealTime_Get_twse() {
 
 // 擷取 華研(8446) 上櫃即時盤股價資訊
 func ExampleStockRealTime_Get_otc() {
-	r := StockRealTime{
-		No:       "8446",
-		Date:     tradingdays.FindRecentlyOpened(time.Now()),
-		Exchange: "otc",
-	}
+	r := NewOTC("8446", tradingdays.FindRecentlyOpened(time.Now()))
 
 	data, _ := r.Get()
 	fmt.Printf("%+v", data.Info)

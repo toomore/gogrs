@@ -181,35 +181,39 @@ func NewTWSE(No string, Date time.Time) *StockRealTime {
 // NewOTC 建立一個上櫃股票
 func NewOTC(No string, Date time.Time) *StockRealTime {
 	return &StockRealTime{
-		No:       No,
-		Date:     Date,
-		Exchange: "otc",
+		No:          No,
+		Date:        Date,
+		Exchange:    "otc",
+		UnixMapData: make(unixMapData),
 	}
 }
 
 // NewWeight 大盤指數
 func NewWeight(Date time.Time) *StockRealTime {
 	return &StockRealTime{
-		No:       "t00",
-		Date:     Date,
-		Exchange: "tse",
+		No:          "t00",
+		Date:        Date,
+		Exchange:    "tse",
+		UnixMapData: make(unixMapData),
 	}
 }
 
 // NewOTCI 上櫃指數
 func NewOTCI(Date time.Time) *StockRealTime {
 	return &StockRealTime{
-		No:       "o00",
-		Date:     Date,
-		Exchange: "otc",
+		No:          "o00",
+		Date:        Date,
+		Exchange:    "otc",
+		UnixMapData: make(unixMapData),
 	}
 }
 
 // NewFRMSA 寶島指數
 func NewFRMSA(Date time.Time) *StockRealTime {
 	return &StockRealTime{
-		No:       "FRMSA",
-		Date:     Date,
-		Exchange: "tse",
+		No:          "FRMSA",
+		Date:        Date,
+		Exchange:    "tse",
+		UnixMapData: make(unixMapData),
 	}
 }
