@@ -22,7 +22,7 @@ go test -race ./...
 echo "mode: count" > coverage.cov
 
 # Standard go tooling behavior is to ignore dirs with leading underscors
-for dir in $(find . -maxdepth 10 -not -path './.git*' -not -path '*/_*' -type d);
+for dir in $(find . -maxdepth 10 -not -path './.git*' -not -path '*/_*' -not -path './docker-*' -type d);
 do
 if ls $dir/*.go &> /dev/null; then
     #go test -v --benchmem --bench=. -covermode=count -covercoverage=$dir/coverage.tmp $dir
