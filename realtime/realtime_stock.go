@@ -111,10 +111,13 @@ func (stock *StockRealTime) get() (StockBlob, error) {
 
 // Get return stock realtime map data.
 func (stock *StockRealTime) Get() (Data, error) {
-	value, err := stock.get()
-	var result Data
+	var (
+		err    error
+		result Data
+		value  StockBlob
+	)
 
-	if err == nil && len(value.MsgArray) != 0 {
+	if value, err = stock.get(); err == nil && len(value.MsgArray) != 0 {
 		aList := strings.Split(value.MsgArray[0]["a"], "_")
 		result.BestAskPrice = make([]float64, len(aList)-1)
 		for i, v := range aList[:len(aList)-1] {
