@@ -18,7 +18,7 @@ The flags are:
 	-ncpu
 		指定 CPU 數量，預設為實際 CPU 數量
 	-color
-		色彩化
+		色彩化（default: true）
 
 */
 package main
