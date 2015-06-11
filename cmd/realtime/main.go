@@ -130,8 +130,8 @@ func prettyprint(data realtime.Data) string {
 	}
 	return fmt.Sprintf("%s %s %s",
 		yellowBold("%s(%s)", data.Info.Name, data.Info.No),
-		outputcolor("$%.2f(%.2f) %.0f/%.0f",
-			data.Price, data.Price-data.Open, data.Volume, data.VolumeAcc),
+		outputcolor("$%.2f(%.2f) %.2f%% %.0f/%.0f",
+			data.Price, data.Price-data.Open, RangeValue/data.Open*100, data.Volume, data.VolumeAcc),
 		cyan("[%s] [%s %s]",
 			data.TradeTime, data.SysInfo["sysDate"], data.SysInfo["sysTime"]),
 	)
