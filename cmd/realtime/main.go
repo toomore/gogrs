@@ -110,13 +110,30 @@ var (
 	white            = color.New(color.FgWhite, color.Bold).SprintfFunc()
 	red              = color.New(color.FgRed, color.Bold).SprintfFunc()
 	green            = color.New(color.FgGreen, color.Bold).SprintfFunc()
+	yellowBold       = color.New(color.FgYellow, color.Bold).SprintfFunc()
+	cyan             = color.New(color.FgCyan).SprintfFunc()
 )
 
 func prettyprint(data realtime.Data) string {
-	return fmt.Sprintf("%s(%s) $%.2f(%.2f) %.0f/%.0f [%s] [%s %s]",
-		data.Info.Name, data.Info.No,
-		data.Price, data.Price-data.Open, data.Volume, data.VolumeAcc,
-		data.TradeTime, data.SysInfo["sysDate"], data.SysInfo["sysTime"])
+	var (
+		RangeValue  = data.Price - data.Open
+		outputcolor func(string, ...interface{}) string
+	)
+	switch {
+	case RangeValue > 0:
+		outputcolor = red
+	case RangeValue < 0:
+		outputcolor = green
+	default:
+		outputcolor = white
+	}
+	return fmt.Sprintf("%s %s %s",
+		yellowBold("%s(%s)", data.Info.Name, data.Info.No),
+		outputcolor("$%.2f(%.2f) %.0f/%.0f",
+			data.Price, data.Price-data.Open, data.Volume, data.VolumeAcc),
+		cyan("[%s] [%s %s]",
+			data.TradeTime, data.SysInfo["sysDate"], data.SysInfo["sysTime"]),
+	)
 }
 
 func main() {
