@@ -50,6 +50,7 @@ import (
 	"flag"
 	"fmt"
 	"log"
+	"os"
 	"runtime"
 	"strings"
 	"sync"
@@ -139,17 +140,25 @@ func prettyprint(data realtime.Data) string {
 func main() {
 	flag.Parse()
 
+	if flag.NFlag() == 0 {
+		flag.PrintDefaults()
+		os.Exit(0)
+	}
+
 	runtime.GOMAXPROCS(*ncpu)
 	chanbuf = *ncpu * 2
 
 	queue := make(chan *realtime.StockRealTime, chanbuf)
 	defer close(queue)
-	var wg sync.WaitGroup
-	var counter int
-	var up int
-	var down int
 
-	var startTime time.Time
+	var (
+		counter   int
+		down      int
+		startTime time.Time
+		up        int
+		wg        sync.WaitGroup
+	)
+
 	if *pt {
 		startTime = time.Now()
 	}
@@ -232,8 +241,5 @@ func main() {
 	}
 	if *pt {
 		defer fmt.Println(time.Now().Sub(startTime))
-	}
-	if flag.NFlag() == 0 {
-		flag.PrintDefaults()
 	}
 }
