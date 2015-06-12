@@ -1,0 +1,5 @@
+tradingdaysserver:
+    image: toomore/gogrs-mini
+    command: tradingdays_server
+    ports:
+        - "80:59123"
