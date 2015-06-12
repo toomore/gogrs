@@ -13,3 +13,8 @@ cp ./tradingdays_server $BASE
 
 cd $BASE
 docker build -t toomore/gogrs-mini .
+
+rm -rf ./twsereport
+rm -rf ./realtime
+rm -rf ./twsecache
+rm -rf ./tradingdays_server
