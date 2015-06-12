@@ -17,7 +17,7 @@ import (
 //STOCKPATH = '/stock/api/getStockInfo.jsp?ex_ch=%(exchange)s_%(no)s.tw_%(date)s&json=1&delay=%(delay)s&_=%(timestamp)s'
 
 type msgArray []map[string]string
-type unixMapData map[int64]msgArray
+type unixMapData map[int64]Data
 
 // StockRealTime start with No, Timestamp, Date.
 type StockRealTime struct {
@@ -87,34 +87,35 @@ type Data struct {
 }
 
 func (stock *StockRealTime) get() (StockBlob, error) {
-	var value StockBlob
-	url := stock.URL()
-	resp, err := http.Get(url)
-	if err != nil {
-		return value, fmt.Errorf("Network fail: %s", err)
-	}
-	defer resp.Body.Close()
-	json.NewDecoder(resp.Body).Decode(&value)
+	var (
+		err   error
+		resp  *http.Response
+		value StockBlob
+	)
 
-	if len(value.MsgArray) != 0 {
-		unixTime, _ := strconv.ParseInt(value.MsgArray[0]["tlong"], 10, 64)
-		if stock.UnixMapData == nil {
-			stock.UnixMapData = make(unixMapData)
+	if resp, err = http.Get(stock.URL()); err == nil {
+		defer resp.Body.Close()
+		json.NewDecoder(resp.Body).Decode(&value)
+
+		if len(value.MsgArray) == 0 {
+			err = fmt.Errorf("No Data.")
 		}
-
-		// Should format data.
-		stock.UnixMapData[unixTime/1000] = value.MsgArray
-		return value, nil
+	} else {
+		err = fmt.Errorf("Network fail: %s", err)
 	}
-	return value, fmt.Errorf("No Data.")
+
+	return value, err
 }
 
 // Get return stock realtime map data.
 func (stock *StockRealTime) Get() (Data, error) {
-	value, err := stock.get()
-	var result Data
+	var (
+		err    error
+		result Data
+		value  StockBlob
+	)
 
-	if err == nil && len(value.MsgArray) != 0 {
+	if value, err = stock.get(); err == nil && len(value.MsgArray) != 0 {
 		aList := strings.Split(value.MsgArray[0]["a"], "_")
 		result.BestAskPrice = make([]float64, len(aList)-1)
 		for i, v := range aList[:len(aList)-1] {
@@ -160,6 +161,9 @@ func (stock *StockRealTime) Get() (Data, error) {
 
 		result.SysInfo = make(map[string]interface{})
 		result.SysInfo = value.QueryTime
+
+		// Record
+		stock.UnixMapData[tlong/1000] = result
 	}
 	return result, err
 }
@@ -167,44 +171,49 @@ func (stock *StockRealTime) Get() (Data, error) {
 // NewTWSE 建立一個上市股票
 func NewTWSE(No string, Date time.Time) *StockRealTime {
 	return &StockRealTime{
-		No:       No,
-		Date:     Date,
-		Exchange: "tse",
+		No:          No,
+		Date:        Date,
+		Exchange:    "tse",
+		UnixMapData: make(unixMapData),
 	}
 }
 
 // NewOTC 建立一個上櫃股票
 func NewOTC(No string, Date time.Time) *StockRealTime {
 	return &StockRealTime{
-		No:       No,
-		Date:     Date,
-		Exchange: "otc",
+		No:          No,
+		Date:        Date,
+		Exchange:    "otc",
+		UnixMapData: make(unixMapData),
 	}
 }
 
 // NewWeight 大盤指數
 func NewWeight(Date time.Time) *StockRealTime {
 	return &StockRealTime{
-		No:       "t00",
-		Date:     Date,
-		Exchange: "tse",
+		No:          "t00",
+		Date:        Date,
+		Exchange:    "tse",
+		UnixMapData: make(unixMapData),
 	}
 }
 
 // NewOTCI 上櫃指數
 func NewOTCI(Date time.Time) *StockRealTime {
 	return &StockRealTime{
-		No:       "o00",
-		Date:     Date,
-		Exchange: "otc",
+		No:          "o00",
+		Date:        Date,
+		Exchange:    "otc",
+		UnixMapData: make(unixMapData),
 	}
 }
 
 // NewFRMSA 寶島指數
 func NewFRMSA(Date time.Time) *StockRealTime {
 	return &StockRealTime{
-		No:       "FRMSA",
-		Date:     Date,
-		Exchange: "tse",
+		No:          "FRMSA",
+		Date:        Date,
+		Exchange:    "tse",
+		UnixMapData: make(unixMapData),
 	}
 }

@@ -28,6 +28,8 @@ The flags are:
 		計算花費時間
 	-count
 		計算此次查詢的漲跌家數（default: true）
+	-color
+		色彩化（default: true）
 
 範例
 
@@ -35,13 +37,13 @@ The flags are:
 
 回傳內容
 
-	2015/04/29 23:43:13 櫃買指數(o00) $144.72(-1.15) 1271/23250 [2015-04-29 13:33:00 +0800 CST] [20150429 23:43:13]
-	2015/04/29 23:43:13 發行量加權股價指數(t00) $9853.83(-80.99) 5742/113762 [2015-04-29 13:33:00 +0800 CST] [20150429 23:43:13]
-	2015/04/29 23:43:13 寶島股價指數(FRMSA) $11416.04(-93.58) 0/0 [2015-04-29 13:33:00 +0800 CST] [20150429 23:43:13]
-	2015/04/29 23:43:13 華研(8446) $124.00(1.00) 6/293 [2015-04-29 14:30:00 +0800 CST] [20150429 23:43:13]
-	2015/04/29 23:43:13 長榮航(2618) $24.20(-0.55) 666/15618 [2015-04-29 14:30:00 +0800 CST] [20150429 23:43:13]
-	2015/04/29 23:43:13 燦星旅(2719) $24.15(0.25) 6/83 [2015-04-29 14:30:00 +0800 CST] [20150429 23:43:13]
-	2015/04/29 23:43:13 華泰(2329) $15.95(0.50) 648/19995 [2015-04-29 14:30:00 +0800 CST] [20150429 23:43:13]
+	2015/06/11 17:46:28 發行量加權股價指數(t00) $9302.49(-28.50) -0.31% 5440/97357 [2015-06-11 13:33:00 +0800 CST] [20150611 17:46:29]
+	2015/06/11 17:46:28 櫃買指數(o00) $135.34(0.08) 0.06% 1228/24569 [2015-06-11 13:33:00 +0800 CST] [20150611 17:46:29]
+	2015/06/11 17:46:28 寶島股價指數(FRMSA) $10768.05(-29.39) -0.27% 0/0 [2015-06-11 13:33:00 +0800 CST] [20150611 17:46:29]
+	2015/06/11 17:46:28 華研(8446) $140.00(-6.00) -4.11% 29/351 [2015-06-11 14:30:00 +0800 CST] [20150611 17:46:29]
+	2015/06/11 17:46:28 華泰(2329) $13.10(-0.40) -2.96% 217/3993 [2015-06-11 14:30:00 +0800 CST] [20150611 17:46:29]
+	2015/06/11 17:46:28 燦星旅(2719) $24.30(-0.70) -2.80% 7/107 [2015-06-11 14:30:00 +0800 CST] [20150611 17:46:28]
+	2015/06/11 17:46:28 長榮航(2618) $19.30(-0.70) -3.50% 1001/19166 [2015-06-11 14:30:00 +0800 CST] [20150611 17:46:29]
 
 */
 package main
@@ -50,11 +52,13 @@ import (
 	"flag"
 	"fmt"
 	"log"
+	"os"
 	"runtime"
 	"strings"
 	"sync"
 	"time"
 
+	"github.com/fatih/color"
 	"github.com/toomore/gogrs/realtime"
 	"github.com/toomore/gogrs/tradingdays"
 	"github.com/toomore/gogrs/twse"
@@ -96,38 +100,70 @@ func TaipeiNow() time.Time {
 	return cacheTime
 }
 
+var (
+	chanbuf          int
+	twseNo           = flag.String("twse", "", "上市股票代碼，可使用 ',' 分隔多組代碼，例：2618,2329")
+	twseCate         = flag.String("twsecate", "", "上市股票類別，可使用 ',' 分隔多組代碼，例：11,15")
+	showtwsecatelist = flag.Bool("showcatelist", false, "顯示上市分類表")
+	otcNo            = flag.String("otc", "", "上櫃股票代碼，可使用 ',' 分隔多組代碼，例：8446,2719")
+	index            = flag.Bool("index", false, "顯示大盤、上櫃、寶島指數（default: false）")
+	ncpu             = flag.Int("ncpu", runtime.NumCPU(), "指定 CPU 數量，預設為實際 CPU 數量")
+	pt               = flag.Bool("pt", false, "計算花費時間")
+	count            = flag.Bool("count", true, "計算此次查詢的漲跌家數")
+	showcolor        = flag.Bool("color", true, "色彩化")
+	white            = color.New(color.FgWhite, color.Bold).SprintfFunc()
+	red              = color.New(color.FgRed, color.Bold).SprintfFunc()
+	green            = color.New(color.FgGreen, color.Bold).SprintfFunc()
+	yellowBold       = color.New(color.FgYellow, color.Bold).SprintfFunc()
+	cyan             = color.New(color.FgCyan).SprintfFunc()
+)
+
 func prettyprint(data realtime.Data) string {
-	return fmt.Sprintf("%s(%s) $%.2f(%.2f) %.0f/%.0f [%s] [%s %s]",
-		data.Info.Name, data.Info.No,
-		data.Price, data.Price-data.Open, data.Volume, data.VolumeAcc,
-		data.TradeTime, data.SysInfo["sysDate"], data.SysInfo["sysTime"])
+	var (
+		RangeValue  = data.Price - data.Open
+		outputcolor func(string, ...interface{}) string
+	)
+	switch {
+	case RangeValue > 0:
+		outputcolor = red
+	case RangeValue < 0:
+		outputcolor = green
+	default:
+		outputcolor = white
+	}
+	return fmt.Sprintf("%s %s %s",
+		yellowBold("%s(%s)", data.Info.Name, data.Info.No),
+		outputcolor("$%.2f(%.2f) %.2f%% %.0f/%.0f",
+			data.Price, data.Price-data.Open, RangeValue/data.Open*100, data.Volume, data.VolumeAcc),
+		cyan("[%s] [%s %s]",
+			data.TradeTime, data.SysInfo["sysDate"], data.SysInfo["sysTime"]),
+	)
 }
-
-var chanbuf int
-
-var twseNo = flag.String("twse", "", "上市股票代碼，可使用 ',' 分隔多組代碼，例：2618,2329")
-var twseCate = flag.String("twsecate", "", "上市股票類別，可使用 ',' 分隔多組代碼，例：11,15")
-var showtwsecatelist = flag.Bool("showcatelist", false, "顯示上市分類表")
-var otcNo = flag.String("otc", "", "上櫃股票代碼，可使用 ',' 分隔多組代碼，例：8446,2719")
-var index = flag.Bool("index", false, "顯示大盤、上櫃、寶島指數（default: false）")
-var ncpu = flag.Int("ncpu", runtime.NumCPU(), "指定 CPU 數量，預設為實際 CPU 數量")
-var pt = flag.Bool("pt", false, "計算花費時間")
-var count = flag.Bool("count", true, "計算此次查詢的漲跌家數")
 
 func main() {
 	flag.Parse()
+
+	if flag.NFlag() == 0 {
+		flag.PrintDefaults()
+		os.Exit(0)
+	}
+
+	color.NoColor = !*showcolor
 
 	runtime.GOMAXPROCS(*ncpu)
 	chanbuf = *ncpu * 2
 
 	queue := make(chan *realtime.StockRealTime, chanbuf)
 	defer close(queue)
-	var wg sync.WaitGroup
-	var counter int
-	var up int
-	var down int
 
-	var startTime time.Time
+	var (
+		counter   int
+		down      int
+		startTime time.Time
+		up        int
+		wg        sync.WaitGroup
+	)
+
 	if *pt {
 		startTime = time.Now()
 	}
@@ -210,8 +246,5 @@ func main() {
 	}
 	if *pt {
 		defer fmt.Println(time.Now().Sub(startTime))
-	}
-	if flag.NFlag() == 0 {
-		flag.PrintDefaults()
 	}
 }
