@@ -30,14 +30,23 @@ Download image.
     docker pull toomore/gogrs
 
 `tag:latest` bind to `branch:master`, more docker [info](https://registry.hub.docker.com/u/toomore/gogrs/).
+Or [minify gogrs docker](https://registry.hub.docker.com/u/toomore/gogrs-mini/).
 
-Run tradingdays_server.
+Run `tradingdays_server`.
 
     docker run -d -p 80:59123 toomore/gogrs tradingdays_server
 
 Or login run other cmd
 
     docker run -it toomore/gogrs
+
+Create a ramdisk volume
+
+    docker create -v /run/shm/:/run/shm --name ramdisk toomore/gogrs-mini
+
+Run with ramdisk volume
+
+    docker run -it --volumes-from ramdisk toomore/gogrs
 
 License
 --------
