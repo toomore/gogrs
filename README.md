@@ -48,6 +48,15 @@ Run with ramdisk volume
 
     docker run -it --volumes-from ramdisk toomore/gogrs
 
+TODO
+-----
+
+1. docker-compose scale `tradingdays_server` with unused ports.
+2. In English comment.
+3. 盤中預估量能。
+4. 個股對應分類股資訊。
+5. 顯示三大法人。
+
 License
 --------
 
