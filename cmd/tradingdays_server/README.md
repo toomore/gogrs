@@ -35,3 +35,25 @@ URL Path:
 範例：
 
 	http://gogrs-trd.toomore.net/open?q=1429888492
+
+Docker
+-------
+
+Download image.
+
+    docker pull toomore/gogrs
+
+`tag:latest` bind to `branch:master`, more docker [info](https://registry.hub.docker.com/u/toomore/gogrs/).
+
+Run `tradingdays_server`.
+
+    docker run -d -p 80:59123 toomore/gogrs tradingdays_server
+
+Run with docker-compose
+
+    docker-compose up
+
+TODO
+-----
+
+1. Implemented docker-compose scale `tradingdays_server` with not used ports.
