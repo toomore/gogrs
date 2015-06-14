@@ -79,10 +79,21 @@ type Lists struct {
 	categoryNoList  map[string][]StockInfo
 }
 
+var errorNotSupport = errors.New("Not support.")
+
+func NewLists(t time.Time) *Lists {
+	return &Lists{
+		Date:            t,
+		FmtData:         make(map[string]FmtListData),
+		categoryRawData: make(map[string][][]string),
+		categoryNoList:  make(map[string][]StockInfo),
+	}
+}
+
 // Get is to get csv data.
 func (l *Lists) Get(category string) ([][]string, error) {
 	if TWSECLASS[category] == "" {
-		return nil, errors.New("Not support.")
+		return nil, errorNotSupport
 	}
 
 	year, month, day := l.Date.Date()
@@ -91,10 +102,7 @@ func (l *Lists) Get(category string) ([][]string, error) {
 			"qdate": {fmt.Sprintf("%d/%02d/%02d", year-1911, month, day)}})
 
 	if err != nil {
-		return nil, fmt.Errorf("Network fail: %s", err)
-	}
-	if l.categoryRawData == nil {
-		l.categoryRawData = make(map[string][][]string)
+		return nil, fmt.Errorf(errorNetworkFail.Error(), err)
 	}
 
 	csvArrayContent := strings.Split(string(data), "\n")
@@ -137,7 +145,7 @@ func (l *Lists) Get(category string) ([][]string, error) {
 		}
 		return returnData, err
 	}
-	return nil, errors.New("Not enough data.")
+	return nil, errorNotEnoughData
 }
 
 // GetCategoryList 取得分類的股票代碼與名稱列表
@@ -168,14 +176,6 @@ type FmtListData struct {
 }
 
 func (l *Lists) formatData(categoryNo string) {
-	if l.FmtData == nil {
-		l.FmtData = make(map[string]FmtListData)
-	}
-
-	if l.categoryNoList == nil {
-		l.categoryNoList = make(map[string][]StockInfo)
-	}
-
 	if _, ok := l.categoryNoList[categoryNo]; !ok {
 		l.categoryNoList[categoryNo] = make([]StockInfo, len(l.categoryRawData[categoryNo]))
 	}

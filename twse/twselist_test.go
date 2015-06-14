@@ -9,9 +9,7 @@ import (
 )
 
 func TestLists_Get_Rawdata(*testing.T) {
-	l := &Lists{
-		Date: time.Date(2014, 12, 23, 0, 0, 0, 0, utils.TaipeiTimeZone),
-	}
+	l := NewLists(time.Date(2014, 12, 23, 0, 0, 0, 0, utils.TaipeiTimeZone))
 	//listdata, err := l.Get("MS")
 	//fmt.Println(l.categoryRawData, "\n\n", listdata, err)
 	//l.FmtData
@@ -20,9 +18,7 @@ func TestLists_Get_Rawdata(*testing.T) {
 }
 
 func TestLists_Get_categoryNoList(t *testing.T) {
-	l := &Lists{
-		Date: time.Date(2015, 4, 27, 0, 0, 0, 0, utils.TaipeiTimeZone),
-	}
+	l := NewLists(time.Date(2015, 4, 27, 0, 0, 0, 0, utils.TaipeiTimeZone))
 	l.Get("15") //航運業
 	l.Get("01") //水泥業
 	t.Log(l.FmtData["2618"])
@@ -32,9 +28,7 @@ func TestLists_Get_categoryNoList(t *testing.T) {
 	t.Log(l.GetCategoryList("15"))
 	t.Log("ALLBUT0999:", len(l.GetCategoryList("ALLBUT0999")))
 	t.Log("ALL:", len(l.GetCategoryList("ALL")))
-	ll := &Lists{
-		Date: time.Date(2015, 5, 22, 0, 0, 0, 0, utils.TaipeiTimeZone),
-	}
+	ll := NewLists(time.Date(2015, 5, 22, 0, 0, 0, 0, utils.TaipeiTimeZone))
 	if len(ll.GetCategoryList("ALLBUT0999")) < 10 {
 		t.Error("應該沒那麼少")
 	}
@@ -44,9 +38,7 @@ func TestLists_Get_categoryNoList(t *testing.T) {
 }
 
 func ExampleLists_GetCategoryList() {
-	l := &Lists{
-		Date: time.Date(2015, 4, 27, 0, 0, 0, 0, utils.TaipeiTimeZone),
-	}
+	l := NewLists(time.Date(2015, 4, 27, 0, 0, 0, 0, utils.TaipeiTimeZone))
 	categoryList := l.GetCategoryList("15")
 	for _, v := range categoryList {
 		if v.No == "2618" {
@@ -59,9 +51,7 @@ func ExampleLists_GetCategoryList() {
 }
 
 func ExampleLists_Get_fmtData() {
-	l := &Lists{
-		Date: time.Date(2015, 4, 9, 0, 0, 0, 0, utils.TaipeiTimeZone),
-	}
+	l := NewLists(time.Date(2015, 4, 9, 0, 0, 0, 0, utils.TaipeiTimeZone))
 	l.Get("15") //航運業
 	fmt.Printf("%+v", l.FmtData["2618"])
 	// output:
@@ -69,9 +59,7 @@ func ExampleLists_Get_fmtData() {
 }
 
 func ExampleLists_Get() {
-	l := &Lists{
-		Date: time.Date(2014, 12, 26, 0, 0, 0, 0, utils.TaipeiTimeZone),
-	}
+	l := NewLists(time.Date(2014, 12, 26, 0, 0, 0, 0, utils.TaipeiTimeZone))
 	listdata, _ := l.Get("15") //航運業
 	fmt.Println(listdata[0])
 	// output:
@@ -80,9 +68,7 @@ func ExampleLists_Get() {
 
 func ExampleLists_Get_notEnoughData() {
 	year, month, day := time.Now().Date()
-	l := &Lists{
-		Date: time.Date(year, month+1, day, 0, 0, 0, 0, utils.TaipeiTimeZone),
-	}
+	l := NewLists(time.Date(year, month+1, day, 0, 0, 0, 0, utils.TaipeiTimeZone))
 	_, err := l.Get("15") //航運業
 	fmt.Println(err)
 	// output:
