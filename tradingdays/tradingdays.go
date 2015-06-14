@@ -30,10 +30,12 @@ func IsOpen(year int, month time.Month, day int) bool {
 
 // FindRecentlyOpened 回傳最近一個開市時間（UTC 0）
 func FindRecentlyOpened(date time.Time) time.Time {
-	var d = date.In(utils.TaipeiTimeZone)
-	var days = d.Day()
-	var index int
-	var tp *TimePeriod
+	var (
+		d     = date.In(utils.TaipeiTimeZone)
+		days  = d.Day()
+		index int
+		tp    *TimePeriod
+	)
 
 	for {
 		if IsOpen(d.Year(), d.Month(), days) {
@@ -58,7 +60,8 @@ func FindRecentlyOpened(date time.Time) time.Time {
 }
 
 var exceptDays map[int64]bool
-var timeLayout = "2006/1/2"
+
+const timeLayout = "2006/1/2"
 
 func readCSV() {
 	_, filename, _, _ := runtime.Caller(1)
