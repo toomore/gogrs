@@ -32,14 +32,18 @@ func (q QFIISTOP20) URL() string {
 
 // Get 擷取資料
 func (q QFIISTOP20) Get() ([][]string, error) {
-	data, _ := hCache.Get(q.URL(), false)
-
-	csvArrayContent := strings.Split(string(data), "\n")[2:]
-	for i, v := range csvArrayContent {
-		csvArrayContent[i] = strings.Replace(v, "=", "", -1)
+	var (
+		err  error
+		data []byte
+	)
+	if data, err = hCache.Get(q.URL(), false); err == nil {
+		csvArrayContent := strings.Split(string(data), "\n")[2:]
+		for i, v := range csvArrayContent {
+			csvArrayContent[i] = strings.Replace(v, "=", "", -1)
+		}
+		return csv.NewReader(strings.NewReader(strings.Join(csvArrayContent, "\n"))).ReadAll()
 	}
-
-	return csv.NewReader(strings.NewReader(strings.Join(csvArrayContent, "\n"))).ReadAll()
+	return nil, err
 }
 
 // BFI82U 取得「三大法人買賣金額統計表」
@@ -64,12 +68,16 @@ func (b BFI82U) URL() string {
 
 // Get 擷取資料
 func (b BFI82U) Get() ([]BaseSellBuy, error) {
-	data, _ := hCache.Get(b.URL(), false)
-
-	var result []BaseSellBuy
-	var err error
-
-	if csvdata, err := csv.NewReader(strings.NewReader(strings.Join(strings.Split(string(data), "\n")[2:], "\n"))).ReadAll(); err == nil {
+	var (
+		csvdata [][]string
+		data    []byte
+		err     error
+		result  []BaseSellBuy
+	)
+	if data, err = hCache.Get(b.URL(), false); err != nil {
+		return nil, err
+	}
+	if csvdata, err = csv.NewReader(strings.NewReader(strings.Join(strings.Split(string(data), "\n")[2:], "\n"))).ReadAll(); err == nil {
 		result = make([]BaseSellBuy, len(csvdata))
 		for i, v := range csvdata {
 			result[i].Name = v[0]
@@ -176,20 +184,22 @@ func (t TWTXXU) URL() string {
 // Get 擷取資料
 func (t TWTXXU) Get() ([][]BaseSellBuy, error) {
 	var (
-		r       *url.URL
-		err     error
-		result  [][]BaseSellBuy
-		csvdata [][]string
+		csvdata  [][]string
+		data     []byte
+		datalist int
+		err      error
+		path     = t.URL()
+		r        *url.URL
+		result   [][]BaseSellBuy
 	)
-
-	path := t.URL()
 
 	if r, err = url.Parse(path); err == nil {
 		rawquery, _ := url.ParseQuery(r.RawQuery)
-		data, _ := hCache.PostForm(path, rawquery)
+		if data, err = hCache.PostForm(path, rawquery); err != nil {
+			return nil, err
+		}
 
 		var csvArrayContent = strings.Split(string(data), "\n")
-		var datalist int
 		switch t.fund {
 		case "TWT43U":
 			csvArrayContent = csvArrayContent[3 : len(csvArrayContent)-4]
