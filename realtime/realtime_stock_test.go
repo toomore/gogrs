@@ -21,7 +21,7 @@ func TestStockRealTime_noData(t *testing.T) {
 	r := NewTWSE("26188", tradingdays.FindRecentlyOpened(time.Now()))
 
 	_, err := r.Get()
-	if err.Error() != "No Data." {
+	if err != errorNotEnoughData {
 		t.Error("Should be \"No Data.\"")
 	}
 }

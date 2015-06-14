@@ -5,6 +5,7 @@ package realtime
 
 import (
 	"encoding/json"
+	"errors"
 	"fmt"
 	"net/http"
 	"strconv"
@@ -13,8 +14,6 @@ import (
 
 	"github.com/toomore/gogrs/utils"
 )
-
-//STOCKPATH = '/stock/api/getStockInfo.jsp?ex_ch=%(exchange)s_%(no)s.tw_%(date)s&json=1&delay=%(delay)s&_=%(timestamp)s'
 
 type msgArray []map[string]string
 type unixMapData map[int64]Data
@@ -86,6 +85,11 @@ type Data struct {
 	SysInfo        map[string]interface{} // 系統回傳資訊
 }
 
+var (
+	errorNetworkFail   = errors.New("Network fail: %s")
+	errorNotEnoughData = errors.New("Not enough data.")
+)
+
 func (stock *StockRealTime) get() (StockBlob, error) {
 	var (
 		err   error
@@ -98,10 +102,10 @@ func (stock *StockRealTime) get() (StockBlob, error) {
 		json.NewDecoder(resp.Body).Decode(&value)
 
 		if len(value.MsgArray) == 0 {
-			err = fmt.Errorf("No Data.")
+			err = errorNotEnoughData
 		}
 	} else {
-		err = fmt.Errorf("Network fail: %s", err)
+		err = fmt.Errorf(errorNetworkFail.Error(), err)
 	}
 
 	return value, err
