@@ -106,7 +106,7 @@ func main() {
 	color.NoColor = !*showcolor
 
 	if *twseCate != "" {
-		l := &twse.Lists{Date: tradingdays.FindRecentlyOpened(time.Now())}
+		l := twse.NewLists(tradingdays.FindRecentlyOpened(time.Now()))
 
 		for _, v := range strings.Split(*twseCate, ",") {
 			catelist = l.GetCategoryList(v)

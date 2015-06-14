@@ -191,7 +191,7 @@ func main() {
 	}
 
 	if *twseCate != "" {
-		l := &twse.Lists{Date: tradingdays.FindRecentlyOpened(time.Now())}
+		l := twse.NewLists(tradingdays.FindRecentlyOpened(time.Now()))
 		for _, no := range strings.Split(*twseCate, ",") {
 			for _, s := range l.GetCategoryList(no) {
 				wg.Add(1)
