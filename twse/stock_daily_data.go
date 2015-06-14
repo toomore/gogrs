@@ -13,6 +13,11 @@ import (
 
 type unixMapData map[int64][][]string
 
+var (
+	errorNetworkFail   = errors.New("Network fail: %s")
+	errorNotEnoughData = errors.New("Not enough data.")
+)
+
 // Data start with stock no, date.
 type Data struct {
 	No             string
@@ -31,18 +36,20 @@ type Data struct {
 // NewTWSE 建立一個 TWSE 上市股票
 func NewTWSE(No string, Date time.Time) *Data {
 	return &Data{
-		No:       No,
-		Date:     Date,
-		exchange: "tse",
+		No:          No,
+		Date:        Date,
+		exchange:    "tse",
+		UnixMapData: make(unixMapData),
 	}
 }
 
 // NewOTC 建立一個 OTC 上櫃股票
 func NewOTC(No string, Date time.Time) *Data {
 	return &Data{
-		No:       No,
-		Date:     Date,
-		exchange: "otc",
+		No:          No,
+		Date:        Date,
+		exchange:    "otc",
+		UnixMapData: make(unixMapData),
 	}
 }
 
@@ -84,13 +91,10 @@ func (d *Data) clearCache() {
 
 // Get return csv data in array.
 func (d *Data) Get() ([][]string, error) {
-	if d.UnixMapData == nil {
-		d.UnixMapData = make(unixMapData)
-	}
 	if len(d.UnixMapData[d.Date.Unix()]) == 0 {
 		data, err := hCache.Get(d.URL(), true)
 		if err != nil {
-			return nil, fmt.Errorf("Network fail: %s", err)
+			return nil, fmt.Errorf(errorNetworkFail.Error(), err)
 		}
 		csvArrayContent := strings.Split(string(data), "\n")
 		for i := range csvArrayContent {
@@ -115,17 +119,23 @@ func (d *Data) Get() ([][]string, error) {
 			d.clearCache()
 			return allData, err
 		}
-		return nil, errors.New("Not enough data.")
+		return nil, errorNotEnoughData
 	}
 	return d.UnixMapData[d.Date.Unix()], nil
 }
 
 // GetByTimeMap return a map by key of time.Time
 func (d Data) GetByTimeMap() map[time.Time]interface{} {
-	data := make(map[time.Time]interface{})
-	dailyData, _ := d.Get()
-	for _, v := range dailyData {
-		data[utils.ParseDate(v[0])] = v
+	var (
+		dailyData [][]string
+		data      map[time.Time]interface{}
+		err       error
+	)
+	if dailyData, err = d.Get(); err == nil {
+		data = make(map[time.Time]interface{})
+		for _, v := range dailyData {
+			data[utils.ParseDate(v[0])] = v
+		}
 	}
 	return data
 }
@@ -195,8 +205,10 @@ func (d *Data) GetDailyRangeList() []float64 {
 
 // MA 計算 收盤價 的移動平均
 func (d Data) MA(days int) []float64 {
-	var result []float64
-	var priceList = d.GetPriceList()
+	var (
+		priceList = d.GetPriceList()
+		result    []float64
+	)
 	result = make([]float64, len(priceList)-days+1)
 	for i := range priceList[days-1:] {
 		result[i] = utils.AvgFloat64(priceList[i : i+days])
@@ -211,8 +223,10 @@ func (d Data) MABR(days1, days2 int) []float64 {
 
 // MAV 計算 成交股數 的移動平均
 func (d Data) MAV(days int) []uint64 {
-	var result []uint64
-	var volumeList = d.GetVolumeList()
+	var (
+		result     []uint64
+		volumeList = d.GetVolumeList()
+	)
 	result = make([]uint64, len(volumeList)-days+1)
 	for i := range volumeList[days-1:] {
 		result[i] = utils.AvgUint64(volumeList[i : i+days])
@@ -222,16 +236,20 @@ func (d Data) MAV(days int) []uint64 {
 
 // MAVBR 計算 成交股數移動平均 的乖離
 func (d Data) MAVBR(days1, days2 int) []int64 {
-	MAV1 := d.MAV(days1)
-	MAV2 := d.MAV(days2)
-	var length int
+	var (
+		MAV1    = d.MAV(days1)
+		MAV2    = d.MAV(days2)
+		length  int
+		result1 []int64
+		result2 []int64
+	)
 	if len(MAV1) <= len(MAV2) {
 		length = len(MAV1)
 	} else {
 		length = len(MAV2)
 	}
-	result1 := make([]int64, length)
-	result2 := make([]int64, length)
+	result1 = make([]int64, length)
+	result2 = make([]int64, length)
 	for i := 1; i <= length; i++ {
 		result1[length-i] = int64(MAV1[len(MAV1)-i])
 		result2[length-i] = int64(MAV2[len(MAV2)-i])
@@ -273,8 +291,11 @@ type FmtData struct {
 
 // FormatData is format daily data.
 func (d Data) FormatData() []FmtData {
-	result := make([]FmtData, len(d.RawData))
-	var loopd FmtData
+	var (
+		loopd  FmtData
+		result []FmtData
+	)
+	result = make([]FmtData, len(d.RawData))
 	for i, v := range d.RawData {
 		loopd.Date = utils.ParseDate(v[0])
 		loopd.Volume, _ = strconv.ParseUint(strings.Replace(v[1], ",", "", -1), 10, 32)
