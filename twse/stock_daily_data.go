@@ -161,10 +161,17 @@ func (d Data) getColsListFloat64(colsNo int) []float64 {
 // GetVolumeList 取得 成交股數 序列
 func (d *Data) GetVolumeList() []uint64 {
 	if d.volumeList == nil {
-		var result []uint64
+		var (
+			unit   uint64 = 1
+			result []uint64
+		)
+		if d.exchange == "otc" {
+			unit = 1000
+		}
 		result = make([]uint64, len(d.RawData))
 		for i, v := range d.getColsList(1) {
 			result[i], _ = strconv.ParseUint(strings.Replace(v, ",", "", -1), 10, 64)
+			result[i] = result[i] * unit
 		}
 		d.volumeList = result
 	}
@@ -298,8 +305,8 @@ func (d Data) FormatData() []FmtData {
 	result = make([]FmtData, len(d.RawData))
 	for i, v := range d.RawData {
 		loopd.Date = utils.ParseDate(v[0])
-		loopd.Volume, _ = strconv.ParseUint(strings.Replace(v[1], ",", "", -1), 10, 32)
-		loopd.TotalPrice, _ = strconv.ParseUint(strings.Replace(v[2], ",", "", -1), 10, 32)
+		loopd.Volume, _ = strconv.ParseUint(strings.Replace(v[1], ",", "", -1), 10, 64)
+		loopd.TotalPrice, _ = strconv.ParseUint(strings.Replace(v[2], ",", "", -1), 10, 64)
 		loopd.Open, _ = strconv.ParseFloat(v[3], 64)
 		loopd.High, _ = strconv.ParseFloat(v[4], 64)
 		loopd.Low, _ = strconv.ParseFloat(v[5], 64)
