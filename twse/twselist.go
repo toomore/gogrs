@@ -238,10 +238,6 @@ func (o *OTCLists) Get(category string) ([][]string, error) {
 
 	if data, err = hCache.Get(url, false); err == nil {
 		csvArrayContent = strings.Split(string(data), "\n")
-		//log.Println(csvArrayContent)
-		//for i, v := range csvArrayContent {
-		//	log.Println(i, v)
-		//}
 		if len(csvArrayContent) > 5 {
 			csvReader = csv.NewReader(strings.NewReader(strings.Join(csvArrayContent[4:len(csvArrayContent)-1], "\n")))
 			if rawData, err = csvReader.ReadAll(); err == nil {
@@ -250,7 +246,6 @@ func (o *OTCLists) Get(category string) ([][]string, error) {
 				return rawData, nil
 			}
 		}
-		//log.Println(csvReader.ReadAll())
 	}
 	return nil, err
 }
@@ -287,6 +282,4 @@ func (o *OTCLists) formatData(categoryNo string) {
 		o.FmtData[data.No] = data
 		o.categoryNoList[categoryNo][i] = StockInfo{No: data.No, Name: data.Name}
 	}
-	//log.Println("FormatData:", o.FmtData)
-	//log.Println("NoList:", o.categoryNoList)
 }
