@@ -186,9 +186,9 @@ func (l *Lists) formatData(categoryNo string) {
 		var data FmtListData
 		data.No = strings.Trim(v[0], " ")
 		data.Name = strings.Trim(v[1], " ")
-		data.Volume, _ = strconv.ParseUint(v[2], 10, 32)
+		data.Volume, _ = strconv.ParseUint(strings.Replace(v[2], ",", "", -1), 10, 64)
 		data.Totalsale, _ = strconv.ParseUint(v[3], 10, 32)
-		data.TotalPrice, _ = strconv.ParseUint(v[4], 10, 32)
+		data.TotalPrice, _ = strconv.ParseUint(strings.Replace(v[4], ",", "", -1), 10, 64)
 		data.Open, _ = strconv.ParseFloat(v[5], 64)
 		data.High, _ = strconv.ParseFloat(v[6], 64)
 		data.Low, _ = strconv.ParseFloat(v[7], 64)
