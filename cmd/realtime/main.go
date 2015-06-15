@@ -22,7 +22,7 @@ The flags are:
 		上市股票類別，可使用 ',' 分隔多組代碼，例：11,15
 	-otccate
 		上櫃股票類別，可使用 ',' 分隔多組代碼，例：04,11
-	-showtwsecatelist
+	-showcatelist
 		顯示上市分類表（default: false）
 	-ncpu
 		指定 CPU 數量，預設為實際 CPU 數量
@@ -103,22 +103,22 @@ func TaipeiNow() time.Time {
 }
 
 var (
-	chanbuf          int
-	twseNo           = flag.String("twse", "", "上市股票代碼，可使用 ',' 分隔多組代碼，例：2618,2329")
-	twseCate         = flag.String("twsecate", "", "上市股票類別，可使用 ',' 分隔多組代碼，例：11,15")
-	showtwsecatelist = flag.Bool("showcatelist", false, "顯示上市分類表")
-	otcNo            = flag.String("otc", "", "上櫃股票代碼，可使用 ',' 分隔多組代碼，例：8446,2719")
-	otcCate          = flag.String("otccate", "", "上櫃股票類別，可使用 ',' 分隔多組代碼，例：04,11")
-	index            = flag.Bool("index", false, "顯示大盤、上櫃、寶島指數（default: false）")
-	ncpu             = flag.Int("ncpu", runtime.NumCPU(), "指定 CPU 數量，預設為實際 CPU 數量")
-	pt               = flag.Bool("pt", false, "計算花費時間")
-	count            = flag.Bool("count", true, "計算此次查詢的漲跌家數")
-	showcolor        = flag.Bool("color", true, "色彩化")
-	white            = color.New(color.FgWhite, color.Bold).SprintfFunc()
-	red              = color.New(color.FgRed, color.Bold).SprintfFunc()
-	green            = color.New(color.FgGreen, color.Bold).SprintfFunc()
-	yellowBold       = color.New(color.FgYellow, color.Bold).SprintfFunc()
-	cyan             = color.New(color.FgCyan).SprintfFunc()
+	chanbuf      int
+	twseNo       = flag.String("twse", "", "上市股票代碼，可使用 ',' 分隔多組代碼，例：2618,2329")
+	twseCate     = flag.String("twsecate", "", "上市股票類別，可使用 ',' 分隔多組代碼，例：11,15")
+	showcatelist = flag.Bool("showcatelist", false, "顯示上市分類表")
+	otcNo        = flag.String("otc", "", "上櫃股票代碼，可使用 ',' 分隔多組代碼，例：8446,2719")
+	otcCate      = flag.String("otccate", "", "上櫃股票類別，可使用 ',' 分隔多組代碼，例：04,11")
+	index        = flag.Bool("index", false, "顯示大盤、上櫃、寶島指數（default: false）")
+	ncpu         = flag.Int("ncpu", runtime.NumCPU(), "指定 CPU 數量，預設為實際 CPU 數量")
+	pt           = flag.Bool("pt", false, "計算花費時間")
+	count        = flag.Bool("count", true, "計算此次查詢的漲跌家數")
+	showcolor    = flag.Bool("color", true, "色彩化")
+	white        = color.New(color.FgWhite, color.Bold).SprintfFunc()
+	red          = color.New(color.FgRed, color.Bold).SprintfFunc()
+	green        = color.New(color.FgGreen, color.Bold).SprintfFunc()
+	yellowBold   = color.New(color.FgYellow, color.Bold).SprintfFunc()
+	cyan         = color.New(color.FgCyan).SprintfFunc()
 )
 
 func prettyprint(data realtime.Data) string {
@@ -171,7 +171,7 @@ func main() {
 		startTime = time.Now()
 	}
 
-	if *showtwsecatelist {
+	if *showcatelist {
 		var index = 1
 		for cateNo, cateName := range twse.TWSECLASS {
 			fmt.Printf("%s(%s)\t\t", cateName, cateNo)
