@@ -91,7 +91,7 @@ func NewLists(t time.Time) *Lists {
 	}
 }
 
-// Get is to get csv data.
+// Get is to get TWSE csv data.
 func (l *Lists) Get(category string) ([][]string, error) {
 	if TWSECLASS[category] == "" {
 		return nil, errorNotSupport
@@ -205,6 +205,7 @@ func (l *Lists) formatData(categoryNo string) {
 	}
 }
 
+// OTCLists is to get OTC list.
 type OTCLists struct {
 	Date            time.Time
 	FmtData         map[string]FmtListData
@@ -212,6 +213,7 @@ type OTCLists struct {
 	categoryNoList  map[string][]StockInfo
 }
 
+// NewOTCLists new a Lists.
 func NewOTCLists(date time.Time) *OTCLists {
 	return &OTCLists{
 		Date:            date,
@@ -221,6 +223,7 @@ func NewOTCLists(date time.Time) *OTCLists {
 	}
 }
 
+// Get is to get OTC csv data.
 func (o *OTCLists) Get(category string) ([][]string, error) {
 	var (
 		csvArrayContent []string
@@ -252,6 +255,7 @@ func (o *OTCLists) Get(category string) ([][]string, error) {
 	return nil, err
 }
 
+// GetCategoryList 取得分類的股票代碼與名稱列表
 func (o OTCLists) GetCategoryList(category string) []StockInfo {
 	if _, ok := o.categoryNoList[category]; !ok {
 		o.Get(category)
