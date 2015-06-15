@@ -104,6 +104,66 @@ var OTCCLASS = map[string]string{
 	"WW": "認購售權證",
 }
 
+// CategoryList to show TWSECLASS, OTCCLASS.
+type CategoryList struct {
+	same     map[string]string
+	onlyTWSE map[string]string
+	onlyOTC  map[string]string
+}
+
+// NewCategoryList to new one.
+func NewCategoryList() *CategoryList {
+	return &CategoryList{
+		same:     nil,
+		onlyTWSE: nil,
+		onlyOTC:  nil,
+	}
+}
+
+// Same return TWSECLASS and OTCCLASS.
+func (c *CategoryList) Same() map[string]string {
+	var result = c.same
+	if result == nil {
+		result = make(map[string]string)
+		for i, v := range TWSECLASS {
+			if _, ok := OTCCLASS[i]; ok {
+				result[i] = v
+			}
+		}
+	}
+	return result
+}
+
+// OnlyTWSE return TWSECLASS but OTCCLASS
+func (c *CategoryList) OnlyTWSE() map[string]string {
+	var result = c.onlyTWSE
+	if result == nil {
+		result = make(map[string]string)
+		same := c.Same()
+		for i, v := range TWSECLASS {
+			if _, ok := same[i]; !ok {
+				result[i] = v
+			}
+		}
+	}
+	return result
+}
+
+// OnlyOTC return OTCCLASS but TWSECLASS
+func (c *CategoryList) OnlyOTC() map[string]string {
+	var result = c.onlyOTC
+	if result == nil {
+		result = make(map[string]string)
+		same := c.Same()
+		for i, v := range OTCCLASS {
+			if _, ok := same[i]; !ok {
+				result[i] = v
+			}
+		}
+	}
+	return result
+}
+
 // StockInfo is simple stock info for no, name.
 type StockInfo struct {
 	No   string

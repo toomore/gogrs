@@ -45,6 +45,13 @@ func TestOTCLists(t *testing.T) {
 	log.Println(o.GetCategoryList("04"))
 }
 
+func TestCategoryList(t *testing.T) {
+	categoryList := NewCategoryList()
+	t.Log(categoryList.Same())
+	t.Log(categoryList.OnlyTWSE())
+	t.Log(categoryList.OnlyOTC())
+}
+
 func ExampleLists_GetCategoryList() {
 	l := NewLists(time.Date(2015, 4, 27, 0, 0, 0, 0, utils.TaipeiTimeZone))
 	categoryList := l.GetCategoryList("15")
