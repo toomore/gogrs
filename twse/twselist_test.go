@@ -42,6 +42,7 @@ func TestLists_Get_categoryNoList(t *testing.T) {
 func TestOTCLists(t *testing.T) {
 	o := NewOTCLists(tradingdays.FindRecentlyOpened(time.Now()))
 	log.Println(o.Get("04"))
+	log.Println(o.GetCategoryList("04"))
 }
 
 func ExampleLists_GetCategoryList() {

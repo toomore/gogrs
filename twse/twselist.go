@@ -252,8 +252,19 @@ func (o *OTCLists) Get(category string) ([][]string, error) {
 	return nil, err
 }
 
+func (o OTCLists) GetCategoryList(category string) []StockInfo {
+	if _, ok := o.categoryNoList[category]; !ok {
+		o.Get(category)
+	}
+	return o.categoryNoList[category]
+}
+
 func (o *OTCLists) formatData(categoryNo string) {
-	for _, v := range o.categoryRawData[categoryNo] {
+	if _, ok := o.categoryNoList[categoryNo]; !ok {
+		o.categoryNoList[categoryNo] = make([]StockInfo, len(o.categoryRawData[categoryNo]))
+	}
+
+	for i, v := range o.categoryRawData[categoryNo] {
 		var data FmtListData
 		data.No = strings.Trim(v[0], " ")
 		data.Name = strings.Trim(v[1], " ")
@@ -270,6 +281,8 @@ func (o *OTCLists) formatData(categoryNo string) {
 		data.IssuedShares, _ = strconv.ParseUint(strings.Replace(v[12], ",", "", -1), 10, 64)
 
 		o.FmtData[data.No] = data
+		o.categoryNoList[categoryNo][i] = StockInfo{No: data.No, Name: data.Name}
 	}
 	//log.Println("FormatData:", o.FmtData)
+	//log.Println("NoList:", o.categoryNoList)
 }
