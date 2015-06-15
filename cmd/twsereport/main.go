@@ -103,14 +103,14 @@ func prettyprint(stock *twse.Data, check checkGroup) string {
 func main() {
 	flag.Parse()
 	var (
-		datalist   []*twse.Data
-		catelist   []twse.StockInfo
-		twselist   []string
-		otclist    []string
-		catenolist []string
-		otcnolist  []string
-		l          *twse.Lists
-		o          *twse.OTCLists
+		datalist     []*twse.Data
+		l            *twse.Lists
+		o            *twse.OTCLists
+		otccatelist  []string
+		otcdelta     int
+		otclist      []string
+		twsecatelist []string
+		twselist     []string
 	)
 
 	color.NoColor = !*showcolor
@@ -118,9 +118,8 @@ func main() {
 	if *twseCate != "" {
 		l = twse.NewLists(tradingdays.FindRecentlyOpened(time.Now()))
 		for _, v := range strings.Split(*twseCate, ",") {
-			catelist = l.GetCategoryList(v)
-			for _, s := range catelist {
-				catenolist = append(catenolist, s.No)
+			for _, s := range l.GetCategoryList(v) {
+				twsecatelist = append(twsecatelist, s.No)
 			}
 		}
 	}
@@ -128,9 +127,8 @@ func main() {
 	if *otcCate != "" {
 		o = twse.NewOTCLists(tradingdays.FindRecentlyOpened(time.Now()))
 		for _, v := range strings.Split(*otcCate, ",") {
-			catelist = o.GetCategoryList(v)
-			for _, s := range catelist {
-				otcnolist = append(otcnolist, s.No)
+			for _, s := range o.GetCategoryList(v) {
+				otccatelist = append(otccatelist, s.No)
 			}
 		}
 	}
@@ -141,14 +139,14 @@ func main() {
 	if *otcNo != "" {
 		otclist = strings.Split(*otcNo, ",")
 	}
-	datalist = make([]*twse.Data, len(twselist)+len(catenolist)+len(otclist)+len(otcnolist))
+	datalist = make([]*twse.Data, len(twselist)+len(twsecatelist)+len(otclist)+len(otccatelist))
 
-	for i, no := range append(twselist, catenolist...) {
+	for i, no := range append(twselist, twsecatelist...) {
 		datalist[i] = twse.NewTWSE(no, tradingdays.FindRecentlyOpened(time.Now()))
 	}
-	delta := len(twselist) + len(catenolist)
-	for i, no := range append(otclist, otcnolist...) {
-		datalist[i+delta] = twse.NewOTC(no, tradingdays.FindRecentlyOpened(time.Now()))
+	otcdelta = len(twselist) + len(twsecatelist)
+	for i, no := range append(otclist, otccatelist...) {
+		datalist[i+otcdelta] = twse.NewOTC(no, tradingdays.FindRecentlyOpened(time.Now()))
 	}
 
 	if len(datalist) > 0 {
