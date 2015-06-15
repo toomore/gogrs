@@ -63,7 +63,7 @@ func ExampleLists_Get_fmtData() {
 	l.Get("15") //航運業
 	fmt.Printf("%+v", l.FmtData["2618"])
 	// output:
-	// {No:2618 Name:長榮航 Volume:46670950 TotalPrice:1136982254 Open:24 High:24.65 Low:24 Price:24 Range:0.55 Totalsale:11117 LastBuyPrice:24 LastBuyVolume:2027 LastSellPrice:24.1 LastSellVolume:10 PERatio:0}
+	// {No:2618 Name:長榮航 Volume:46670950 TotalPrice:1136982254 Open:24 High:24.65 Low:24 Price:24 Range:0.55 Totalsale:11117 LastBuyPrice:24 LastBuyVolume:2027 LastSellPrice:24.1 LastSellVolume:10 PERatio:0 IssuedShares:0}
 }
 
 func ExampleLists_Get() {
