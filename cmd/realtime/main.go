@@ -20,6 +20,8 @@ The flags are:
 		顯示大盤、上櫃、寶島指數（default: false）
 	-twsecate
 		上市股票類別，可使用 ',' 分隔多組代碼，例：11,15
+	-otccate
+		上櫃股票類別，可使用 ',' 分隔多組代碼，例：04,11
 	-showtwsecatelist
 		顯示上市分類表（default: false）
 	-ncpu
@@ -106,6 +108,7 @@ var (
 	twseCate         = flag.String("twsecate", "", "上市股票類別，可使用 ',' 分隔多組代碼，例：11,15")
 	showtwsecatelist = flag.Bool("showcatelist", false, "顯示上市分類表")
 	otcNo            = flag.String("otc", "", "上櫃股票代碼，可使用 ',' 分隔多組代碼，例：8446,2719")
+	otcCate          = flag.String("otccate", "", "上櫃股票類別，可使用 ',' 分隔多組代碼，例：04,11")
 	index            = flag.Bool("index", false, "顯示大盤、上櫃、寶島指數（default: false）")
 	ncpu             = flag.Int("ncpu", runtime.NumCPU(), "指定 CPU 數量，預設為實際 CPU 數量")
 	pt               = flag.Bool("pt", false, "計算花費時間")
@@ -212,6 +215,20 @@ func main() {
 			}(no)
 		}
 	}
+
+	if *otcCate != "" {
+		o := twse.NewOTCLists(tradingdays.FindRecentlyOpened(time.Now()))
+		for _, no := range strings.Split(*otcCate, ",") {
+			for _, s := range o.GetCategoryList(no) {
+				wg.Add(1)
+				go func(s twse.StockInfo) {
+					runtime.Gosched()
+					queue <- realtime.NewOTC(s.No, TaipeiNow())
+				}(s)
+			}
+		}
+	}
+
 	if *index {
 		wg.Add(3)
 		for _, r := range []*realtime.StockRealTime{realtime.NewWeight(TaipeiNow()), realtime.NewOTCI(TaipeiNow()), realtime.NewFRMSA(TaipeiNow())} {
