@@ -205,12 +205,18 @@ func (l *Lists) formatData(categoryNo string) {
 }
 
 type OTCLists struct {
-	Date time.Time
+	Date            time.Time
+	FmtData         map[string]FmtListData
+	categoryRawData map[string][][]string
+	categoryNoList  map[string][]StockInfo
 }
 
 func NewOTCLists(date time.Time) *OTCLists {
 	return &OTCLists{
-		Date: date,
+		Date:            date,
+		FmtData:         make(map[string]FmtListData),
+		categoryRawData: make(map[string][][]string),
+		categoryNoList:  make(map[string][]StockInfo),
 	}
 }
 
@@ -220,6 +226,7 @@ func (o *OTCLists) Get(category string) ([][]string, error) {
 		csvReader       *csv.Reader
 		data            []byte
 		err             error
+		rawData         [][]string
 		url             string
 	)
 
@@ -233,7 +240,10 @@ func (o *OTCLists) Get(category string) ([][]string, error) {
 		//}
 		if len(csvArrayContent) > 5 {
 			csvReader = csv.NewReader(strings.NewReader(strings.Join(csvArrayContent[4:len(csvArrayContent)-1], "\n")))
-			return csvReader.ReadAll()
+			if rawData, err = csvReader.ReadAll(); err == nil {
+				o.categoryRawData[category] = rawData
+				return rawData, nil
+			}
 		}
 		//log.Println(csvReader.ReadAll())
 	}
