@@ -23,7 +23,7 @@ The flags are:
 	-otccate
 		上櫃股票類別，可使用 ',' 分隔多組代碼，例：04,11
 	-showcatelist
-		顯示上市分類表（default: false）
+		顯示上市/上櫃分類表（default: false）
 	-ncpu
 		指定 CPU 數量，預設為實際 CPU 數量
 	-pt
@@ -106,7 +106,7 @@ var (
 	chanbuf      int
 	twseNo       = flag.String("twse", "", "上市股票代碼，可使用 ',' 分隔多組代碼，例：2618,2329")
 	twseCate     = flag.String("twsecate", "", "上市股票類別，可使用 ',' 分隔多組代碼，例：11,15")
-	showcatelist = flag.Bool("showcatelist", false, "顯示上市分類表")
+	showcatelist = flag.Bool("showcatelist", false, "顯示上市/上櫃分類表")
 	otcNo        = flag.String("otc", "", "上櫃股票代碼，可使用 ',' 分隔多組代碼，例：8446,2719")
 	otcCate      = flag.String("otccate", "", "上櫃股票類別，可使用 ',' 分隔多組代碼，例：04,11")
 	index        = flag.Bool("index", false, "顯示大盤、上櫃、寶島指數（default: false）")
@@ -172,15 +172,26 @@ func main() {
 	}
 
 	if *showcatelist {
-		var index = 1
-		for cateNo, cateName := range twse.TWSECLASS {
-			fmt.Printf("%s(%s)\t\t", cateName, cateNo)
-			if index%3 == 0 {
-				fmt.Println("")
+		var (
+			cateTitle    = []string{"The same with TWSE/OTC", "OnlyTWSE", "OnlyOTC"}
+			categoryList = twse.NewCategoryList()
+			index        int
+		)
+
+		for i, cate := range []map[string]string{
+			categoryList.Same(), categoryList.OnlyTWSE(), categoryList.OnlyOTC(),
+		} {
+			index = 1
+			fmt.Println(white("---------- %s ----------", cateTitle[i]))
+			for cateNo, cateName := range cate {
+				fmt.Printf("%s\t", fmt.Sprintf("%s%s", green("%s", cateName), yellowBold("(%s)", cateNo)))
+				if index%3 == 0 {
+					fmt.Println("")
+				}
+				index++
 			}
-			index++
+			fmt.Println("")
 		}
-		fmt.Println("")
 	}
 
 	if *twseNo != "" {

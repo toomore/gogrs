@@ -19,6 +19,8 @@ The flags are:
 		上櫃股票代碼，可使用 ',' 分隔多組代碼，例：4406,8446
 	-otccate
 		上櫃股票類別，可使用 ',' 分隔多組代碼，例：02,14
+	-showcatelist
+		顯示上市/上櫃分類表（default: false）
 	-ncpu
 		指定 CPU 數量，預設為實際 CPU 數量
 	-color
@@ -30,6 +32,7 @@ package main
 import (
 	"flag"
 	"fmt"
+	"os"
 	"runtime"
 	"strings"
 	"sync"
@@ -51,20 +54,21 @@ func (c *checkGroupList) Add(f checkGroup) {
 }
 
 var (
-	wg         sync.WaitGroup
-	twseNo     = flag.String("twse", "", "上市股票代碼，可使用 ',' 分隔多組代碼，例：2618,2329")
-	twseCate   = flag.String("twsecate", "", "上市股票類別，可使用 ',' 分隔多組代碼，例：11,15")
-	otcNo      = flag.String("otc", "", "上櫃股票代碼，可使用 ',' 分隔多組代碼，例：4406,8446")
-	otcCate    = flag.String("otccate", "", "上櫃股票類別，可使用 ',' 分隔多組代碼，例：02,14")
-	showcolor  = flag.Bool("color", true, "色彩化")
-	ncpu       = flag.Int("ncpu", runtime.NumCPU(), "指定 CPU 數量，預設為實際 CPU 數量")
-	ckList     = make(checkGroupList, 1)
-	white      = color.New(color.FgWhite, color.Bold).SprintfFunc()
-	red        = color.New(color.FgRed, color.Bold).SprintfFunc()
-	green      = color.New(color.FgGreen, color.Bold).SprintfFunc()
-	yellow     = color.New(color.FgYellow).SprintfFunc()
-	yellowBold = color.New(color.FgYellow, color.Bold).SprintfFunc()
-	blue       = color.New(color.FgBlue).SprintfFunc()
+	wg           sync.WaitGroup
+	twseNo       = flag.String("twse", "", "上市股票代碼，可使用 ',' 分隔多組代碼，例：2618,2329")
+	twseCate     = flag.String("twsecate", "", "上市股票類別，可使用 ',' 分隔多組代碼，例：11,15")
+	otcNo        = flag.String("otc", "", "上櫃股票代碼，可使用 ',' 分隔多組代碼，例：4406,8446")
+	otcCate      = flag.String("otccate", "", "上櫃股票類別，可使用 ',' 分隔多組代碼，例：02,14")
+	showcatelist = flag.Bool("showcatelist", false, "顯示上市/上櫃分類表")
+	showcolor    = flag.Bool("color", true, "色彩化")
+	ncpu         = flag.Int("ncpu", runtime.NumCPU(), "指定 CPU 數量，預設為實際 CPU 數量")
+	ckList       = make(checkGroupList, 1)
+	white        = color.New(color.FgWhite, color.Bold).SprintfFunc()
+	red          = color.New(color.FgRed, color.Bold).SprintfFunc()
+	green        = color.New(color.FgGreen, color.Bold).SprintfFunc()
+	yellow       = color.New(color.FgYellow).SprintfFunc()
+	yellowBold   = color.New(color.FgYellow, color.Bold).SprintfFunc()
+	blue         = color.New(color.FgBlue).SprintfFunc()
 )
 
 func init() {
@@ -102,6 +106,12 @@ func prettyprint(stock *twse.Data, check checkGroup) string {
 
 func main() {
 	flag.Parse()
+
+	if flag.NFlag() == 0 {
+		flag.PrintDefaults()
+		os.Exit(0)
+	}
+
 	var (
 		datalist     []*twse.Data
 		l            *twse.Lists
@@ -114,6 +124,29 @@ func main() {
 	)
 
 	color.NoColor = !*showcolor
+
+	if *showcatelist {
+		var (
+			cateTitle    = []string{"The same with TWSE/OTC", "OnlyTWSE", "OnlyOTC"}
+			categoryList = twse.NewCategoryList()
+			index        int
+		)
+
+		for i, cate := range []map[string]string{
+			categoryList.Same(), categoryList.OnlyTWSE(), categoryList.OnlyOTC(),
+		} {
+			index = 1
+			fmt.Println(white("---------- %s ----------", cateTitle[i]))
+			for cateNo, cateName := range cate {
+				fmt.Printf("%s\t", fmt.Sprintf("%s%s", green("%s", cateName), yellowBold("(%s)", cateNo)))
+				if index%3 == 0 {
+					fmt.Println("")
+				}
+				index++
+			}
+			fmt.Println("")
+		}
+	}
 
 	if *twseCate != "" {
 		l = twse.NewLists(tradingdays.FindRecentlyOpened(time.Now()))
@@ -164,7 +197,5 @@ func main() {
 			}
 			wg.Wait()
 		}
-	} else {
-		flag.PrintDefaults()
 	}
 }
