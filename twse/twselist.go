@@ -203,3 +203,39 @@ func (l *Lists) formatData(categoryNo string) {
 		l.categoryNoList[categoryNo][i] = StockInfo{No: data.No, Name: data.Name}
 	}
 }
+
+type OTCLists struct {
+	Date time.Time
+}
+
+func NewOTCLists(date time.Time) *OTCLists {
+	return &OTCLists{
+		Date: date,
+	}
+}
+
+func (o *OTCLists) Get(category string) ([][]string, error) {
+	var (
+		csvArrayContent []string
+		csvReader       *csv.Reader
+		data            []byte
+		err             error
+		url             string
+	)
+
+	url = fmt.Sprintf("%s%s", utils.OTCHOST, fmt.Sprintf(utils.OTCLISTCSV, fmt.Sprintf("%d/%02d/%02d", o.Date.Year()-1911, o.Date.Month(), o.Date.Day()), category))
+
+	if data, err = hCache.Get(url, false); err == nil {
+		csvArrayContent = strings.Split(string(data), "\n")
+		//log.Println(csvArrayContent)
+		//for i, v := range csvArrayContent {
+		//	log.Println(i, v)
+		//}
+		if len(csvArrayContent) > 5 {
+			csvReader = csv.NewReader(strings.NewReader(strings.Join(csvArrayContent[4:len(csvArrayContent)-1], "\n")))
+			return csvReader.ReadAll()
+		}
+		//log.Println(csvReader.ReadAll())
+	}
+	return nil, err
+}

@@ -2,9 +2,11 @@ package twse
 
 import (
 	"fmt"
+	"log"
 	"testing"
 	"time"
 
+	"github.com/toomore/gogrs/tradingdays"
 	"github.com/toomore/gogrs/utils"
 )
 
@@ -35,6 +37,11 @@ func TestLists_Get_categoryNoList(t *testing.T) {
 	if len(ll.GetCategoryList("ALL")) < 10 {
 		t.Error("應該沒那麼少")
 	}
+}
+
+func TestOTCLists(t *testing.T) {
+	o := NewOTCLists(tradingdays.FindRecentlyOpened(time.Now()))
+	log.Println(o.Get("04"))
 }
 
 func ExampleLists_GetCategoryList() {
