@@ -16,6 +16,8 @@ Packages
 Cmd
 ----
 
+![gogrs cmd demo](https://s3-ap-northeast-1.amazonaws.com/toomore/gogrs/gogrs_cmd_demo_20150615.png "gogrs cmd demo")
+
 1. gogrs_example - [簡單範例測試](https://godoc.org/github.com/toomore/gogrs/cmd/gogrs_example)
 2. realtime - [擷取盤中即時資訊與大盤、上櫃、寶島指數](https://godoc.org/github.com/toomore/gogrs/cmd/realtime)
 3. twsereport - [每日收盤後產生符合選股條件的報告](https://godoc.org/github.com/toomore/gogrs/cmd/twsereport)
