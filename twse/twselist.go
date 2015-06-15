@@ -174,6 +174,7 @@ type FmtListData struct {
 	LastSellPrice  float64 //最後揭示賣價
 	LastSellVolume uint64  //最後揭示賣量
 	PERatio        float64 //本益比
+	IssuedShares   uint64  //發行股數
 }
 
 func (l *Lists) formatData(categoryNo string) {
@@ -256,9 +257,9 @@ func (o *OTCLists) formatData(categoryNo string) {
 		var data FmtListData
 		data.No = strings.Trim(v[0], " ")
 		data.Name = strings.Trim(v[1], " ")
-		data.Volume, _ = strconv.ParseUint(strings.Replace(v[7], ",", "", -1), 10, 32)
-		data.Totalsale, _ = strconv.ParseUint(strings.Replace(v[9], ",", "", -1), 10, 32)
-		data.TotalPrice, _ = strconv.ParseUint(strings.Replace(v[8], ",", "", -1), 10, 32)
+		data.Volume, _ = strconv.ParseUint(strings.Replace(v[7], ",", "", -1), 10, 64)
+		data.Totalsale, _ = strconv.ParseUint(strings.Replace(v[9], ",", "", -1), 10, 64)
+		data.TotalPrice, _ = strconv.ParseUint(strings.Replace(v[8], ",", "", -1), 10, 64)
 		data.Open, _ = strconv.ParseFloat(v[4], 64)
 		data.High, _ = strconv.ParseFloat(v[5], 64)
 		data.Low, _ = strconv.ParseFloat(v[6], 64)
@@ -266,6 +267,7 @@ func (o *OTCLists) formatData(categoryNo string) {
 		data.Range, _ = strconv.ParseFloat(strings.Replace(v[3], " ", "", -1), 64)
 		data.LastBuyPrice, _ = strconv.ParseFloat(v[10], 64)
 		data.LastSellPrice, _ = strconv.ParseFloat(v[11], 64)
+		data.IssuedShares, _ = strconv.ParseUint(strings.Replace(v[12], ",", "", -1), 10, 64)
 
 		o.FmtData[data.No] = data
 	}
