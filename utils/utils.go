@@ -204,6 +204,16 @@ func CalDiffInt64(listA, listB []int64) []int64 {
 	return result
 }
 
+// CalLHPower 計算兩序列與終點的比例
+func CalLHPower(final, low, high []float64) []float64 {
+	var result []float64
+	result = make([]float64, len(final))
+	for i, _ := range result {
+		result[i] = (final[i] - low[i]) / (high[i] - low[i])
+	}
+	return result
+}
+
 // SDUint64 計算標準差
 func SDUint64(list []uint64) float64 {
 	var data = make([]float64, len(list))

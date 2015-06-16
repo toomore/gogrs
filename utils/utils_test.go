@@ -219,6 +219,13 @@ func TestCalDiff(t *testing.T) {
 	}
 }
 
+func TestCalLHPower(t *testing.T) {
+	var sampleA = []float64{10.0, 11.1, 10.2, 9.3}
+	var sampleB = []float64{12.2, 12.1, 13.0, 14.4}
+	var sampleC = []float64{11.0, 11.3, 11.0, 11.0}
+	t.Log(CalLHPower(sampleC, sampleA, sampleB))
+}
+
 func TestDelta(t *testing.T) {
 	var sample1 = []float64{10.0, 11.0, 9.0}
 	var sample2 = []int64{10, 11, 9}
@@ -260,6 +267,15 @@ func BenchmarkSD(b *testing.B) {
 	var sample = []uint64{1, 2, 3, 4, 5, 6, 7, 8, 9, 10}
 	for i := 0; i < b.N; i++ {
 		SDUint64(sample)
+	}
+}
+
+func BenchmarkCalLHPower(b *testing.B) {
+	var sampleA = []float64{10.0, 11.1, 10.2, 9.3}
+	var sampleB = []float64{12.2, 12.1, 13.0, 14.4}
+	var sampleC = []float64{11.0, 11.3, 11.0, 11.0}
+	for i := 0; i < b.N; i++ {
+		CalLHPower(sampleC, sampleA, sampleB)
 	}
 }
 
