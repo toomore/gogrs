@@ -27,6 +27,8 @@ type Data struct {
 	UnixMapData    unixMapData
 	exchange       string
 	openList       []float64
+	highList       []float64
+	lowList        []float64
 	priceList      []float64
 	rangeList      []float64
 	dailyRangeList []float64
@@ -85,6 +87,8 @@ func (d *Data) clearCache() {
 	d.rangeList = nil
 	d.dailyRangeList = nil
 	d.openList = nil
+	d.highList = nil
+	d.lowList = nil
 	d.priceList = nil
 	d.volumeList = nil
 }
@@ -184,6 +188,22 @@ func (d *Data) GetOpenList() []float64 {
 		d.openList = d.getColsListFloat64(3)
 	}
 	return d.openList
+}
+
+// GetHighList 取得 最高價 序列
+func (d *Data) GetHighList() []float64 {
+	if d.highList == nil {
+		d.highList = d.getColsListFloat64(4)
+	}
+	return d.highList
+}
+
+// GetLowList 取得 最低價 序列
+func (d *Data) GetLowList() []float64 {
+	if d.lowList == nil {
+		d.lowList = d.getColsListFloat64(5)
+	}
+	return d.lowList
 }
 
 // GetPriceList 取得 收盤價 序列
