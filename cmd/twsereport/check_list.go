@@ -175,6 +175,31 @@ func (check06) CheckFunc(b ...*twse.Data) bool {
 	return false
 }
 
+type check07 struct{}
+
+func (check07) String() string {
+	return "多方力道 > 0.75"
+}
+
+func (check07) Mindata() int {
+	return 1
+}
+
+func (check07) CheckFunc(b ...*twse.Data) bool {
+	if !prepareData(b...)[0] {
+		return false
+	}
+
+	var power []float64
+	power = utils.CalLHPower(b[0].GetPriceList(), b[0].GetLowList(), b[0].GetHighList())
+
+	if power[len(power)-1] > 0.75 {
+		return true
+	}
+
+	return false
+}
+
 func prepareData(b ...*twse.Data) []bool {
 	var (
 		result  []bool
@@ -220,4 +245,5 @@ func init() {
 	ckList.Add(checkGroup(check04{}))
 	ckList.Add(checkGroup(check05{}))
 	ckList.Add(checkGroup(check06{}))
+	ckList.Add(checkGroup(check07{}))
 }
