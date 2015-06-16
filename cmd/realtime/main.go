@@ -32,6 +32,8 @@ The flags are:
 		計算此次查詢的漲跌家數（default: true）
 	-color
 		色彩化（default: true）
+	-nonstop
+		自動重複，單位秒數
 
 範例
 
@@ -114,6 +116,7 @@ var (
 	pt           = flag.Bool("pt", false, "計算花費時間")
 	count        = flag.Bool("count", true, "計算此次查詢的漲跌家數")
 	showcolor    = flag.Bool("color", true, "色彩化")
+	nonstop      = flag.Int64("nonstop", 0, "自動重複，單位秒數")
 	white        = color.New(color.FgWhite, color.Bold).SprintfFunc()
 	red          = color.New(color.FgRed, color.Bold).SprintfFunc()
 	green        = color.New(color.FgGreen, color.Bold).SprintfFunc()
@@ -167,6 +170,7 @@ func main() {
 		wg        sync.WaitGroup
 	)
 
+Start:
 	if *pt {
 		startTime = time.Now()
 	}
@@ -274,5 +278,9 @@ func main() {
 	}
 	if *pt {
 		defer fmt.Println(time.Now().Sub(startTime))
+	}
+	if *nonstop > 0 {
+		time.Sleep(time.Duration(*nonstop) * time.Second)
+		goto Start
 	}
 }
