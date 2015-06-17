@@ -281,6 +281,7 @@ Start:
 	}
 	if *nonstop > 0 {
 		time.Sleep(time.Duration(*nonstop) * time.Second)
+		counter, up, down = 0, 0, 0
 		goto Start
 	}
 }
