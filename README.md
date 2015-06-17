@@ -3,7 +3,7 @@ gogrs
 
 [![GoDoc](https://godoc.org/github.com/toomore/gogrs?status.svg)](https://godoc.org/github.com/toomore/gogrs) [![Build Status](https://travis-ci.org/toomore/gogrs.svg?branch=master)](https://travis-ci.org/toomore/gogrs) [![Coverage Status](https://coveralls.io/repos/toomore/gogrs/badge.svg?branch=master)](https://coveralls.io/r/toomore/gogrs?branch=master) [![GitHub license](https://img.shields.io/badge/license-MIT-blue.svg)](https://raw.githubusercontent.com/toomore/gogrs/master/LICENSE)
 
-gogrs now is still in development. I will try my best to speed up to completed the same function with [grs](https://github.com/toomore/grs) (Python). gogrs 是擷取台灣上市股票股價資訊工具，目前還在大量的開發中。原始工具是用 [grs](https://github.com/toomore/grs)（Python 套件），目標是將基本功能用 go 來實作。
+gogrs is a tool for fetching data from Taiwan Stock Exchange(TWSE) and dockerizing. gogrs now is still in development. I will try my best to speed up to completed the same function with [grs](https://github.com/toomore/grs) (Python). gogrs 是擷取台灣上市股票股價資訊工具，目前還在大量的開發中。原始工具是用 [grs](https://github.com/toomore/grs)（Python 套件），目標是將基本功能用 go 來實作。
 
 Packages
 ---------
@@ -57,7 +57,10 @@ TODO
 2. In English comment.
 3. 盤中預估量能。
 4. 個股對應分類股資訊。
-5. 顯示三大法人。
+5. 個股融資融券資訊。
+6. 顯示三大法人。
+7. 各類股盤後買賣超表。
+8. 新聞內容擷取。
 
 License
 --------
