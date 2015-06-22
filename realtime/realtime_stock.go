@@ -49,7 +49,7 @@ func (stock StockRealTime) URL() string {
 					int(stock.Date.Month()),
 					stock.Date.Day(),
 				),
-				utils.RandInt(),
+				time.Now().Unix()*1000,
 			))
 	}
 	return ""
