@@ -7,6 +7,7 @@ import (
 	"encoding/json"
 	"errors"
 	"fmt"
+	"log"
 	"net/http"
 	"strconv"
 	"strings"
@@ -49,7 +50,7 @@ func (stock StockRealTime) URL() string {
 					int(stock.Date.Month()),
 					stock.Date.Day(),
 				),
-				time.Now().Unix()*1000,
+				time.Now().UnixNano()/1000000,
 			))
 	}
 	return ""
@@ -96,8 +97,22 @@ func (stock *StockRealTime) get() (StockBlob, error) {
 		resp  *http.Response
 		value StockBlob
 	)
+	log.Println(stock.URL())
+	req, _ := http.NewRequest("GET", stock.URL(), nil)
+	req.Header.Set("User-Agent", "Mozilla/5.0 (Macintosh; Intel Mac OS X 10.10; rv:39.0) Gecko/20100101 Firefox/39.0")
+	//req.Header.Set("Cookie", "JSESSIONID=52978A658B945F6B400D480FF6EE00E3; JSESSIONID=83C2D4470AA4F430CAC02EF7A162C623")
+	//req.Header.Set("Cookie", "JSESSIONID=52978A658B945F6B400D480FF6EE00E3; JSESSIONID=D7953B63154DD91F6F13957DE3893D40")
+	//req.Header.Set("")
 
-	if resp, err = http.Get(stock.URL()); err == nil {
+	misr, _ := http.NewRequest("GET", "http://mis.tse.com.tw/", nil)
+	misr.Header.Set("User-Agent", "Mozilla/5.0 (Macintosh; Intel Mac OS X 10.10; rv:39.0) Gecko/20100101 Firefox/39.0")
+	rr, _ := utils.HttpClient.Do(misr)
+	coo := rr.Header.Get("Set-Cookie")
+	log.Println(coo)
+	req.Header.Set("Cookie", strings.Trim(strings.Split(coo, " ")[0], ";"))
+	req.Header.Set("Connection", "close")
+	log.Println(">>>>", req.Header)
+	if resp, err = utils.HttpClient.Do(req); err == nil {
 		defer resp.Body.Close()
 		json.NewDecoder(resp.Body).Decode(&value)
 
@@ -108,6 +123,7 @@ func (stock *StockRealTime) get() (StockBlob, error) {
 		err = fmt.Errorf(errorNetworkFail.Error(), err)
 	}
 
+	log.Println(err)
 	return value, err
 }
 
