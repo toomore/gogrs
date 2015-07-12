@@ -83,6 +83,7 @@ var (
 
 func init() {
 	runtime.GOMAXPROCS(*ncpu)
+	tradingdays.DownloadCSV(true)
 }
 
 func prettyprint(stock *twse.Data, check checkGroup) string {

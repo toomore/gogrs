@@ -72,6 +72,7 @@ import (
 var cacheTime time.Time
 
 func init() {
+	tradingdays.DownloadCSV(true)
 	TaipeiNow()
 }
 
