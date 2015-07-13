@@ -18,7 +18,7 @@ var TaipeiTimeZone = time.FixedZone("Asia/Taipei", 8*3600)
 
 // TWSE base url.
 const (
-	TWSEURL     string = "http://mis.tse.com.tw"
+	TWSEURL     string = "http://mis.twse.com.tw"
 	TWSEHOST    string = "http://www.twse.com.tw"
 	OTCHOST     string = "http://www.tpex.org.tw"
 	OTCCSV      string = "/ch/stock/aftertrading/daily_trading_info/st43_download.php?d=%d/%02d&stkno=%s&r=%%d"           // year, mon, stock, rand
