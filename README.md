@@ -62,6 +62,11 @@ TODO
 7. 各類股盤後買賣超表。
 8. 新聞內容擷取。
 
+Known Issue
+------------
+
+1. `realtime`, `cmd/realtime` not work.
+
 License
 --------
 

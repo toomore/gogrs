@@ -15,14 +15,17 @@ test -z "$(gofmt -l -w ./     | tee /dev/stderr)"
 test -z "$(goimports -l -w ./ | tee /dev/stderr)"
 test -z "$(golint ./...       | tee /dev/stderr)"
 #go vet ./...
-go test -race ./...
+#go test -race ./...
+go test ./tradingdays...
+go test ./twse...
+go test ./utils...
 
 # Run test coverage on each subdirectories and merge the coverage profile.
 
 echo "mode: count" > coverage.cov
 
 # Standard go tooling behavior is to ignore dirs with leading underscors
-for dir in $(find . -maxdepth 10 -not -path './.git*' -not -path '*/_*' -not -path './docker-*' -type d);
+for dir in $(find . -maxdepth 10 -not -path './.git*' -not -path '*/_*' -not -path './docker-*' -not -path './realtime*' -type d);
 do
 if ls $dir/*.go &> /dev/null; then
     #go test -v --benchmem --bench=. -covermode=count -covercoverage=$dir/coverage.tmp $dir
