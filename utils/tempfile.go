@@ -103,8 +103,8 @@ func (hc HTTPCache) readFile(filehash string) ([]byte, error) {
 	return nil, err
 }
 
-// Fixed http too many open files.
-var httpClient = &http.Client{Transport: &http.Transport{
+// HttpClient Fixed http too many open files.
+var HttpClient = &http.Client{Transport: &http.Transport{
 	Proxy: http.ProxyFromEnvironment,
 	Dial: (&net.Dialer{
 		Timeout:   0,
@@ -143,7 +143,7 @@ func (hc HTTPCache) saveFile(url, filehash string, rand bool, data url.Values) (
 	}
 
 	req.Header.Set("Connection", "close")
-	if resp, err = httpClient.Do(req); err != nil {
+	if resp, err = HttpClient.Do(req); err != nil {
 		return out, err
 	}
 	defer resp.Body.Close()
