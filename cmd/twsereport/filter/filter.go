@@ -1,27 +1,43 @@
-package main
+// Package filter - all check list.
+package filter
 
 import (
 	"github.com/toomore/gogrs/twse"
 	"github.com/toomore/gogrs/utils"
 )
 
-type checkGroup interface {
+// CheckGroup for base filter interface.
+type CheckGroup interface {
 	String() string
 	CheckFunc(...*twse.Data) bool
 	Mindata() int
 }
 
-type check01 struct{}
+type checkGroupList []CheckGroup
 
-func (check01) String() string {
+func (c *checkGroupList) Add(f CheckGroup) {
+	if (*c)[0] == nil {
+		(*c)[0] = f
+	} else {
+		*c = append(*c, f)
+	}
+}
+
+// Check01 MA 3 > 6 > 18
+type Check01 struct{}
+
+// String to string.
+func (Check01) String() string {
 	return "MA 3 > 6 > 18"
 }
 
-func (check01) Mindata() int {
+// Mindata is filter required a minimum of data.
+func (Check01) Mindata() int {
 	return 18
 }
 
-func (check01) CheckFunc(b ...*twse.Data) bool {
+// CheckFunc func to check.
+func (Check01) CheckFunc(b ...*twse.Data) bool {
 	if !prepareData(b...)[0] {
 		return false
 	}
@@ -44,34 +60,42 @@ func (check01) CheckFunc(b ...*twse.Data) bool {
 	return false
 }
 
-type check02 struct{}
+// Check02 量大於前三天 K 線收紅
+type Check02 struct{}
 
-func (check02) String() string {
+// String to string.
+func (Check02) String() string {
 	return "量大於前三天 K 線收紅"
 }
 
-func (check02) Mindata() int {
+// Mindata is filter required a minimum of data.
+func (Check02) Mindata() int {
 	return 4
 }
 
-func (check02) CheckFunc(b ...*twse.Data) bool {
+// CheckFunc func to check.
+func (Check02) CheckFunc(b ...*twse.Data) bool {
 	if !prepareData(b...)[0] {
 		return false
 	}
 	return utils.ThanSumPastUint64((*b[0]).GetVolumeList(), 3, true) && ((*b[0]).IsRed() || (*b[0]).IsThanYesterday())
 }
 
-type check03 struct{}
+// Check03 量或價走平 45 天
+type Check03 struct{}
 
-func (check03) String() string {
+// String to string.
+func (Check03) String() string {
 	return "量或價走平 45 天"
 }
 
-func (check03) Mindata() int {
+// Mindata is filter required a minimum of data.
+func (Check03) Mindata() int {
 	return 45
 }
 
-func (check03) CheckFunc(b ...*twse.Data) bool {
+// CheckFunc func to check.
+func (Check03) CheckFunc(b ...*twse.Data) bool {
 	if !prepareData(b...)[0] {
 		return false
 	}
@@ -86,17 +110,21 @@ func (check03) CheckFunc(b ...*twse.Data) bool {
 			utils.SDUint64(volume[len(volume)-45:]) < 0.25)
 }
 
-type check04 struct{}
+// Check04 (MA3 < MA6) > MA18 and MA3UP(1)
+type Check04 struct{}
 
-func (check04) String() string {
+// String to string.
+func (Check04) String() string {
 	return "(MA3 < MA6) > MA18 and MA3UP(1)"
 }
 
-func (check04) Mindata() int {
+// Mindata is filter required a minimum of data.
+func (Check04) Mindata() int {
 	return 18
 }
 
-func (check04) CheckFunc(b ...*twse.Data) bool {
+// CheckFunc func to check.
+func (Check04) CheckFunc(b ...*twse.Data) bool {
 	if !prepareData(b...)[0] {
 		return false
 	}
@@ -114,17 +142,21 @@ func (check04) CheckFunc(b ...*twse.Data) bool {
 	return false
 }
 
-type check05 struct{}
+// Check05 三日內最大量 K 線收紅 收在 MA18 之上
+type Check05 struct{}
 
-func (check05) String() string {
+// String to string.
+func (Check05) String() string {
 	return "三日內最大量 K 線收紅 收在 MA18 之上"
 }
 
-func (check05) Mindata() int {
+// Mindata is filter required a minimum of data.
+func (Check05) Mindata() int {
 	return 18
 }
 
-func (check05) CheckFunc(b ...*twse.Data) bool {
+// CheckFunc func to check.
+func (Check05) CheckFunc(b ...*twse.Data) bool {
 	if !prepareData(b...)[0] {
 		return false
 	}
@@ -148,17 +180,21 @@ func (check05) CheckFunc(b ...*twse.Data) bool {
 	return false
 }
 
-type check06 struct{}
+// Check06 漲幅 7% 以上
+type Check06 struct{}
 
-func (check06) String() string {
+// String to string.
+func (Check06) String() string {
 	return "漲幅 7% 以上"
 }
 
-func (check06) Mindata() int {
+// Mindata is filter required a minimum of data.
+func (Check06) Mindata() int {
 	return 1
 }
 
-func (check06) CheckFunc(b ...*twse.Data) bool {
+// CheckFunc func to check.
+func (Check06) CheckFunc(b ...*twse.Data) bool {
 	if !prepareData(b...)[0] {
 		return false
 	}
@@ -175,17 +211,21 @@ func (check06) CheckFunc(b ...*twse.Data) bool {
 	return false
 }
 
-type check07 struct{}
+// Check07 多方力道 > 0.75
+type Check07 struct{}
 
-func (check07) String() string {
+// String to string.
+func (Check07) String() string {
 	return "多方力道 > 0.75"
 }
 
-func (check07) Mindata() int {
+// Mindata is filter required a minimum of data.
+func (Check07) Mindata() int {
 	return 1
 }
 
-func (check07) CheckFunc(b ...*twse.Data) bool {
+// CheckFunc func to check.
+func (Check07) CheckFunc(b ...*twse.Data) bool {
 	if !prepareData(b...)[0] {
 		return false
 	}
@@ -206,9 +246,9 @@ func prepareData(b ...*twse.Data) []bool {
 		mindata int
 	)
 
-	for i := range ckList {
-		if ckList[i].Mindata() > mindata {
-			mindata = ckList[i].Mindata()
+	for i := range AllList {
+		if AllList[i].Mindata() > mindata {
+			mindata = AllList[i].Mindata()
 		}
 	}
 
@@ -238,12 +278,15 @@ func prepareData(b ...*twse.Data) []bool {
 	return result
 }
 
+// AllList is all check group.
+var AllList = make(checkGroupList, 1)
+
 func init() {
-	ckList.Add(checkGroup(check01{}))
-	ckList.Add(checkGroup(check02{}))
-	ckList.Add(checkGroup(check03{}))
-	ckList.Add(checkGroup(check04{}))
-	ckList.Add(checkGroup(check05{}))
-	ckList.Add(checkGroup(check06{}))
-	ckList.Add(checkGroup(check07{}))
+	AllList.Add(CheckGroup(Check01{}))
+	AllList.Add(CheckGroup(Check02{}))
+	AllList.Add(CheckGroup(Check03{}))
+	AllList.Add(CheckGroup(Check04{}))
+	AllList.Add(CheckGroup(Check05{}))
+	AllList.Add(CheckGroup(Check06{}))
+	AllList.Add(CheckGroup(Check07{}))
 }

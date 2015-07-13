@@ -49,19 +49,10 @@ import (
 	"time"
 
 	"github.com/fatih/color"
+	"github.com/toomore/gogrs/cmd/twsereport/filter"
 	"github.com/toomore/gogrs/tradingdays"
 	"github.com/toomore/gogrs/twse"
 )
-
-type checkGroupList []checkGroup
-
-func (c *checkGroupList) Add(f checkGroup) {
-	if (*c)[0] == nil {
-		(*c)[0] = f
-	} else {
-		*c = append(*c, f)
-	}
-}
 
 var (
 	wg           sync.WaitGroup
@@ -72,7 +63,6 @@ var (
 	showcatelist = flag.Bool("showcatelist", false, "顯示上市/上櫃分類表")
 	showcolor    = flag.Bool("color", true, "色彩化")
 	ncpu         = flag.Int("ncpu", runtime.NumCPU(), "指定 CPU 數量，預設為實際 CPU 數量")
-	ckList       = make(checkGroupList, 1)
 	white        = color.New(color.FgWhite, color.Bold).SprintfFunc()
 	red          = color.New(color.FgRed, color.Bold).SprintfFunc()
 	green        = color.New(color.FgGreen, color.Bold).SprintfFunc()
@@ -86,7 +76,7 @@ func init() {
 	tradingdays.DownloadCSV(true)
 }
 
-func prettyprint(stock *twse.Data, check checkGroup) string {
+func prettyprint(stock *twse.Data, check filter.CheckGroup) string {
 	var (
 		Open        = stock.GetOpenList()[len(stock.GetOpenList())-1]
 		Price       = stock.GetPriceList()[len(stock.GetPriceList())-1]
@@ -194,11 +184,11 @@ func main() {
 	}
 
 	if len(datalist) > 0 {
-		for _, check := range ckList {
+		for _, check := range filter.AllList {
 			fmt.Println(yellowBold("----- %v -----", check))
 			wg.Add(len(datalist))
 			for _, stock := range datalist {
-				go func(check checkGroup, stock *twse.Data) {
+				go func(check filter.CheckGroup, stock *twse.Data) {
 					defer wg.Done()
 					runtime.Gosched()
 					if check.CheckFunc(stock) {
