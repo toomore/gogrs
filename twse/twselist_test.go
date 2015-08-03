@@ -52,6 +52,18 @@ func TestCategoryList(t *testing.T) {
 	t.Log(categoryList.OnlyOTC())
 }
 
+func TestBaseLists(t *testing.T) {
+	otc := NewOTCLists(tradingdays.FindRecentlyOpened(time.Now()))
+	twselist := NewLists(tradingdays.FindRecentlyOpened(time.Now()))
+	for _, v := range []BaseLists{otc, twselist} {
+		if data, err := v.Get("02"); err == nil {
+			t.Log(len(data))
+		} else {
+			t.Error(err)
+		}
+	}
+}
+
 func ExampleLists_GetCategoryList() {
 	l := NewLists(time.Date(2015, 4, 27, 0, 0, 0, 0, utils.TaipeiTimeZone))
 	categoryList := l.GetCategoryList("15")

@@ -170,6 +170,12 @@ type StockInfo struct {
 	Name string
 }
 
+// BaseLists is base list interface.
+type BaseLists interface {
+	Get(category string) ([][]string, error)
+	GetCategoryList(category string) []StockInfo
+}
+
 // Lists is to get TWSE list.
 type Lists struct {
 	Date            time.Time
