@@ -8,6 +8,7 @@ import (
 
 // CheckGroup for base filter interface.
 type CheckGroup interface {
+	No() int64
 	String() string
 	CheckFunc(...*twse.Data) bool
 	Mindata() int
@@ -25,6 +26,11 @@ func (c *checkGroupList) Add(f CheckGroup) {
 
 // Check01 MA 3 > 6 > 18
 type Check01 struct{}
+
+// No for check no.
+func (Check01) No() int64 {
+	return 1
+}
 
 // String to string.
 func (Check01) String() string {
@@ -63,6 +69,11 @@ func (Check01) CheckFunc(b ...*twse.Data) bool {
 // Check02 量大於前三天 K 線收紅
 type Check02 struct{}
 
+// No for check no.
+func (Check02) No() int64 {
+	return 2
+}
+
 // String to string.
 func (Check02) String() string {
 	return "量大於前三天 K 線收紅"
@@ -83,6 +94,11 @@ func (Check02) CheckFunc(b ...*twse.Data) bool {
 
 // Check03 量或價走平 45 天
 type Check03 struct{}
+
+// No for check no.
+func (Check03) No() int64 {
+	return 3
+}
 
 // String to string.
 func (Check03) String() string {
@@ -112,6 +128,11 @@ func (Check03) CheckFunc(b ...*twse.Data) bool {
 
 // Check04 (MA3 < MA6) > MA18 and MA3UP(1)
 type Check04 struct{}
+
+// No for check no.
+func (Check04) No() int64 {
+	return 4
+}
 
 // String to string.
 func (Check04) String() string {
@@ -144,6 +165,11 @@ func (Check04) CheckFunc(b ...*twse.Data) bool {
 
 // Check05 三日內最大量 K 線收紅 收在 MA18 之上
 type Check05 struct{}
+
+// No for check no.
+func (Check05) No() int64 {
+	return 5
+}
 
 // String to string.
 func (Check05) String() string {
@@ -183,6 +209,11 @@ func (Check05) CheckFunc(b ...*twse.Data) bool {
 // Check06 漲幅 7% 以上
 type Check06 struct{}
 
+// No for check no.
+func (Check06) No() int64 {
+	return 6
+}
+
 // String to string.
 func (Check06) String() string {
 	return "漲幅 7% 以上"
@@ -213,6 +244,11 @@ func (Check06) CheckFunc(b ...*twse.Data) bool {
 
 // Check07 多方力道 > 0.75
 type Check07 struct{}
+
+// No for check no.
+func (Check07) No() int64 {
+	return 7
+}
 
 // String to string.
 func (Check07) String() string {
