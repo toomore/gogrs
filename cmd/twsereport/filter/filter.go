@@ -8,7 +8,7 @@ import (
 
 // CheckGroup for base filter interface.
 type CheckGroup interface {
-	No() int64
+	No() uint64
 	String() string
 	CheckFunc(...*twse.Data) bool
 	Mindata() int
@@ -28,7 +28,7 @@ func (c *checkGroupList) Add(f CheckGroup) {
 type Check01 struct{}
 
 // No for check no.
-func (Check01) No() int64 {
+func (Check01) No() uint64 {
 	return 1
 }
 
@@ -70,7 +70,7 @@ func (Check01) CheckFunc(b ...*twse.Data) bool {
 type Check02 struct{}
 
 // No for check no.
-func (Check02) No() int64 {
+func (Check02) No() uint64 {
 	return 2
 }
 
@@ -96,7 +96,7 @@ func (Check02) CheckFunc(b ...*twse.Data) bool {
 type Check03 struct{}
 
 // No for check no.
-func (Check03) No() int64 {
+func (Check03) No() uint64 {
 	return 3
 }
 
@@ -130,7 +130,7 @@ func (Check03) CheckFunc(b ...*twse.Data) bool {
 type Check04 struct{}
 
 // No for check no.
-func (Check04) No() int64 {
+func (Check04) No() uint64 {
 	return 4
 }
 
@@ -167,7 +167,7 @@ func (Check04) CheckFunc(b ...*twse.Data) bool {
 type Check05 struct{}
 
 // No for check no.
-func (Check05) No() int64 {
+func (Check05) No() uint64 {
 	return 5
 }
 
@@ -210,7 +210,7 @@ func (Check05) CheckFunc(b ...*twse.Data) bool {
 type Check06 struct{}
 
 // No for check no.
-func (Check06) No() int64 {
+func (Check06) No() uint64 {
 	return 6
 }
 
@@ -246,7 +246,7 @@ func (Check06) CheckFunc(b ...*twse.Data) bool {
 type Check07 struct{}
 
 // No for check no.
-func (Check07) No() int64 {
+func (Check07) No() uint64 {
 	return 7
 }
 
