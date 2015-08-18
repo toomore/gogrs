@@ -33,6 +33,7 @@ type Data struct {
 	rangeList      []float64
 	dailyRangeList []float64
 	volumeList     []uint64
+	datelist       []time.Time
 }
 
 // NewTWSE 建立一個 TWSE 上市股票
@@ -91,6 +92,7 @@ func (d *Data) clearCache() {
 	d.lowList = nil
 	d.priceList = nil
 	d.volumeList = nil
+	d.datelist = nil
 }
 
 // Get return csv data in array.
@@ -228,6 +230,18 @@ func (d *Data) GetDailyRangeList() []float64 {
 		d.dailyRangeList = utils.CalDiffFloat64(d.GetPriceList(), d.GetOpenList())
 	}
 	return d.dailyRangeList
+}
+
+// GetDateList 取出資料時間序列
+func (d *Data) GetDateList() []time.Time {
+	if d.datelist == nil {
+		datelistdata := d.getColsList(0)
+		d.datelist = make([]time.Time, len(datelistdata))
+		for i, v := range datelistdata {
+			d.datelist[i] = utils.ParseDate(v)
+		}
+	}
+	return d.datelist
 }
 
 // MA 計算 收盤價 的移動平均

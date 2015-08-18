@@ -71,6 +71,7 @@ func TestGetList(*testing.T) {
 		log.Println(stock.GetLowList())
 		stock.IsRed()
 		stock.IsThanYesterday()
+		log.Println(stock.GetDateList())
 	}
 }
 
