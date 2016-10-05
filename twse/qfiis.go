@@ -27,7 +27,7 @@ type QFIISTOP20 struct {
 
 // URL 擷取網址
 func (q QFIISTOP20) URL() string {
-	return fmt.Sprintf("%s%s", utils.TWSEHOST, fmt.Sprintf(utils.QFIISTOP20, q.Date.Year(), q.Date.Month(), q.Date.Day()))
+	return fmt.Sprintf("%s%s", utils.TWSEHOST, utils.QFIISTOP20)
 }
 
 // Get 擷取資料
@@ -36,12 +36,14 @@ func (q QFIISTOP20) Get() ([][]string, error) {
 		err  error
 		data []byte
 	)
-	if data, err = hCache.Get(q.URL(), false); err == nil {
-		csvArrayContent := strings.Split(string(data), "\n")[2:]
-		for i, v := range csvArrayContent {
-			csvArrayContent[i] = strings.Replace(v, "=", "", -1)
+	if data, err = hCache.PostForm(q.URL(), url.Values{"download": []string{"csv"}, "qdate": []string{"105/10/03"}}); err == nil {
+		if len(data) > 0 {
+			csvArrayContent := strings.Split(string(data), "\n")[2:]
+			for i, v := range csvArrayContent {
+				csvArrayContent[i] = strings.Replace(v, "=", "", -1)
+			}
+			return csv.NewReader(strings.NewReader(strings.Join(csvArrayContent, "\n"))).ReadAll()
 		}
-		return csv.NewReader(strings.NewReader(strings.Join(csvArrayContent, "\n"))).ReadAll()
 	}
 	return nil, err
 }

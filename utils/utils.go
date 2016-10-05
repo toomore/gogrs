@@ -26,10 +26,11 @@ const (
 	TWSECSV     string = "/ch/trading/exchange/STOCK_DAY/STOCK_DAY_print.php?genpage=genpage/Report%d%02d/%d%02d_F3_1_8_%s.php&type=csv&r=%%d"
 	TWSELISTCSV string = "/ch/trading/exchange/MI_INDEX/MI_INDEX.php" // year, mon, day, type
 	TWSEREAL    string = "/stock/api/getStockInfo.jsp?ex_ch=%s_%s.tw_%s&json=1&delay=0&_=%d"
-	QFIISTOP20  string = "/ch/trading/fund/MI_QFIIS_sort_20/MI_QFIIS_sort_20_PD.php?filename=%d%02d%d.php&type=csv"                            // yyyymmdd
-	BFI82U      string = "/ch/trading/fund/BFI82U/BFI82U_print.php?begin_date=%d%02d%d&end_date=%d%02d%d&report_type=day&language=ch&save=csv" // yyyymmdd
-	T86         string = "/ch/trading/fund/T86/print.php?edition=ch&filename=genpage/%s/%s_2by_issue.dat&type=csv&select2=%s&qdate=%s"
-	TWTXXU      string = "/ch/trading/fund/%s/%s.php?download=csv&qdate=%d/%02d/%02d&sorting=by_issue"
+	//QFIISTOP20  string = "/ch/trading/fund/MI_QFIIS_sort_20/MI_QFIIS_sort_20_PD.php?filename=%d%02d%d.php&type=csv"                            // yyyymmdd
+	QFIISTOP20 string = "/ch/trading/fund/MI_QFIIS_sort_20/MI_QFIIS_sort_20.php"                                                              // yyyymmdd
+	BFI82U     string = "/ch/trading/fund/BFI82U/BFI82U_print.php?begin_date=%d%02d%d&end_date=%d%02d%d&report_type=day&language=ch&save=csv" // yyyymmdd
+	T86        string = "/ch/trading/fund/T86/print.php?edition=ch&filename=genpage/%s/%s_2by_issue.dat&type=csv&select2=%s&qdate=%s"
+	TWTXXU     string = "/ch/trading/fund/%s/%s.php?download=csv&qdate=%d/%02d/%02d&sorting=by_issue"
 )
 
 // RandInt return random int.
