@@ -212,7 +212,7 @@ func (t TWTXXU) Get() ([][]BaseSellBuy, error) {
 			csvArrayContent = csvArrayContent[3 : len(csvArrayContent)-4]
 			datalist = 3
 		case "TWT44U", "TWT38U":
-			csvArrayContent = csvArrayContent[2 : len(csvArrayContent)-5]
+			csvArrayContent = csvArrayContent[2 : len(csvArrayContent)-6]
 			datalist = 1
 		}
 

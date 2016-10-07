@@ -39,7 +39,10 @@ func TestTWTXXU_Get(t *testing.T) {
 	date := time.Date(2015, 5, 26, 0, 0, 0, 0, utils.TaipeiTimeZone)
 	for _, v := range []*TWTXXU{NewTWT38U(date), NewTWT44U(date), NewTWT43U(date)} {
 		t.Log(v.URL())
-		data, err := v.Get()
-		t.Log(len(data), err)
+		if data, err := v.Get(); err == nil {
+			t.Log(len(data), err)
+		} else {
+			t.Error(err)
+		}
 	}
 }
