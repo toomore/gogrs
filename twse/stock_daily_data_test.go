@@ -37,14 +37,14 @@ func TestData_Get(t *testing.T) {
 	d.Get()
 	d.Get() // Test Cache.
 	if d.Name != "長榮航" {
-		t.Error("Should be `長榮航`")
+		t.Errorf("Should be `長榮航` but `%s`", d.Name)
 	}
 
 	var o = NewOTC("8446", time.Date(2014, 12, 26, 0, 0, 0, 0, utils.TaipeiTimeZone))
 	o.Get()
 	o.Get() // Test Cache.
 	if o.Name != "華研" {
-		t.Error("Should be `華研`")
+		t.Errorf("Should be `華研` but `%s`", d.Name)
 	}
 }
 

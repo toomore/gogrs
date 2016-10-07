@@ -4,6 +4,8 @@ import (
 	"encoding/csv"
 	"errors"
 	"fmt"
+	"net/url"
+	"regexp"
 	"strconv"
 	"strings"
 	"time"
@@ -58,18 +60,16 @@ func NewOTC(No string, Date time.Time) *Data {
 
 // URL return stock csv url path.
 func (d Data) URL() string {
-	var path string
-	var host string
-
-	if d.exchange == "tse" {
-		path = fmt.Sprintf(utils.TWSECSV, d.Date.Year(), d.Date.Month(), d.Date.Year(), d.Date.Month(), d.No)
-		host = utils.TWSEHOST
-	} else if d.exchange == "otc" {
-		path = fmt.Sprintf(utils.OTCCSV, d.Date.Year()-1911, d.Date.Month(), d.No)
-		host = utils.OTCHOST
+	switch d.exchange {
+	case "tse":
+		return fmt.Sprintf("%s%s", utils.TWSEHOST, utils.TWSECSV)
+	case "otc":
+		return fmt.Sprintf("%s%s",
+			utils.OTCHOST,
+			fmt.Sprintf(utils.OTCCSV, d.Date.Year()-1911, d.Date.Month(), d.No))
 	}
 
-	return fmt.Sprintf("%s%s", host, path)
+	return ""
 }
 
 // Round will do sub one month.
@@ -95,10 +95,21 @@ func (d *Data) clearCache() {
 	d.datelist = nil
 }
 
+var noName = regexp.MustCompile(`^([A-Z0-9]+)(.+)`)
+
 // Get return csv data in array.
 func (d *Data) Get() ([][]string, error) {
 	if len(d.UnixMapData[d.Date.Unix()]) == 0 {
-		data, err := hCache.Get(d.URL(), true)
+		var data []byte
+		var err error
+		switch d.exchange {
+		case "tse":
+			data, err = hCache.PostForm(
+				d.URL(),
+				url.Values{"download": {"csv"}, "query_year": {strconv.Itoa(d.Date.Year())}, "query_month": {strconv.Itoa(int(d.Date.Month()))}, "CO_ID": {d.No}})
+		case "otc":
+			data, err = hCache.Get(d.URL(), true)
+		}
 		if err != nil {
 			return nil, fmt.Errorf(errorNetworkFail.Error(), err)
 		}
@@ -110,7 +121,8 @@ func (d *Data) Get() ([][]string, error) {
 		if (d.exchange == "tse" && len(csvArrayContent) > 2) || (d.exchange == "otc" && len(csvArrayContent) > 5) {
 			if d.exchange == "tse" {
 				if d.Name == "" {
-					d.Name = strings.Split(csvArrayContent[0], " ")[2]
+					groups := noName.FindStringSubmatch(strings.Split(csvArrayContent[0], " ")[1])
+					d.No, d.Name = groups[1], groups[2]
 				}
 				csvReader = csv.NewReader(strings.NewReader(strings.Join(csvArrayContent[2:], "\n")))
 			} else if d.exchange == "otc" {

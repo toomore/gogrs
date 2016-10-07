@@ -65,7 +65,7 @@ var TWSECLASS = map[string]string{
 	"CB":         "可轉換公司債",
 }
 
-// TWSECLASS is a class list of TWSE.
+// OTCCLASS is a class list of TWSE.
 var OTCCLASS = map[string]string{
 	"02": "食品工業",
 	"03": "塑膠工業",
