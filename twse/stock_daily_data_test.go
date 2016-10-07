@@ -29,7 +29,7 @@ func ExampleData() {
 	fmt.Println(stockData[0])
 	// output:
 	// 2014-12-26 00:00:00 +0800 Asia/Taipei
-	// [103/12/01 64,418,143 1,350,179,448 20.20 21.40 20.20 21.35 +1.35 13,249]
+	// [103/12/01 64,418,143 1,350,179,448 20.20 21.40 20.20 21.35 +1.35 13,249 ]
 }
 
 func TestData_Get(t *testing.T) {
@@ -157,7 +157,7 @@ func Example_newTWSE() {
 	stock.Get()
 	fmt.Println(stock.RawData[0])
 	// output:
-	// [104/03/02 13,384,378 305,046,992 23.00 23.05 22.50 22.90 -0.10 3,793]
+	// [104/03/02 13,384,378 305,046,992 23.00 23.05 22.50 22.90 -0.10 3,793 ]
 }
 
 // 新增一個 OTC 上櫃股票
@@ -180,7 +180,7 @@ func ExampleData_Get_notEnoughData() {
 		fmt.Println(stockData)
 	}
 	// output:
-	// Not enough data.
+	// [[查無資料！]]
 }
 
 func ExampleData_PlusData() {

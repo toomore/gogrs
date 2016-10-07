@@ -90,7 +90,7 @@ func ExampleLists_Get() {
 	listdata, _ := l.Get("15") //航運業
 	fmt.Println(listdata[0])
 	// output:
-	// [2208   台船   729340 324 12048156 16.45 16.6 16.45 16.45   0 16.45 67 16.5 58 41.13]
+	// [2208   台船             729340 324 12048156 16.45 16.6 16.45 16.45   0 16.45 67 16.5 58 41.13]
 }
 
 func ExampleLists_Get_notEnoughData() {
