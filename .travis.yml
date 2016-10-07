@@ -14,7 +14,7 @@ before_install:
     - go get github.com/mattn/goveralls
 
 script:
-    - go vet ./...
+    - go tool vet -v ./
     - sh ./goclean.sh
     - $HOME/gopath/bin/goveralls -coverprofile=coverage.cov -service=travis-ci
     - bash <(curl -s https://codecov.io/bash)
