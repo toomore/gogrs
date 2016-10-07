@@ -98,12 +98,8 @@ type T86 struct {
 }
 
 // URL 擷取網址
-func (t T86) URL(cate string) string {
-	var ym = fmt.Sprintf("%d%02d", t.Date.Year(), t.Date.Month())
-	var ymd = fmt.Sprintf("%s%d", ym, t.Date.Day())
-	return fmt.Sprintf("%s%s", utils.TWSEHOST,
-		fmt.Sprintf(utils.T86,
-			ym, ymd, cate, ymd))
+func (t T86) URL() string {
+	return fmt.Sprintf("%s%s", utils.TWSEHOST, utils.T86)
 }
 
 // T86Data 各欄位資料
@@ -119,39 +115,47 @@ type T86Data struct {
 
 // Get 擷取資料
 func (t T86) Get(cate string) ([]T86Data, error) {
-	data, _ := hCache.Get(t.URL(cate), false)
+	data, err := hCache.PostForm(t.URL(), url.Values{
+		"download": {"csv"},
+		"qdate":    {fmt.Sprintf("%d/%02d/%02d", t.Date.Year()-1911, t.Date.Month(), t.Date.Day())},
+		"select2":  {cate},
+		"sorting":  {"by_issue"}})
+	if err != nil {
+		return nil, err
+	}
 	csvArrayContent := strings.Split(string(data), "\n")[2:]
 	for i, v := range csvArrayContent {
 		csvArrayContent[i] = strings.Replace(v, "=", "", -1)
 	}
-
 	var result []T86Data
-	var err error
-
-	if csvdata, err := csv.NewReader(strings.NewReader(strings.Join(csvArrayContent, "\n"))).ReadAll(); err == nil {
+	if csvdata, err := csv.NewReader(strings.NewReader(strings.Join(csvArrayContent[:len(csvArrayContent)-8], "\n"))).ReadAll(); err == nil {
 		result = make([]T86Data, len(csvdata))
 		for i, v := range csvdata {
-			result[i].No = v[0]
-			result[i].Name = v[1]
+			if len(v) >= 11 {
+				result[i].No = v[0]
+				result[i].Name = v[1]
 
-			result[i].FII.Buy, _ = strconv.ParseInt(strings.Replace(v[2], ",", "", -1), 10, 64)
-			result[i].FII.Sell, _ = strconv.ParseInt(strings.Replace(v[3], ",", "", -1), 10, 64)
-			result[i].FII.Total = result[i].FII.Buy - result[i].FII.Sell
+				result[i].FII.Buy, _ = strconv.ParseInt(strings.Replace(v[2], ",", "", -1), 10, 64)
+				result[i].FII.Sell, _ = strconv.ParseInt(strings.Replace(v[3], ",", "", -1), 10, 64)
+				result[i].FII.Total = result[i].FII.Buy - result[i].FII.Sell
 
-			result[i].SIT.Buy, _ = strconv.ParseInt(strings.Replace(v[4], ",", "", -1), 10, 64)
-			result[i].SIT.Sell, _ = strconv.ParseInt(strings.Replace(v[5], ",", "", -1), 10, 64)
-			result[i].SIT.Total = result[i].SIT.Buy - result[i].SIT.Sell
+				result[i].SIT.Buy, _ = strconv.ParseInt(strings.Replace(v[4], ",", "", -1), 10, 64)
+				result[i].SIT.Sell, _ = strconv.ParseInt(strings.Replace(v[5], ",", "", -1), 10, 64)
+				result[i].SIT.Total = result[i].SIT.Buy - result[i].SIT.Sell
 
-			result[i].DProp.Buy, _ = strconv.ParseInt(strings.Replace(v[6], ",", "", -1), 10, 64)
-			result[i].DProp.Sell, _ = strconv.ParseInt(strings.Replace(v[7], ",", "", -1), 10, 64)
-			result[i].DProp.Total = result[i].DProp.Buy - result[i].DProp.Sell
+				result[i].DProp.Buy, _ = strconv.ParseInt(strings.Replace(v[6], ",", "", -1), 10, 64)
+				result[i].DProp.Sell, _ = strconv.ParseInt(strings.Replace(v[7], ",", "", -1), 10, 64)
+				result[i].DProp.Total = result[i].DProp.Buy - result[i].DProp.Sell
 
-			result[i].DHedge.Buy, _ = strconv.ParseInt(strings.Replace(v[8], ",", "", -1), 10, 64)
-			result[i].DHedge.Sell, _ = strconv.ParseInt(strings.Replace(v[9], ",", "", -1), 10, 64)
-			result[i].DHedge.Total = result[i].DHedge.Buy - result[i].DHedge.Sell
+				result[i].DHedge.Buy, _ = strconv.ParseInt(strings.Replace(v[8], ",", "", -1), 10, 64)
+				result[i].DHedge.Sell, _ = strconv.ParseInt(strings.Replace(v[9], ",", "", -1), 10, 64)
+				result[i].DHedge.Total = result[i].DHedge.Buy - result[i].DHedge.Sell
 
-			result[i].Diff, _ = strconv.ParseInt(strings.Replace(v[10], ",", "", -1), 10, 64)
+				result[i].Diff, _ = strconv.ParseInt(strings.Replace(v[10], ",", "", -1), 10, 64)
+			}
 		}
+	} else {
+		return nil, err
 	}
 	return result, err
 }

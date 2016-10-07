@@ -25,10 +25,13 @@ func TestBFI82U_Get(t *testing.T) {
 
 func TestT86_Get(t *testing.T) {
 	t86 := &T86{Date: time.Date(2015, 5, 25, 0, 0, 0, 0, utils.TaipeiTimeZone)}
-	t.Log(t86.URL("01"))
-	data, _ := t86.Get("ALLBUT0999")
-	for i, v := range data[:5] {
-		t.Logf("%d %+v", i, v)
+	t.Log(t86.URL())
+	if data, err := t86.Get("ALLBUT0999"); err == nil {
+		for i, v := range data[:5] {
+			t.Logf("%d %+v", i, v)
+		}
+	} else {
+		t.Error("Error", err)
 	}
 }
 
