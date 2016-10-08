@@ -1,14 +1,14 @@
-gogrs
+gogrs [![Release](https://img.shields.io/github/release/toomore/gogrs.svg)](https://github.com/toomore/gogrs/releases)
 ======
 
-[![GoDoc](https://godoc.org/github.com/toomore/gogrs?status.svg)](https://godoc.org/github.com/toomore/gogrs) [![Build Status](https://travis-ci.org/toomore/gogrs.svg?branch=master)](https://travis-ci.org/toomore/gogrs) [![Coverage Status](https://coveralls.io/repos/toomore/gogrs/badge.svg?branch=master)](https://coveralls.io/r/toomore/gogrs?branch=master) [![GitHub license](https://img.shields.io/badge/license-MIT-blue.svg)](https://raw.githubusercontent.com/toomore/gogrs/master/LICENSE)
+[![GoDoc](https://godoc.org/github.com/toomore/gogrs?status.svg)](https://godoc.org/github.com/toomore/gogrs)   [![Coverage Status](https://coveralls.io/repos/toomore/gogrs/badge.svg?branch=master)](https://coveralls.io/r/toomore/gogrs?branch=master) [![GitHub license](https://img.shields.io/badge/license-MIT-blue.svg)](https://raw.githubusercontent.com/toomore/gogrs/master/LICENSE) [![Build Status](https://travis-ci.org/toomore/gogrs.svg?branch=master)](https://travis-ci.org/toomore/gogrs)
 
 gogrs is a tool for fetching data from Taiwan Stock Exchange(TWSE) and dockerizing. gogrs now is still in development. I will try my best to speed up to completed the same function with [grs](https://github.com/toomore/grs) (Python). gogrs 是擷取台灣上市股票股價資訊工具，目前還在大量的開發中。原始工具是用 [grs](https://github.com/toomore/grs)（Python 套件），目標是將基本功能用 go 來實作。
 
 Packages
 ---------
 
-1. realtime - [擷取盤中個股、指數即時股價資訊](https://godoc.org/github.com/toomore/gogrs/realtime)
+1. realtime - [擷取盤中個股、指數即時股價資訊](https://godoc.org/github.com/toomore/gogrs/realtime) **(!!! Deprecated !!!)**
 2. twse - [擷取台灣股市上市/上櫃股票資訊、上市/上櫃類股清單、外資及陸資持股比率前二十名彙總表、 三大法人買賣金額統計表、三大法人買賣超日報、自營商、投信、外資及陸資買賣超彙總表](https://godoc.org/github.com/toomore/gogrs/twse)
 3. tradingdays - [股市開休市判斷（支援非國定假日：颱風假）與當日區間判斷（盤中、盤後、盤後盤）](https://godoc.org/github.com/toomore/gogrs/tradingdays)
 4. utils - [套件所需的公用工具（總和、平均、序列差、持續天數、民國日期解析、簡單亂數、標準差、簡單 net/http 快取）](https://godoc.org/github.com/toomore/gogrs/utils)
@@ -53,14 +53,13 @@ Run with ramdisk volume
 TODO
 -----
 
-1. docker-compose scale `tradingdays_server` with unused ports.
-2. In English comment.
-3. 盤中預估量能。
-4. 個股對應分類股資訊。
-5. 個股融資融券資訊。
-6. 顯示三大法人。
-7. 各類股盤後買賣超表。
-8. 新聞內容擷取。
+1. In English comment.
+2. 盤中預估量能。
+3. 個股對應分類股資訊。
+4. 個股融資融券資訊。
+5. 顯示三大法人。
+6. 各類股盤後買賣超表。
+7. 新聞內容擷取。
 
 Known Issue
 ------------
@@ -72,7 +71,7 @@ License
 
 The MIT License (MIT)
 
-Copyright © 2015 Toomore Chiang, http://toomore.net/ <toomore0929@gmail.com>
+Copyright © 2015, 2016 Toomore Chiang, http://toomore.net/ <toomore0929@gmail.com>
 
 Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the “Software”), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
 
