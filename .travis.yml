@@ -1,10 +1,12 @@
 language: go
 
 go:
-    - 1.4
-    - 1.5
     - 1.6
+    - 1.6.1
+    - 1.6.2
+    - 1.6.3
     - 1.7
+    - 1.7.1
     - tip
 
 before_install:
@@ -14,7 +16,7 @@ before_install:
     - go get github.com/mattn/goveralls
 
 script:
-    - go tool vet -v ./
+    - go tool vet -all ./
     - sh ./goclean.sh
     - $HOME/gopath/bin/goveralls -coverprofile=coverage.cov -service=travis-ci
     - bash <(curl -s https://codecov.io/bash)
