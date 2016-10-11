@@ -10,8 +10,6 @@ go:
     - tip
 
 before_install:
-    - go get golang.org/x/tools/cmd/cover
-    - go get golang.org/x/tools/cmd/goimports
     - go get github.com/golang/lint/golint
     - go get github.com/mattn/goveralls
 
