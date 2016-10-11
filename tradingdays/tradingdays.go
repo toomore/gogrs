@@ -78,29 +78,28 @@ func readCSV() {
 func DownloadCSV(replace bool) {
 	log.Println("Download CSV list.")
 	var resp *http.Response
-	var updateData bool
 	if csvEtag == "" {
 		resp, _ = http.Get(utils.S3CSV)
 		csvEtag = resp.Header.Get("Etag")
-		updateData = true
-
+		updateCSVData(resp, replace)
 	} else {
 		req, _ := http.NewRequest("GET", utils.S3CSV, nil)
 		req.Header.Set("If-None-Match", csvEtag)
 		client := &http.Client{}
 		resp, _ = client.Do(req)
 		if resp.StatusCode != http.StatusNotModified && resp.StatusCode == http.StatusOK {
-			updateData = true
+			updateCSVData(resp, replace)
 		}
 	}
-	if updateData {
-		defer resp.Body.Close()
-		if data, err := ioutil.ReadAll(resp.Body); err == nil {
-			if replace {
-				exceptDays = make(map[int64]bool)
-			}
-			processCSV(bytes.NewReader(data))
+}
+
+func updateCSVData(resp *http.Response, replace bool) {
+	defer resp.Body.Close()
+	if data, err := ioutil.ReadAll(resp.Body); err == nil {
+		if replace {
+			exceptDays = make(map[int64]bool)
 		}
+		processCSV(bytes.NewReader(data))
 	}
 }
 
