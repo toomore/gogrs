@@ -2,6 +2,7 @@ package tradingdays
 
 import (
 	"fmt"
+	"log"
 	"testing"
 	"time"
 
@@ -104,6 +105,15 @@ func TestTimePerid(t *testing.T) {
 	}
 }
 
+func TestDownloadCSV(*testing.T) {
+	DownloadCSV(true)
+	DownloadCSV(true)
+	DownloadCSV(true)
+	DownloadCSV(true)
+	DownloadCSV(true)
+	DownloadCSV(true)
+}
+
 func BenchmarkTimePeriod(b *testing.B) {
 	var tp = NewTimePeriod(time.Date(2015, 5, 8, 20, 0, 0, 0, utils.TaipeiTimeZone))
 	for i := 0; i < b.N; i++ {
@@ -141,5 +151,6 @@ func BenchmarkFindRecentlyOpened(b *testing.B) {
 }
 
 func init() {
+	log.Println("Testing init")
 	DownloadCSV(true)
 }

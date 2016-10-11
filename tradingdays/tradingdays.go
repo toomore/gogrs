@@ -60,9 +60,10 @@ func FindRecentlyOpened(date time.Time) time.Time {
 
 }
 
-var exceptDays map[int64]bool
-
-const timeLayout = "2006/1/2"
+var (
+	csvEtag    string
+	exceptDays map[int64]bool
+)
 
 func readCSV() {
 	_, filename, _, _ := runtime.Caller(1)
@@ -76,13 +77,30 @@ func readCSV() {
 // 下載表更新，主要發生在非國定假日，如：颱風假。
 func DownloadCSV(replace bool) {
 	log.Println("Download CSV list.")
-	resp, _ := http.Get("https://s3-ap-northeast-1.amazonaws.com/toomore/gogrs/list.csv")
-	defer resp.Body.Close()
-	if data, err := ioutil.ReadAll(resp.Body); err == nil {
-		if replace {
-			exceptDays = make(map[int64]bool)
+	var resp *http.Response
+	var updateData bool
+	if csvEtag == "" {
+		resp, _ = http.Get(utils.S3CSV)
+		csvEtag = resp.Header.Get("Etag")
+		updateData = true
+
+	} else {
+		req, _ := http.NewRequest("GET", utils.S3CSV, nil)
+		req.Header.Set("If-None-Match", csvEtag)
+		client := &http.Client{}
+		resp, _ = client.Do(req)
+		if resp.StatusCode != http.StatusNotModified && resp.StatusCode == http.StatusOK {
+			updateData = true
 		}
-		processCSV(bytes.NewReader(data))
+	}
+	if updateData {
+		defer resp.Body.Close()
+		if data, err := ioutil.ReadAll(resp.Body); err == nil {
+			if replace {
+				exceptDays = make(map[int64]bool)
+			}
+			processCSV(bytes.NewReader(data))
+		}
 	}
 }
 
@@ -94,7 +112,7 @@ func processCSV(data io.Reader) {
 		if err == io.EOF {
 			break
 		}
-		if t, err := time.ParseInLocation(timeLayout, record[0], time.UTC); err == nil {
+		if t, err := time.ParseInLocation("2006/1/2", record[0], time.UTC); err == nil {
 			var isopen bool
 			if record[1] == "1" {
 				isopen = true
