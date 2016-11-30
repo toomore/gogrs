@@ -8,6 +8,7 @@ import (
 	"errors"
 	"fmt"
 	"net/http"
+	"net/http/cookiejar"
 	"strconv"
 	"strings"
 	"time"
@@ -43,12 +44,6 @@ func (stock StockRealTime) URL() string {
 			fmt.Sprintf(utils.TWSEREAL,
 				stock.Exchange,
 				stock.No,
-				fmt.Sprintf(
-					"%d%02d%02d",
-					stock.Date.Year(),
-					int(stock.Date.Month()),
-					stock.Date.Day(),
-				),
 				time.Now().Unix()*1000,
 			))
 	}
@@ -97,7 +92,17 @@ func (stock *StockRealTime) get() (StockBlob, error) {
 		value StockBlob
 	)
 
-	if resp, err = http.Get(stock.URL()); err == nil {
+	cookieJar, _ := cookiejar.New(nil)
+	client := &http.Client{
+		Jar: cookieJar,
+	}
+
+	resp, _ = client.Get(utils.TWSEURL + utils.HOME)
+
+	req, _ := http.NewRequest("GET", stock.URL(), nil)
+	req.Header.Set("User-Agent", "gogrs")
+
+	if resp, err = client.Do(req); err == nil {
 		defer resp.Body.Close()
 		json.NewDecoder(resp.Body).Decode(&value)
 
