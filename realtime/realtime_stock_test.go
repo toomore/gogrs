@@ -11,7 +11,6 @@ import (
 
 func TestStockRealTime(t *testing.T) {
 	r := NewTWSE("2618", tradingdays.FindRecentlyOpened(time.Now()))
-
 	t.Log(r.URL())
 	r.Get()
 	t.Logf("%+v", r)
