@@ -17,7 +17,7 @@ type unixMapData map[int64][][]string
 
 var (
 	errorNetworkFail   = errors.New("Network fail: %s")
-	errorNotEnoughData = errors.New("Not enough data.")
+	errorNotEnoughData = errors.New("not enough data")
 )
 
 // Data start with stock no, date.
