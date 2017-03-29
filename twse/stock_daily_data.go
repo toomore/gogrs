@@ -17,7 +17,7 @@ type unixMapData map[int64][][]string
 
 var (
 	errorNetworkFail   = errors.New("Network fail: %s")
-	errorNotEnoughData = errors.New("Not enough data.")
+	errorNotEnoughData = errors.New("Not enough data")
 )
 
 // Data start with stock no, date.
@@ -99,7 +99,8 @@ var noName = regexp.MustCompile(`^([A-Z0-9]+)(.+)`)
 
 // Get return csv data in array.
 func (d *Data) Get() ([][]string, error) {
-	if len(d.UnixMapData[d.Date.Unix()]) == 0 {
+	monthDateUnix := time.Date(d.Date.Year(), d.Date.Month(), 1, 0, 0, 0, 0, d.Date.Location()).Unix()
+	if len(d.UnixMapData[monthDateUnix]) == 0 {
 		var data []byte
 		var err error
 		switch d.exchange {
@@ -133,13 +134,13 @@ func (d *Data) Get() ([][]string, error) {
 			}
 			allData, err := csvReader.ReadAll()
 			d.RawData = append(allData, d.RawData...)
-			d.UnixMapData[d.Date.Unix()] = allData
+			d.UnixMapData[monthDateUnix] = allData
 			d.clearCache()
 			return allData, err
 		}
 		return nil, errorNotEnoughData
 	}
-	return d.UnixMapData[d.Date.Unix()], nil
+	return d.UnixMapData[monthDateUnix], nil
 }
 
 // GetByTimeMap return a map by key of time.Time

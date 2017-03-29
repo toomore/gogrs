@@ -184,7 +184,7 @@ type Lists struct {
 	categoryNoList  map[string][]StockInfo
 }
 
-var errorNotSupport = errors.New("Not support.")
+var errorNotSupport = errors.New("Not support")
 
 // NewLists new a Lists.
 func NewLists(t time.Time) *Lists {

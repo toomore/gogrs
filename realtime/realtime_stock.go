@@ -87,7 +87,7 @@ type Data struct {
 
 var (
 	errorNetworkFail   = errors.New("Network fail: %s")
-	errorNotEnoughData = errors.New("Not enough data.")
+	errorNotEnoughData = errors.New("Not enough data")
 )
 
 func (stock *StockRealTime) get() (StockBlob, error) {

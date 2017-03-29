@@ -99,5 +99,5 @@ func ExampleLists_Get_notEnoughData() {
 	_, err := l.Get("15") //航運業
 	fmt.Println(err)
 	// output:
-	// Not enough data.
+	// Not enough data
 }
