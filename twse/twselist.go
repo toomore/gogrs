@@ -235,7 +235,7 @@ func (l *Lists) Get(category string) ([][]string, error) {
 			csvReader = csv.NewReader(strings.NewReader(strings.Join(pickdata, "\n")))
 		}
 	default:
-		if len(csvArrayContent) > 9 {
+		if len(csvArrayContent) > 12 {
 			csvReader = csv.NewReader(strings.NewReader(strings.Join(csvArrayContent[4:len(csvArrayContent)-7], "\n")))
 		}
 	}
