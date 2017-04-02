@@ -108,6 +108,11 @@ func TestParseDate(t *testing.T) {
 	if ParseDate(sample3) != time.Date(2015, 5, 1, 0, 0, 0, 0, TaipeiTimeZone) {
 		t.Error("Should be 2015/5/1")
 	}
+
+	var sample4 = " "
+	if ParseDate(sample4).IsZero() == false {
+		t.Error("Should be Time Zero")
+	}
 }
 
 func TestAvg(t *testing.T) {
