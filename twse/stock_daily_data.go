@@ -153,7 +153,10 @@ func (d Data) GetByTimeMap() map[time.Time]interface{} {
 	if dailyData, err = d.Get(); err == nil {
 		data = make(map[time.Time]interface{})
 		for _, v := range dailyData {
-			data[utils.ParseDate(v[0])] = v
+			vdate := utils.ParseDate(v[0])
+			if vdate.IsZero() == false {
+				data[vdate] = v
+			}
 		}
 	}
 	return data
@@ -352,16 +355,19 @@ func (d Data) FormatData() []FmtData {
 	result = make([]FmtData, len(d.RawData))
 	for i, v := range d.RawData {
 		if len(v) >= 8 {
-			loopd.Date = utils.ParseDate(v[0])
-			loopd.Volume, _ = strconv.ParseUint(strings.Replace(v[1], ",", "", -1), 10, 64)
-			loopd.TotalPrice, _ = strconv.ParseUint(strings.Replace(v[2], ",", "", -1), 10, 64)
-			loopd.Open, _ = strconv.ParseFloat(v[3], 64)
-			loopd.High, _ = strconv.ParseFloat(v[4], 64)
-			loopd.Low, _ = strconv.ParseFloat(v[5], 64)
-			loopd.Price, _ = strconv.ParseFloat(v[6], 64)
-			loopd.Range, _ = strconv.ParseFloat(v[7], 64)
-			loopd.Totalsale, _ = strconv.ParseUint(strings.Replace(v[8], ",", "", -1), 10, 64)
-			result[i] = loopd
+			vdate := utils.ParseDate(v[0])
+			if vdate.IsZero() == false {
+				loopd.Date = vdate
+				loopd.Volume, _ = strconv.ParseUint(strings.Replace(v[1], ",", "", -1), 10, 64)
+				loopd.TotalPrice, _ = strconv.ParseUint(strings.Replace(v[2], ",", "", -1), 10, 64)
+				loopd.Open, _ = strconv.ParseFloat(v[3], 64)
+				loopd.High, _ = strconv.ParseFloat(v[4], 64)
+				loopd.Low, _ = strconv.ParseFloat(v[5], 64)
+				loopd.Price, _ = strconv.ParseFloat(v[6], 64)
+				loopd.Range, _ = strconv.ParseFloat(v[7], 64)
+				loopd.Totalsale, _ = strconv.ParseUint(strings.Replace(v[8], ",", "", -1), 10, 64)
+				result[i] = loopd
+			}
 		}
 	}
 	return result
