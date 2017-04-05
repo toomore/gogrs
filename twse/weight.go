@@ -1,10 +1,12 @@
 package twse
 
 import (
+	"bytes"
 	"encoding/base64"
 	"encoding/csv"
 	"fmt"
 	"io"
+	"log"
 	"net/url"
 	"regexp"
 	"strconv"
@@ -92,4 +94,61 @@ Final:
 		num++
 	}
 	return result
+}
+
+// WeightVolumeData is struct
+type WeightVolumeData struct {
+	Date       time.Time //日期
+	Volume     uint64    //成交股數
+	TotalPrice uint64    //成交金額
+	Totalsale  uint64    //成交筆數
+	Points     float64   //發行量加權股價指數
+	Diff       float64   //漲跌點數
+}
+
+// WeightVolume is TWSE Weight Volume
+func WeightVolume(date time.Time) []*WeightVolumeData {
+	byteData, nums := getWeightVolume(date)
+	if nums > 0 {
+		result := make([]*WeightVolumeData, nums)
+		solveWeightVolumeCSV(byteData, result)
+		return result
+	}
+	return nil
+}
+
+func getWeightVolume(date time.Time) ([]byte, int) {
+	data := make(url.Values)
+	data.Add("download", "csv")
+	data.Add("query_year", fmt.Sprintf("%d", date.Year()))
+	data.Add("query_month", fmt.Sprintf("%d", date.Month()))
+	resp, _ := hCache.PostForm("http://www.tse.com.tw/ch/trading/exchange/FMTQIK/FMTQIK.php", data)
+	dataSplitbytes := bytes.Split(resp, []byte("\n"))
+	if len(dataSplitbytes) > 6 {
+		return bytes.Join(dataSplitbytes[2:len(dataSplitbytes)-4], []byte("\n")),
+			len(dataSplitbytes) - 6
+	}
+	return nil, 0
+}
+
+func solveWeightVolumeCSV(raw []byte, result []*WeightVolumeData) {
+	csvReader := csv.NewReader(bytes.NewReader(raw))
+	for i := range result {
+		row, err := csvReader.Read()
+		switch err {
+		case nil:
+			result[i] = &WeightVolumeData{}
+			result[i].Date = utils.ParseDate(row[0])
+			result[i].Volume, _ = strconv.ParseUint(strings.Replace(row[1], ",", "", -1), 10, 64)
+			result[i].TotalPrice, _ = strconv.ParseUint(strings.Replace(row[2], ",", "", -1), 10, 64)
+			result[i].Totalsale, _ = strconv.ParseUint(strings.Replace(row[3], ",", "", -1), 10, 64)
+			result[i].Points, _ = strconv.ParseFloat(strings.Replace(row[4], ",", "", -1), 64)
+			result[i].Diff, _ = strconv.ParseFloat(strings.Replace(row[5], ",", "", -1), 64)
+		case io.EOF:
+			return
+		default:
+			log.Println(err)
+			return
+		}
+	}
 }
