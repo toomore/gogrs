@@ -217,12 +217,12 @@ func TestData_Round(t *testing.T) {
 
 	t.Log(d.Date)
 	if d.Date == past {
-		t.Fatal(d.Date, past)
+		t.Error(d.Date, past)
 	}
 	d.Round()
 	t.Log(d.Date)
 	if d.Date != past {
-		t.Fatal(d.Date, past)
+		t.Error(d.Date, past)
 	}
 }
 
@@ -234,7 +234,7 @@ func TestData_PlusData(t *testing.T) {
 	d2.Get()
 	for i := range d2.RawData {
 		if d.RawData[i][0] != d2.RawData[i][0] {
-			t.Fatal("Data not difference.")
+			t.Error("Data not difference.")
 			t.Log(d.RawData, d2.RawData)
 		}
 	}
