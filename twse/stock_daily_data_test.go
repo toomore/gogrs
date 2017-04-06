@@ -2,7 +2,6 @@ package twse
 
 import (
 	"fmt"
-	"log"
 	"reflect"
 	"testing"
 	"time"
@@ -51,11 +50,11 @@ func TestData_Get(t *testing.T) {
 var twse = NewTWSE("2329", time.Date(2015, 03, 20, 0, 0, 0, 0, utils.TaipeiTimeZone))
 var otc = NewOTC("8446", time.Date(2015, 03, 20, 0, 0, 0, 0, utils.TaipeiTimeZone))
 
-func TestGetList(*testing.T) {
+func TestGetList(t *testing.T) {
 	for _, stock := range []*Data{twse, otc} {
-		log.Println(stock.URL())
+		t.Log(stock.URL())
 		stock.Get()
-		log.Println(stock.RawData)
+		t.Log(stock.RawData)
 		stock.MA(6)
 		stock.MAV(6)
 		stock.GetPriceList()
@@ -67,11 +66,11 @@ func TestGetList(*testing.T) {
 		stock.GetRangeList()
 		stock.GetDailyRangeList()
 		stock.GetOpenList()
-		log.Println(stock.GetHighList())
-		log.Println(stock.GetLowList())
+		t.Log(stock.GetHighList())
+		t.Log(stock.GetLowList())
 		stock.IsRed()
 		stock.IsThanYesterday()
-		log.Println(stock.GetDateList())
+		t.Log(stock.GetDateList())
 	}
 }
 
