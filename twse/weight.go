@@ -137,6 +137,9 @@ func solveWeightVolumeCSV(raw []byte, result []*WeightVolumeData) {
 		row, err := csvReader.Read()
 		switch err {
 		case nil:
+			if len(row) < 7 {
+				break
+			}
 			result[i] = &WeightVolumeData{}
 			result[i].Date = utils.ParseDate(row[0])
 			result[i].Volume, _ = strconv.ParseUint(strings.Replace(row[1], ",", "", -1), 10, 64)
@@ -147,8 +150,8 @@ func solveWeightVolumeCSV(raw []byte, result []*WeightVolumeData) {
 		case io.EOF:
 			return
 		default:
-			log.Println(err)
-			return
+			log.Println("solveWeightVolumeCSV", err)
+			break
 		}
 	}
 }

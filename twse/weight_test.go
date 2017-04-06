@@ -44,6 +44,18 @@ func TestWeightVolume(t *testing.T) {
 		t.Log(nums)
 		var result = make([]*WeightVolumeData, nums)
 		solveWeightVolumeCSV(bytedata, result)
+
+		var result2 = make([]*WeightVolumeData, nums+5)
+		solveWeightVolumeCSV(bytedata, result2)
+		t.Log(result2)
+
+		var result3 = make([]*WeightVolumeData, nums-2)
+		solveWeightVolumeCSV(bytedata, result3)
+		t.Log(result3)
+
+		var result4 = make([]*WeightVolumeData, 5)
+		solveWeightVolumeCSV([]byte("\n\"1\",\"2\",\"3\"\n\"1\",\"2\"\n\"1\""), result4)
+		t.Log(result4)
 	}
 
 	if len(WeightVolume(date)) != 18 {
