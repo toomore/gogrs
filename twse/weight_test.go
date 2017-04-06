@@ -67,3 +67,14 @@ func TestWeightVolume(t *testing.T) {
 		t.Error("Data nums fail")
 	}
 }
+
+func ExampleWeightVolume() {
+	for _, v := range WeightVolume(time.Date(2017, 2, 5, 0, 0, 0, 0, utils.TaipeiTimeZone)) {
+		if v.Date == time.Date(2017, 2, 2, 0, 0, 0, 0, utils.TaipeiTimeZone) {
+			fmt.Printf("%+v", v)
+			break
+		}
+	}
+	// output:
+	// &{Date:2017-02-02 00:00:00 +0800 Asia/Taipei Volume:5119534614 TotalPrice:147930853630 Totalsale:1131546 Points:9428.97 Diff:-18.98}
+}
