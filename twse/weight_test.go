@@ -78,3 +78,18 @@ func ExampleWeightVolume() {
 	// output:
 	// &{Date:2017-02-02 00:00:00 +0800 Asia/Taipei Volume:5119534614 TotalPrice:147930853630 Totalsale:1131546 Points:9428.97 Diff:-18.98}
 }
+
+func Benchmark_solveWeightVolumeCSV(b *testing.B) {
+	bytedata, nums := getWeightVolume(time.Date(2017, 2, 5, 0, 0, 0, 0, utils.TaipeiTimeZone))
+	var result = make([]*WeightVolumeData, nums)
+	for i := 0; i <= b.N; i++ {
+		solveWeightVolumeCSV(bytedata, result)
+	}
+}
+
+func Benchmark_solveWeightCSV(b *testing.B) {
+	csvData, _ := getWeight(time.Date(2017, 2, 5, 0, 0, 0, 0, utils.TaipeiTimeZone))
+	for i := 0; i <= b.N; i++ {
+		solveWeightCSV(csvData)
+	}
+}
