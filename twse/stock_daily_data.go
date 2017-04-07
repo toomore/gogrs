@@ -376,5 +376,5 @@ func (d Data) FormatData() []FmtData {
 var hCache *utils.HTTPCache
 
 func init() {
-	hCache = utils.NewHTTPCache(utils.GetOSRamdiskPath(), "cp950")
+	hCache = utils.NewHTTPCache(utils.GetOSRamdiskPath(""), "cp950")
 }

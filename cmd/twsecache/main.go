@@ -25,7 +25,7 @@ import (
 	"github.com/toomore/gogrs/utils"
 )
 
-var hCache = utils.NewHTTPCache(utils.GetOSRamdiskPath(), "utf8")
+var hCache = utils.NewHTTPCache(utils.GetOSRamdiskPath(""), "utf8")
 var flushall = flag.Bool("flushall", false, "Clear cache.")
 
 func outputNote(note ...interface{}) {
