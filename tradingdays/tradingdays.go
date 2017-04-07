@@ -8,7 +8,6 @@ import (
 	"encoding/csv"
 	"io"
 	"io/ioutil"
-	"log"
 	"net/http"
 	"path"
 	"runtime"
@@ -76,20 +75,12 @@ func readCSV() {
 // 從 https://s3-ap-northeast-1.amazonaws.com/toomore/gogrs/list.csv
 // 下載表更新，主要發生在非國定假日，如：颱風假。
 func DownloadCSV(replace bool) {
-	log.Println("Download CSV list.")
-	var resp *http.Response
-	if csvEtag == "" {
-		resp, _ = http.Get(utils.S3CSV)
+	req, _ := http.NewRequest("GET", utils.S3CSV, nil)
+	req.Header.Set("If-None-Match", csvEtag)
+	resp, _ := utils.HTTPClient.Do(req)
+	if resp.StatusCode != http.StatusNotModified && resp.StatusCode == http.StatusOK {
 		csvEtag = resp.Header.Get("Etag")
 		updateCSVData(resp, replace)
-	} else {
-		req, _ := http.NewRequest("GET", utils.S3CSV, nil)
-		req.Header.Set("If-None-Match", csvEtag)
-		client := &http.Client{}
-		resp, _ = client.Do(req)
-		if resp.StatusCode != http.StatusNotModified && resp.StatusCode == http.StatusOK {
-			updateCSVData(resp, replace)
-		}
 	}
 }
 

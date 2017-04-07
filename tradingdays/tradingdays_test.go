@@ -2,7 +2,6 @@ package tradingdays
 
 import (
 	"fmt"
-	"log"
 	"testing"
 	"time"
 
@@ -151,6 +150,5 @@ func BenchmarkFindRecentlyOpened(b *testing.B) {
 }
 
 func init() {
-	log.Println("Testing init")
 	DownloadCSV(true)
 }
