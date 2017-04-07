@@ -103,14 +103,14 @@ func (hc HTTPCache) readFile(filehash string) ([]byte, error) {
 	return nil, err
 }
 
-// Fixed http too many open files.
-var httpClient = &http.Client{Transport: &http.Transport{
+// HTTPClient is default func and fixed http too many open files.
+var HTTPClient = &http.Client{Transport: &http.Transport{
 	Proxy: http.ProxyFromEnvironment,
 	Dial: (&net.Dialer{
 		Timeout:   0,
 		KeepAlive: 0,
 	}).Dial,
-	TLSHandshakeTimeout: 10 * time.Second,
+	TLSHandshakeTimeout: 1 * time.Second,
 },
 }
 
@@ -143,7 +143,7 @@ func (hc HTTPCache) saveFile(url, filehash string, rand bool, data url.Values) (
 	}
 
 	req.Header.Set("Connection", "close")
-	if resp, err = httpClient.Do(req); err != nil {
+	if resp, err = HTTPClient.Do(req); err != nil {
 		return out, err
 	}
 	defer resp.Body.Close()
@@ -180,12 +180,14 @@ func renderIconvConverter(fromEncoding string) func([]byte) []byte {
 }
 
 // GetOSRamdiskPath try to get RamDisk path.
-func GetOSRamdiskPath() string {
-	switch runtime.GOOS {
+func GetOSRamdiskPath(goos string) string {
+	switch goos {
 	case "darwin":
 		return "/Volumes/RamDisk/"
 	case "linux":
 		return "/run/shm/"
+	case "":
+		return GetOSRamdiskPath(runtime.GOOS)
 	default:
 		return os.TempDir()
 	}

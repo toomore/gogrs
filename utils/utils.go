@@ -55,6 +55,9 @@ var dateReg = regexp.MustCompile(`([\d]{2,})/([\d]{1,2})/([\d]{1,2})`)
 // ParseDate is to parse "104/01/13" format.
 func ParseDate(strDate string) time.Time {
 	p := dateReg.FindStringSubmatch(strDate)
+	if len(p) == 0 {
+		return time.Time{}
+	}
 	year, _ := strconv.Atoi(p[1])
 	mon, _ := strconv.Atoi(p[2])
 	day, _ := strconv.Atoi(p[3])

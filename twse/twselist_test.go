@@ -2,7 +2,6 @@ package twse
 
 import (
 	"fmt"
-	"log"
 	"testing"
 	"time"
 
@@ -41,8 +40,8 @@ func TestLists_Get_categoryNoList(t *testing.T) {
 
 func TestOTCLists(t *testing.T) {
 	o := NewOTCLists(tradingdays.FindRecentlyOpened(time.Now()))
-	log.Println(o.GetCategoryList("04"))
-	log.Println(o.Get("04"))
+	t.Log(o.GetCategoryList("04"))
+	t.Log(o.Get("04"))
 }
 
 func TestCategoryList(t *testing.T) {
@@ -99,5 +98,5 @@ func ExampleLists_Get_notEnoughData() {
 	_, err := l.Get("15") //航運業
 	fmt.Println(err)
 	// output:
-	// Not enough data.
+	// Not enough data
 }

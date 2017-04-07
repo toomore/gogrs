@@ -17,7 +17,7 @@ type unixMapData map[int64][][]string
 
 var (
 	errorNetworkFail   = errors.New("Network fail: %s")
-	errorNotEnoughData = errors.New("Not enough data.")
+	errorNotEnoughData = errors.New("Not enough data")
 )
 
 // Data start with stock no, date.
@@ -99,7 +99,8 @@ var noName = regexp.MustCompile(`^([A-Z0-9]+)(.+)`)
 
 // Get return csv data in array.
 func (d *Data) Get() ([][]string, error) {
-	if len(d.UnixMapData[d.Date.Unix()]) == 0 {
+	monthDateUnix := time.Date(d.Date.Year(), d.Date.Month(), 1, 0, 0, 0, 0, d.Date.Location()).Unix()
+	if len(d.UnixMapData[monthDateUnix]) == 0 {
 		var data []byte
 		var err error
 		switch d.exchange {
@@ -133,13 +134,13 @@ func (d *Data) Get() ([][]string, error) {
 			}
 			allData, err := csvReader.ReadAll()
 			d.RawData = append(allData, d.RawData...)
-			d.UnixMapData[d.Date.Unix()] = allData
+			d.UnixMapData[monthDateUnix] = allData
 			d.clearCache()
 			return allData, err
 		}
 		return nil, errorNotEnoughData
 	}
-	return d.UnixMapData[d.Date.Unix()], nil
+	return d.UnixMapData[monthDateUnix], nil
 }
 
 // GetByTimeMap return a map by key of time.Time
@@ -152,7 +153,10 @@ func (d Data) GetByTimeMap() map[time.Time]interface{} {
 	if dailyData, err = d.Get(); err == nil {
 		data = make(map[time.Time]interface{})
 		for _, v := range dailyData {
-			data[utils.ParseDate(v[0])] = v
+			vdate := utils.ParseDate(v[0])
+			if vdate.IsZero() == false {
+				data[vdate] = v
+			}
 		}
 	}
 	return data
@@ -350,16 +354,21 @@ func (d Data) FormatData() []FmtData {
 	)
 	result = make([]FmtData, len(d.RawData))
 	for i, v := range d.RawData {
-		loopd.Date = utils.ParseDate(v[0])
-		loopd.Volume, _ = strconv.ParseUint(strings.Replace(v[1], ",", "", -1), 10, 64)
-		loopd.TotalPrice, _ = strconv.ParseUint(strings.Replace(v[2], ",", "", -1), 10, 64)
-		loopd.Open, _ = strconv.ParseFloat(v[3], 64)
-		loopd.High, _ = strconv.ParseFloat(v[4], 64)
-		loopd.Low, _ = strconv.ParseFloat(v[5], 64)
-		loopd.Price, _ = strconv.ParseFloat(v[6], 64)
-		loopd.Range, _ = strconv.ParseFloat(v[7], 64)
-		loopd.Totalsale, _ = strconv.ParseUint(strings.Replace(v[8], ",", "", -1), 10, 64)
-		result[i] = loopd
+		if len(v) >= 8 {
+			vdate := utils.ParseDate(v[0])
+			if vdate.IsZero() == false {
+				loopd.Date = vdate
+				loopd.Volume, _ = strconv.ParseUint(strings.Replace(v[1], ",", "", -1), 10, 64)
+				loopd.TotalPrice, _ = strconv.ParseUint(strings.Replace(v[2], ",", "", -1), 10, 64)
+				loopd.Open, _ = strconv.ParseFloat(v[3], 64)
+				loopd.High, _ = strconv.ParseFloat(v[4], 64)
+				loopd.Low, _ = strconv.ParseFloat(v[5], 64)
+				loopd.Price, _ = strconv.ParseFloat(v[6], 64)
+				loopd.Range, _ = strconv.ParseFloat(v[7], 64)
+				loopd.Totalsale, _ = strconv.ParseUint(strings.Replace(v[8], ",", "", -1), 10, 64)
+				result[i] = loopd
+			}
+		}
 	}
 	return result
 }
@@ -367,5 +376,5 @@ func (d Data) FormatData() []FmtData {
 var hCache *utils.HTTPCache
 
 func init() {
-	hCache = utils.NewHTTPCache(utils.GetOSRamdiskPath(), "cp950")
+	hCache = utils.NewHTTPCache(utils.GetOSRamdiskPath(""), "cp950")
 }

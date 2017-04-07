@@ -24,7 +24,14 @@ func TestHTTPCache(t *testing.T) {
 	hccp950 := NewHTTPCache(dir, "cp950")
 	hccp950.Get("http://toomore.net/", false)
 
-	t.Log("GetOSRamdiskPath", GetOSRamdiskPath())
+	t.Log("GetOSRamdiskPath", GetOSRamdiskPath(""))
+}
+
+func TestGetOSRamdiskPath(t *testing.T) {
+	t.Log("darwin", GetOSRamdiskPath("darwin"))
+	t.Log("linux", GetOSRamdiskPath("linux"))
+	t.Log("", GetOSRamdiskPath(""))
+	t.Log("temp", GetOSRamdiskPath("temp"))
 }
 
 func TestHTTPCache_FlushALL(t *testing.T) {
