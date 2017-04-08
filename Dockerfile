@@ -1,12 +1,20 @@
-FROM golang:wheezy 
+FROM golang:latest
 MAINTAINER Toomore Chiang <toomore0929@gmail.com>
 
-RUN go get golang.org/x/tools/cmd/cover && \
-    go get golang.org/x/tools/cmd/vet && \
-    go get golang.org/x/tools/cmd/goimports && \
+WORKDIR /go/src/github.com/toomore/gogrs/
+
+ADD ./cmd ./cmd
+ADD ./realtime ./realtime
+ADD ./tradingdays ./tradingdays
+ADD ./twse ./twse
+ADD ./utils ./utils
+
+ADD ./LICENSE ./
+ADD ./README.md ./
+ADD ./doc.go ./
+ADD ./goclean.sh ./
+
+RUN  \
     go get github.com/golang/lint/golint && \
-    go get github.com/toomore/gogrs && \
-    cd /go/src/github.com/toomore/gogrs && \
-    go get -v ./... && \
-    cd /go/src && \
-    rm -rf ./*
+    go get golang.org/x/tools/cmd/goimports && \
+    go get -v ./...
