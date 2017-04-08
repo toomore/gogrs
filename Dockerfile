@@ -15,8 +15,6 @@ ADD ./doc.go ./
 ADD ./goclean.sh ./
 
 RUN  \
-    cd /go/src/github.com/toomore/gogrs && \
-    go get -v ./... && \
     go get github.com/golang/lint/golint && \
-    go get github.com/mattn/goveralls && \
-    go get golang.org/x/tools/cmd/goimports
+    go get golang.org/x/tools/cmd/goimports && \
+    go get -v ./...
