@@ -1,20 +1,12 @@
 #!/bin/bash
 
-BASE=$(pwd)
+docker run -it --rm -v $(pwd)/gogrs_bin:/gogrs_bin gogrs:latest \
+    bash -c "cp /go/bin/gogrs_example /gogrs_bin;
+             cp /go/bin/realtime /gogrs_bin;
+             cp /go/bin/tradingdays_server /gogrs_bin;
+             cp /go/bin/twsecache /gogrs_bin;
+             cp /go/bin/twsereport /gogrs_bin;"
 
-cd $GOPATH/src/github.com/toomore/gogrs
-go get -v ./...
+docker build -t gogrs:mini ./
 
-cd $GOPATH/bin
-cp ./twsereport $BASE
-cp ./realtime $BASE
-cp ./twsecache $BASE
-cp ./tradingdays_server $BASE
-
-cd $BASE
-docker build -t toomore/gogrs-mini .
-
-rm -rf ./twsereport
-rm -rf ./realtime
-rm -rf ./twsecache
-rm -rf ./tradingdays_server
+sudo rm -rf ./gogrs_bin
