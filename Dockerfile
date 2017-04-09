@@ -14,9 +14,8 @@ ADD ./README.md ./
 ADD ./doc.go ./
 ADD ./goclean.sh ./
 
+VOLUME ["/go/bin"]
+
 RUN  \
     apk update && apk add bash git build-base && \
-    rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/* && \
-    go get github.com/golang/lint/golint && \
-    go get golang.org/x/tools/cmd/goimports && \
-    go get -v ./...
+    rm -rf /var/cache/apk/* /var/lib/apk/* /etc/apk/cache/*

@@ -6,4 +6,4 @@ WORKDIR /bin
 ADD ./gogrs_bin ./
 
 RUN apk update && apk add ca-certificates && \
-    rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
+    rm -rf /var/cache/apk/* /var/lib/apk/* /etc/apk/cache/*
