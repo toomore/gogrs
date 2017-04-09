@@ -32,7 +32,12 @@ Download image.
     docker pull toomore/gogrs
 
 `tag:latest` bind to `branch:master`, more docker [info](https://registry.hub.docker.com/u/toomore/gogrs/).
-Or [minify gogrs docker](https://registry.hub.docker.com/u/toomore/gogrs-mini/).
+
+Or ...
+
+Build minify gogrs docker(`toomore/gogrs:mini`)
+
+    cd ./docker-mini; sh ./make.sh
 
 Run `tradingdays_server`.
 
