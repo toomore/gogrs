@@ -17,5 +17,5 @@ ADD ./goclean.sh ./
 VOLUME ["/go/bin"]
 
 RUN  \
-    apk update && apk add bash git build-base && \
+    apk update && apk add gcc git musl-dev && \
     rm -rf /var/cache/apk/* /var/lib/apk/* /etc/apk/cache/*
