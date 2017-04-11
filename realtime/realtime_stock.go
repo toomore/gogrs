@@ -7,6 +7,7 @@ import (
 	"encoding/json"
 	"errors"
 	"fmt"
+	"log"
 	"net/http"
 	"net/http/cookiejar"
 	"strconv"
@@ -83,7 +84,28 @@ type Data struct {
 var (
 	errorNetworkFail   = errors.New("Network fail: %s")
 	errorNotEnoughData = errors.New("Not enough data")
+	client             *http.Client
 )
+
+const useragent = "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_12_4) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/58.0.3029.54 Safari/537.36"
+
+func init() {
+	if cookieJar, err := cookiejar.New(nil); err != nil {
+		log.Fatalln("Init session fail", err)
+	} else {
+		client = &http.Client{
+			Jar: cookieJar,
+		}
+	}
+
+	// Get home page session
+	if req, err := http.NewRequest("GET", utils.TWSEURL+utils.HOME, nil); err != nil {
+		log.Fatalln("Get session fail", err)
+	} else {
+		req.Header.Set("User-Agent", useragent)
+		client.Do(req)
+	}
+}
 
 func (stock *StockRealTime) get() (StockBlob, error) {
 	var (
@@ -92,15 +114,8 @@ func (stock *StockRealTime) get() (StockBlob, error) {
 		value StockBlob
 	)
 
-	cookieJar, _ := cookiejar.New(nil)
-	client := &http.Client{
-		Jar: cookieJar,
-	}
-
-	resp, _ = client.Get(utils.TWSEURL + utils.HOME)
-
 	req, _ := http.NewRequest("GET", stock.URL(), nil)
-	req.Header.Set("User-Agent", "gogrs")
+	req.Header.Set("User-Agent", useragent)
 
 	if resp, err = client.Do(req); err == nil {
 		defer resp.Body.Close()
