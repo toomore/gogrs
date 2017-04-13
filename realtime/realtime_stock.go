@@ -7,6 +7,7 @@ import (
 	"encoding/json"
 	"errors"
 	"fmt"
+	"net"
 	"net/http"
 	"net/http/cookiejar"
 	"strconv"
@@ -87,20 +88,34 @@ var (
 
 func (stock *StockRealTime) get() (StockBlob, error) {
 	var (
-		err   error
-		resp  *http.Response
-		value StockBlob
+		cookieJar *cookiejar.Jar
+		err       error
+		resp      *http.Response
+		value     StockBlob
 	)
 
-	cookieJar, _ := cookiejar.New(nil)
+	cookieJar, _ = cookiejar.New(nil)
 	client := &http.Client{
+		Transport: &http.Transport{
+			Proxy: http.ProxyFromEnvironment,
+			Dial: (&net.Dialer{
+				Timeout:   0,
+				KeepAlive: 0,
+			}).Dial,
+			TLSHandshakeTimeout: 1 * time.Second,
+		},
 		Jar: cookieJar,
 	}
-
 	resp, _ = client.Get(utils.TWSEURL + utils.HOME)
 
 	req, _ := http.NewRequest("GET", stock.URL(), nil)
-	req.Header.Set("User-Agent", "gogrs")
+	req.Header.Set("Accept", "application/json, text/javascript, */*; q=0.01")
+	req.Header.Set("Accept-Encoding", "gzip, deflate, sdch")
+	req.Header.Set("Accept-Language", "zh-TW,zh;q=0.8,en-US;q=0.6,en;q=0.4")
+	req.Header.Set("Connection", "keep-alive")
+	req.Header.Set("Referer", "http://mis.twse.com.tw/stock/fibest.jsp?stock="+stock.No)
+	req.Header.Set("User-Agent", "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_12_4) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/58.0.3029.54 Safari/537.36")
+	req.Header.Set("X-Requested-With", "XMLHttpRequest")
 
 	if resp, err = client.Do(req); err == nil {
 		defer resp.Body.Close()

@@ -72,7 +72,7 @@ import (
 var cacheTime time.Time
 
 func init() {
-	tradingdays.DownloadCSV(true)
+	tradingdays.DownloadCSV(false)
 	TaipeiNow()
 }
 
@@ -106,7 +106,6 @@ func TaipeiNow() time.Time {
 }
 
 var (
-	chanbuf      int
 	twseNo       = flag.String("twse", "", "上市股票代碼，可使用 ',' 分隔多組代碼，例：2618,2329")
 	twseCate     = flag.String("twsecate", "", "上市股票類別，可使用 ',' 分隔多組代碼，例：11,15")
 	showcatelist = flag.Bool("showcatelist", false, "顯示上市/上櫃分類表")
@@ -147,6 +146,36 @@ func prettyprint(data realtime.Data) string {
 	)
 }
 
+func fetch(r *realtime.StockRealTime) {
+	limit <- struct{}{}
+	runtime.Gosched()
+	defer wg.Done()
+	data, _ := r.Get()
+	if data.TradeTime.IsZero() {
+		log.Println("No data")
+	} else {
+		log.Println(prettyprint(data))
+	}
+	if *count {
+		counter++
+		if data.Price-data.Open > 0 {
+			up++
+		} else if data.Price-data.Open < 0 {
+			down++
+		}
+	}
+	<-limit
+}
+
+var (
+	counter   int
+	down      int
+	startTime time.Time
+	up        int
+	wg        sync.WaitGroup
+	limit     chan struct{}
+)
+
 func main() {
 	flag.Parse()
 
@@ -158,18 +187,11 @@ func main() {
 	color.NoColor = !*showcolor
 
 	runtime.GOMAXPROCS(*ncpu)
-	chanbuf = *ncpu * 2
 
-	queue := make(chan *realtime.StockRealTime, chanbuf)
+	queue := make(chan *realtime.StockRealTime, *ncpu)
 	defer close(queue)
 
-	var (
-		counter   int
-		down      int
-		startTime time.Time
-		up        int
-		wg        sync.WaitGroup
-	)
+	limit = make(chan struct{}, 1)
 
 Start:
 	if *pt {
@@ -256,20 +278,7 @@ Start:
 	}
 	go func() {
 		for r := range queue {
-			go func(r *realtime.StockRealTime) {
-				defer wg.Done()
-				runtime.Gosched()
-				data, _ := r.Get()
-				log.Println(prettyprint(data))
-				if *count {
-					counter++
-					if data.Price-data.Open > 0 {
-						up++
-					} else if data.Price-data.Open < 0 {
-						down++
-					}
-				}
-			}(r)
+			go fetch(r)
 		}
 	}()
 	wg.Wait()
