@@ -15,7 +15,6 @@ before_install:
     - go get github.com/golang/lint/golint
     - go get github.com/mattn/goveralls
     - go get golang.org/x/tools/cmd/goimports
-    - cd ./docker-mini; sh ./make.sh
 
 script:
     - sh ./goclean.sh
@@ -25,3 +24,6 @@ script:
     - go test -bench=. -benchmem ./twse
     - go test -bench=. -benchmem ./utils
     - sh ./install_all_cmd.sh
+    - docker build -t toomore/gogrs:latest ./ ; cd ./docker-mini; sh ./make.sh
+    - docker images
+    - docker run -it --rm toomore/gogrs:mini sh -c "gogrs_example; realtime; tradingdays_server -h; twsecache; twsereport;"
