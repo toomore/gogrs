@@ -73,8 +73,14 @@ Known Issue
 
 ## Changelog
 
-### v1.2.0 (2017/04/25)
+### v1.2
+
+#### v1.2.0 (2017/04/25)
 * Fixed `realtime` #1 #3
+
+#### v1.2.1 (2017/04/26)
+* Pass realtime testing
+* Put gogrs:mini into test
 
 ### v1.1
 
