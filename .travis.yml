@@ -18,5 +18,4 @@ script:
     - go test -bench=. -benchmem ./tradingdays
     - go test -bench=. -benchmem ./twse
     - go test -bench=. -benchmem ./utils
-    - go test -bench=. -benchmem ./realtime
     - sh ./install_all_cmd.sh
