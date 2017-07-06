@@ -27,13 +27,11 @@ const (
 	TWSECSV     string = "/exchangeReport/STOCK_DAY?response=csv&date=%d%02d%02d&stockNo=%s"
 	TWSELISTCSV string = "/ch/trading/exchange/MI_INDEX/MI_INDEX.php" // year, mon, day, type
 	TWSEREAL    string = "/stock/api/getStockInfo.jsp?ex_ch=%s_%s.tw&json=1&delay=0&_=%d"
-	QFIISTOP20  string = "/ch/trading/fund/MI_QFIIS_sort_20/MI_QFIIS_sort_20.php"                                                              // yyyymmdd
+	QFIISTOP20  string = "/fund/MI_QFIIS_sort_20?response=csv&date=%d%02d%02d"                                                                 // yyyymmdd
 	BFI82U      string = "/ch/trading/fund/BFI82U/BFI82U_print.php?begin_date=%d%02d%d&end_date=%d%02d%d&report_type=day&language=ch&save=csv" // yyyymmdd
 	T86         string = "/ch/trading/fund/T86/T86.php"
 	TWTXXU      string = "/ch/trading/fund/%s/%s.php?download=csv&qdate=%d/%02d/%02d&sorting=by_issue"
 	S3CSV       string = "https://s3-ap-northeast-1.amazonaws.com/toomore/gogrs/list.csv"
-	//QFIISTOP20  string = "/ch/trading/fund/MI_QFIIS_sort_20/MI_QFIIS_sort_20_PD.php?filename=%d%02d%d.php&type=csv"                            // yyyymmdd
-	//T86        string = "/ch/trading/fund/T86/print.php?edition=ch&filename=genpage/%s/%s_2by_issue.dat&type=csv&select2=%s&qdate=%s"
 )
 
 // RandInt return random int.
