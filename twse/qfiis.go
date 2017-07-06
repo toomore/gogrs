@@ -62,10 +62,7 @@ func NewBFI82U(begin, end time.Time) *BFI82U {
 // URL 擷取網址
 func (b BFI82U) URL() string {
 	return fmt.Sprintf("%s%s", utils.TWSEHOST,
-		fmt.Sprintf(utils.BFI82U,
-			b.Begin.Year(), b.Begin.Month(), b.Begin.Day(),
-			b.End.Year(), b.End.Month(), b.End.Day(),
-		))
+		fmt.Sprintf(utils.BFI82U, b.Begin.Year(), b.Begin.Month(), b.Begin.Day()))
 }
 
 // Get 擷取資料
@@ -76,10 +73,10 @@ func (b BFI82U) Get() ([]BaseSellBuy, error) {
 		err     error
 		result  []BaseSellBuy
 	)
-	if data, err = hCache.Get(b.URL(), false); err != nil {
+	if data, err = hCache.PostForm(b.URL(), nil); err != nil {
 		return nil, err
 	}
-	if csvdata, err = csv.NewReader(strings.NewReader(strings.Join(strings.Split(string(data), "\n")[2:], "\n"))).ReadAll(); err == nil {
+	if csvdata, err = csv.NewReader(strings.NewReader(strings.Join(strings.Split(string(data), "\n")[2:7], "\n"))).ReadAll(); err == nil {
 		result = make([]BaseSellBuy, len(csvdata))
 		for i, v := range csvdata {
 			result[i].Name = v[0]
@@ -87,6 +84,8 @@ func (b BFI82U) Get() ([]BaseSellBuy, error) {
 			result[i].Sell, _ = strconv.ParseInt(strings.Replace(v[2], ",", "", -1), 10, 64)
 			result[i].Total, _ = strconv.ParseInt(strings.Replace(v[3], ",", "", -1), 10, 64)
 		}
+	} else {
+		fmt.Println(err)
 	}
 	return result, err
 }
