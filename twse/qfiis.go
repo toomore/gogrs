@@ -97,7 +97,7 @@ type T86 struct {
 
 // URL 擷取網址
 func (t T86) URL() string {
-	return fmt.Sprintf("%s%s", utils.TWSEHOST, utils.T86)
+	return fmt.Sprintf("%s%s", utils.TWSEHOST, fmt.Sprintf(utils.T86, t.Date.Year(), t.Date.Month(), t.Date.Day()))
 }
 
 // T86Data 各欄位資料
@@ -113,11 +113,7 @@ type T86Data struct {
 
 // Get 擷取資料
 func (t T86) Get(cate string) ([]T86Data, error) {
-	data, err := hCache.PostForm(t.URL(), url.Values{
-		"download": {"csv"},
-		"qdate":    {fmt.Sprintf("%d/%02d/%02d", t.Date.Year()-1911, t.Date.Month(), t.Date.Day())},
-		"select2":  {cate},
-		"sorting":  {"by_issue"}})
+	data, err := hCache.PostForm(t.URL(), nil)
 	if err != nil {
 		return nil, err
 	}
@@ -126,7 +122,7 @@ func (t T86) Get(cate string) ([]T86Data, error) {
 		csvArrayContent[i] = strings.Replace(v, "=", "", -1)
 	}
 	var result []T86Data
-	if csvdata, err := csv.NewReader(strings.NewReader(strings.Join(csvArrayContent[:len(csvArrayContent)-8], "\n"))).ReadAll(); err == nil {
+	if csvdata, err := csv.NewReader(strings.NewReader(strings.Join(csvArrayContent[2:len(csvArrayContent)-8], "\n"))).ReadAll(); err == nil {
 		result = make([]T86Data, len(csvdata))
 		for i, v := range csvdata {
 			if len(v) >= 11 {
