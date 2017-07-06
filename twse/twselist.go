@@ -4,7 +4,6 @@ import (
 	"encoding/csv"
 	"errors"
 	"fmt"
-	"net/url"
 	"regexp"
 	"strconv"
 	"strings"
@@ -202,10 +201,8 @@ func (l *Lists) Get(category string) ([][]string, error) {
 		return nil, errorNotSupport
 	}
 
-	year, month, day := l.Date.Date()
-	data, err := hCache.PostForm(fmt.Sprintf("%s%s", utils.TWSEHOST, utils.TWSELISTCSV),
-		url.Values{"download": {"csv"}, "selectType": {category},
-			"qdate": {fmt.Sprintf("%d/%02d/%02d", year-1911, month, day)}})
+	data, err := hCache.PostForm(fmt.Sprintf("%s%s", utils.TWSEHOST,
+		fmt.Sprintf(utils.TWSELISTCSV, l.Date.Year(), l.Date.Month(), l.Date.Day(), category)), nil)
 
 	if err != nil {
 		return nil, fmt.Errorf(errorNetworkFail.Error(), err)
@@ -220,16 +217,12 @@ func (l *Lists) Get(category string) ([][]string, error) {
 			csvReader = csv.NewReader(strings.NewReader(strings.Join(csvArrayContent[4:51], "\n")))
 		}
 	case "ALLBUT0999", "ALL":
-		if len(csvArrayContent) > 155 {
+		if len(csvArrayContent) > 121 {
 			re := regexp.MustCompile("^=?[\"]{1}[0-9A-Z]{4,}")
 			var pickdata []string
-			for _, v := range csvArrayContent {
+			for _, v := range csvArrayContent[121:] {
 				if re.MatchString(v) {
-					if v[0] == 61 {
-						pickdata = append(pickdata, v[1:])
-					} else {
-						pickdata = append(pickdata, v)
-					}
+					pickdata = append(pickdata, strings.Replace(v, "=", "", -1))
 				}
 			}
 			csvReader = csv.NewReader(strings.NewReader(strings.Join(pickdata, "\n")))
