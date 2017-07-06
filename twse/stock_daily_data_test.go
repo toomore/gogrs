@@ -181,7 +181,7 @@ func ExampleData_Get_notEnoughData() {
 		fmt.Println(stockData)
 	}
 	// output:
-	// [[查無資料！]]
+	// Not enough data
 }
 
 func ExampleData_PlusData() {

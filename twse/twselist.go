@@ -285,7 +285,7 @@ func (l *Lists) formatData(categoryNo string) {
 		data.No = strings.Trim(v[0], " ")
 		data.Name = strings.Trim(v[1], " ")
 		data.Volume, _ = strconv.ParseUint(strings.Replace(v[2], ",", "", -1), 10, 64)
-		data.Totalsale, _ = strconv.ParseUint(v[3], 10, 32)
+		data.Totalsale, _ = strconv.ParseUint(strings.Replace(v[3], ",", "", -1), 10, 64)
 		data.TotalPrice, _ = strconv.ParseUint(strings.Replace(v[4], ",", "", -1), 10, 64)
 		data.Open, _ = strconv.ParseFloat(v[5], 64)
 		data.High, _ = strconv.ParseFloat(v[6], 64)
@@ -293,9 +293,9 @@ func (l *Lists) formatData(categoryNo string) {
 		data.Price, _ = strconv.ParseFloat(v[8], 64)
 		data.Range, _ = strconv.ParseFloat(fmt.Sprintf("%s%s", v[9], v[10]), 64)
 		data.LastBuyPrice, _ = strconv.ParseFloat(v[11], 64)
-		data.LastBuyVolume, _ = strconv.ParseUint(v[12], 10, 32)
+		data.LastBuyVolume, _ = strconv.ParseUint(strings.Replace(v[12], ",", "", -1), 10, 64)
 		data.LastSellPrice, _ = strconv.ParseFloat(v[13], 64)
-		data.LastSellVolume, _ = strconv.ParseUint(v[14], 10, 32)
+		data.LastSellVolume, _ = strconv.ParseUint(v[14], 10, 64)
 		data.PERatio, _ = strconv.ParseFloat(v[15], 64)
 
 		l.FmtData[data.No] = data
