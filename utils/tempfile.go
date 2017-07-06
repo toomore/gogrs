@@ -148,17 +148,19 @@ func (hc HTTPCache) saveFile(url, filehash string, rand bool, data url.Values) (
 	}
 	defer resp.Body.Close()
 
-	if content, err = ioutil.ReadAll(resp.Body); err != nil {
-		return out, err
-	}
+	if 200 <= resp.StatusCode && resp.StatusCode < 300 {
+		if content, err = ioutil.ReadAll(resp.Body); err != nil {
+			return out, err
+		}
 
-	if f, err = os.Create(filepath.Join(hc.fullpath, filehash)); err != nil {
-		return out, err
-	}
-	defer f.Close()
+		if f, err = os.Create(filepath.Join(hc.fullpath, filehash)); err != nil {
+			return out, err
+		}
+		defer f.Close()
 
-	out = hc.iconvConverter(content)
-	f.Write(out)
+		out = hc.iconvConverter(content)
+		f.Write(out)
+	}
 
 	return out, err
 }

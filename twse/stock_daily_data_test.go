@@ -32,11 +32,13 @@ func ExampleData() {
 }
 
 func TestData_Get(t *testing.T) {
-	var d = NewTWSE("2618", time.Date(2014, 12, 26, 0, 0, 0, 0, utils.TaipeiTimeZone))
+	//var d = NewTWSE("2618", time.Date(2014, 12, 26, 0, 0, 0, 0, utils.TaipeiTimeZone))
+	var d = NewTWSE("2618", time.Date(2017, 7, 6, 0, 0, 0, 0, utils.TaipeiTimeZone))
 	d.Get()
 	d.Get() // Test Cache.
 	t.Log(d.URL())
 	t.Log(d.RawData)
+	t.Log(d.GetPriceList())
 	if d.Name != "長榮航" {
 		t.Errorf("Should be `長榮航` but `%s`", d.Name)
 	}

@@ -69,10 +69,10 @@ var (
 	yellow       = color.New(color.FgYellow).SprintfFunc()
 	yellowBold   = color.New(color.FgYellow, color.Bold).SprintfFunc()
 	blue         = color.New(color.FgBlue).SprintfFunc()
+	limit        = make(chan struct{}, 1)
 )
 
 func init() {
-	runtime.GOMAXPROCS(*ncpu)
 	tradingdays.DownloadCSV(true)
 }
 
@@ -103,6 +103,13 @@ func prettyprint(stock *twse.Data, check filter.CheckGroup) string {
 		outputcolor("%.2f%%", RangeValue/Open*100),
 		outputcolor("%d", Volume),
 	)
+}
+func gocheck(check filter.CheckGroup, stock *twse.Data) {
+	defer wg.Done()
+	if check.CheckFunc(stock) {
+		fmt.Println(prettyprint(stock, check))
+	}
+	<-limit
 }
 
 func main() {
@@ -188,13 +195,8 @@ func main() {
 			fmt.Println(yellowBold("----- %v -----", check))
 			wg.Add(len(datalist))
 			for _, stock := range datalist {
-				go func(check filter.CheckGroup, stock *twse.Data) {
-					defer wg.Done()
-					runtime.Gosched()
-					if check.CheckFunc(stock) {
-						fmt.Println(prettyprint(stock, check))
-					}
-				}(check, stock)
+				limit <- struct{}{}
+				go gocheck(check, stock)
 			}
 			wg.Wait()
 		}

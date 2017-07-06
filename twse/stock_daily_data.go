@@ -4,6 +4,7 @@ import (
 	"encoding/csv"
 	"errors"
 	"fmt"
+	"regexp"
 	"strconv"
 	"strings"
 	"time"
@@ -116,11 +117,18 @@ func (d *Data) Get() ([][]string, error) {
 		var csvReader *csv.Reader
 		if (d.exchange == "tse" && len(csvArrayContent) > 2) || (d.exchange == "otc" && len(csvArrayContent) > 5) {
 			if d.exchange == "tse" {
+				var regdate = regexp.MustCompile(`^\"[0-9/]{7,}`)
 				if d.Name == "" {
 					groups := strings.Split(csvArrayContent[0], " ")
 					d.No, d.Name = groups[1], groups[2]
 				}
-				csvReader = csv.NewReader(strings.NewReader(strings.Join(csvArrayContent[2:len(csvArrayContent)-5], "\n")))
+				var datalist []string
+				for _, v := range csvArrayContent {
+					if regdate.MatchString(v) {
+						datalist = append(datalist, v)
+					}
+				}
+				csvReader = csv.NewReader(strings.NewReader(strings.Join(datalist, "\n")))
 			} else if d.exchange == "otc" {
 				if d.Name == "" {
 					d.Name = strings.Split(csvArrayContent[2], ":")[1]
