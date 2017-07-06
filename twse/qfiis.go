@@ -3,7 +3,6 @@ package twse
 import (
 	"encoding/csv"
 	"fmt"
-	"net/url"
 	"strconv"
 	"strings"
 	"time"
@@ -178,8 +177,7 @@ func NewTWT38U(date time.Time) *TWTXXU {
 // URL 擷取網址
 func (t TWTXXU) URL() string {
 	return fmt.Sprintf("%s%s", utils.TWSEHOST,
-		fmt.Sprintf(utils.TWTXXU,
-			t.fund, t.fund, t.Date.Year()-1911, t.Date.Month(), t.Date.Day()))
+		fmt.Sprintf(utils.TWTXXU, t.fund, t.Date.Year(), t.Date.Month(), t.Date.Day()))
 }
 
 // Get 擷取資料
@@ -189,52 +187,56 @@ func (t TWTXXU) Get() ([][]BaseSellBuy, error) {
 		data     []byte
 		datalist int
 		err      error
-		path     = t.URL()
-		r        *url.URL
 		result   [][]BaseSellBuy
 	)
 
-	if r, err = url.Parse(path); err == nil {
-		rawquery, _ := url.ParseQuery(r.RawQuery)
-		if data, err = hCache.PostForm(path, rawquery); err != nil {
-			return nil, err
-		}
+	if data, err = hCache.PostForm(t.URL(), nil); err != nil {
+		return nil, err
+	}
 
-		var csvArrayContent = strings.Split(string(data), "\n")
-		switch t.fund {
-		case "TWT43U":
-			csvArrayContent = csvArrayContent[3 : len(csvArrayContent)-4]
-			datalist = 3
-		case "TWT44U", "TWT38U":
-			csvArrayContent = csvArrayContent[2 : len(csvArrayContent)-6]
-			datalist = 1
-		}
+	var csvArrayContent = strings.Split(string(data), "\n")
+	switch t.fund {
+	case "TWT43U":
+		csvArrayContent = csvArrayContent[3 : len(csvArrayContent)-5]
+		datalist = 3
+	case "TWT44U", "TWT38U":
+		csvArrayContent = csvArrayContent[2 : len(csvArrayContent)-7]
+		datalist = 1
+	}
 
-		for i, v := range csvArrayContent {
-			csvArrayContent[i] = strings.Replace(v, "=", "", -1)
-		}
+	for i, v := range csvArrayContent {
+		csvArrayContent[i] = strings.Replace(v, "=", "", -1)
+	}
 
-		if csvdata, err = csv.NewReader(strings.NewReader(strings.Join(csvArrayContent, "\n"))).ReadAll(); err == nil {
-			result = make([][]BaseSellBuy, len(csvdata))
-			for i, v := range csvdata {
-				result[i] = make([]BaseSellBuy, datalist)
-				result[i][0].Name = v[0]
-				result[i][0].No = v[1]
-				result[i][0].Buy, _ = strconv.ParseInt(strings.Replace(v[2], ",", "", -1), 10, 64)
-				result[i][0].Sell, _ = strconv.ParseInt(strings.Replace(v[3], ",", "", -1), 10, 64)
-				result[i][0].Total, _ = strconv.ParseInt(strings.Replace(v[4], ",", "", -1), 10, 64)
-				if datalist > 1 {
-					result[i][1].Name = v[0]
-					result[i][1].No = v[1]
-					result[i][1].Buy, _ = strconv.ParseInt(strings.Replace(v[5], ",", "", -1), 10, 64)
-					result[i][1].Sell, _ = strconv.ParseInt(strings.Replace(v[6], ",", "", -1), 10, 64)
-					result[i][1].Total, _ = strconv.ParseInt(strings.Replace(v[7], ",", "", -1), 10, 64)
-					result[i][2].Name = v[0]
-					result[i][2].No = v[1]
-					result[i][2].Buy, _ = strconv.ParseInt(strings.Replace(v[8], ",", "", -1), 10, 64)
-					result[i][2].Sell, _ = strconv.ParseInt(strings.Replace(v[9], ",", "", -1), 10, 64)
-					result[i][2].Total, _ = strconv.ParseInt(strings.Replace(v[10], ",", "", -1), 10, 64)
-				}
+	if csvdata, err = csv.NewReader(strings.NewReader(strings.Join(csvArrayContent, "\n"))).ReadAll(); err == nil {
+		result = make([][]BaseSellBuy, len(csvdata))
+		for i, v := range csvdata {
+			var name, no string
+			result[i] = make([]BaseSellBuy, datalist)
+			switch {
+			case datalist == 1:
+				name = strings.Replace(v[2], " ", "", -1)
+				no = strings.Replace(v[1], " ", "", -1)
+			case datalist > 1:
+				name = strings.Replace(v[1], " ", "", -1)
+				no = strings.Replace(v[0], " ", "", -1)
+			}
+			result[i][0].Name = name
+			result[i][0].No = no
+			result[i][0].Buy, _ = strconv.ParseInt(strings.Replace(v[2], ",", "", -1), 10, 64)
+			result[i][0].Sell, _ = strconv.ParseInt(strings.Replace(v[3], ",", "", -1), 10, 64)
+			result[i][0].Total, _ = strconv.ParseInt(strings.Replace(v[4], ",", "", -1), 10, 64)
+			if datalist > 1 {
+				result[i][1].Name = name
+				result[i][1].No = no
+				result[i][1].Buy, _ = strconv.ParseInt(strings.Replace(v[5], ",", "", -1), 10, 64)
+				result[i][1].Sell, _ = strconv.ParseInt(strings.Replace(v[6], ",", "", -1), 10, 64)
+				result[i][1].Total, _ = strconv.ParseInt(strings.Replace(v[7], ",", "", -1), 10, 64)
+				result[i][2].Name = name
+				result[i][2].No = no
+				result[i][2].Buy, _ = strconv.ParseInt(strings.Replace(v[8], ",", "", -1), 10, 64)
+				result[i][2].Sell, _ = strconv.ParseInt(strings.Replace(v[9], ",", "", -1), 10, 64)
+				result[i][2].Total, _ = strconv.ParseInt(strings.Replace(v[10], ",", "", -1), 10, 64)
 			}
 		}
 	}

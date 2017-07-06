@@ -30,7 +30,7 @@ const (
 	QFIISTOP20  string = "/fund/MI_QFIIS_sort_20?response=csv&date=%d%02d%02d"   // yyyymmdd
 	BFI82U      string = "/fund/BFI82U?response=csv&dayDate=%d%02d%02d&type=day" // yyyymmdd
 	T86         string = "/fund/T86?response=csv&date=%d%02d%02d&selectType=ALL"
-	TWTXXU      string = "/ch/trading/fund/%s/%s.php?download=csv&qdate=%d/%02d/%02d&sorting=by_issue"
+	TWTXXU      string = "/fund/%s?response=csv&date=%d%02d%02d"
 	S3CSV       string = "https://s3-ap-northeast-1.amazonaws.com/toomore/gogrs/list.csv"
 )
 

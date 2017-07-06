@@ -41,6 +41,7 @@ func TestTWTXXU_Get(t *testing.T) {
 		t.Log(v.URL())
 		if data, err := v.Get(); err == nil {
 			t.Log(len(data), err)
+			t.Logf("%+v\n", data[len(data)-1])
 		} else {
 			t.Error(err)
 		}
