@@ -4,8 +4,6 @@ import (
 	"encoding/csv"
 	"errors"
 	"fmt"
-	"net/url"
-	"regexp"
 	"strconv"
 	"strings"
 	"time"
@@ -62,7 +60,8 @@ func NewOTC(No string, Date time.Time) *Data {
 func (d Data) URL() string {
 	switch d.exchange {
 	case "tse":
-		return fmt.Sprintf("%s%s", utils.TWSEHOST, utils.TWSECSV)
+		return fmt.Sprintf("%s%s", utils.TWSEHOST,
+			fmt.Sprintf(utils.TWSECSV, d.Date.Year(), d.Date.Month(), d.Date.Day(), d.No))
 	case "otc":
 		return fmt.Sprintf("%s%s",
 			utils.OTCHOST,
@@ -95,8 +94,6 @@ func (d *Data) clearCache() {
 	d.datelist = nil
 }
 
-var noName = regexp.MustCompile(`^([A-Z0-9]+)(.+)`)
-
 // Get return csv data in array.
 func (d *Data) Get() ([][]string, error) {
 	monthDateUnix := time.Date(d.Date.Year(), d.Date.Month(), 1, 0, 0, 0, 0, d.Date.Location()).Unix()
@@ -105,9 +102,7 @@ func (d *Data) Get() ([][]string, error) {
 		var err error
 		switch d.exchange {
 		case "tse":
-			data, err = hCache.PostForm(
-				d.URL(),
-				url.Values{"download": {"csv"}, "query_year": {strconv.Itoa(d.Date.Year())}, "query_month": {strconv.Itoa(int(d.Date.Month()))}, "CO_ID": {d.No}})
+			data, err = hCache.PostForm(d.URL(), nil)
 		case "otc":
 			data, err = hCache.Get(d.URL(), true)
 		}
@@ -122,10 +117,10 @@ func (d *Data) Get() ([][]string, error) {
 		if (d.exchange == "tse" && len(csvArrayContent) > 2) || (d.exchange == "otc" && len(csvArrayContent) > 5) {
 			if d.exchange == "tse" {
 				if d.Name == "" {
-					groups := noName.FindStringSubmatch(strings.Split(csvArrayContent[0], " ")[1])
+					groups := strings.Split(csvArrayContent[0], " ")
 					d.No, d.Name = groups[1], groups[2]
 				}
-				csvReader = csv.NewReader(strings.NewReader(strings.Join(csvArrayContent[2:], "\n")))
+				csvReader = csv.NewReader(strings.NewReader(strings.Join(csvArrayContent[2:len(csvArrayContent)-5], "\n")))
 			} else if d.exchange == "otc" {
 				if d.Name == "" {
 					d.Name = strings.Split(csvArrayContent[2], ":")[1]

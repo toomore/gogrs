@@ -24,7 +24,7 @@ const (
 	HOME        string = "/stock/index.jsp"
 	OTCCSV      string = "/ch/stock/aftertrading/daily_trading_info/st43_download.php?d=%d/%02d&stkno=%s&r=%%d"           // year, mon, stock, rand
 	OTCLISTCSV  string = "/web/stock/aftertrading/otc_quotes_no1430/stk_wn1430_download.php?l=zh-tw&d=%s&se=%s&s=0,asc,0" // date, cate
-	TWSECSV     string = "/ch/trading/exchange/STOCK_DAY/STOCK_DAYMAIN.php"
+	TWSECSV     string = "/exchangeReport/STOCK_DAY?response=csv&date=%d%02d%02d&stockNo=%s"
 	TWSELISTCSV string = "/ch/trading/exchange/MI_INDEX/MI_INDEX.php" // year, mon, day, type
 	TWSEREAL    string = "/stock/api/getStockInfo.jsp?ex_ch=%s_%s.tw&json=1&delay=0&_=%d"
 	QFIISTOP20  string = "/ch/trading/fund/MI_QFIIS_sort_20/MI_QFIIS_sort_20.php"                                                              // yyyymmdd
