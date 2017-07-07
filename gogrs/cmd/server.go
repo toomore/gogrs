@@ -110,6 +110,12 @@ var serverCmd = &cobra.Command{
 	Use:   "server",
 	Short: "run tradingdays server",
 	Long:  `run tradingdays server`,
+	PersistentPreRun: func(cmd *cobra.Command, args []string) {
+		tradingdays.DownloadCSV(true)
+		log.Println("Init DownloadCSV.")
+		csvcachetime.Set()
+
+	},
 	Run: func(cmd *cobra.Command, args []string) {
 		log.Println("http:", *httpport, "CSVCacheTime:", *defaultttl)
 		http.HandleFunc("/", Home)
@@ -119,10 +125,6 @@ var serverCmd = &cobra.Command{
 }
 
 func init() {
-	tradingdays.DownloadCSV(true)
-	log.Println("Init DownloadCSV.")
-	csvcachetime.Set()
-
 	httpport = serverCmd.Flags().StringP("port", "p", ":59123", "HTTP Port")
 	defaultttl = serverCmd.Flags().Int64P("ttl", "t", 21600, "Cache time")
 
