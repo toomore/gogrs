@@ -1,79 +1,55 @@
-// 擷取盤中即時資訊與大盤、上櫃、寶島指數.
+// Copyright © 2017 NAME HERE <EMAIL ADDRESS>
+// Licensed under the Apache License, Version 2.0 (the "License");
+// you may not use this file except in compliance with the License.
+// You may obtain a copy of the License at
 //
-/*
+//     http://www.apache.org/licenses/LICENSE-2.0
+//
+// Unless required by applicable law or agreed to in writing, software
+// distributed under the License is distributed on an "AS IS" BASIS,
+// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+// See the License for the specific language governing permissions and
+// limitations under the License.
 
-Install:
-
-	go install github.com/toomore/gogrs/cmd/realtime
-
-Usage:
-
-	realtime [flags]
-
-The flags are:
-
-	-twse
-		上市股票代碼，可使用 ',' 分隔多組代碼，例：2618,2329
-	-otc
-		上櫃股票代碼，可使用 ',' 分隔多組代碼，例：8446,2719
-	-index
-		顯示大盤、上櫃、寶島指數（default: false）
-	-twsecate
-		上市股票類別，可使用 ',' 分隔多組代碼，例：11,15
-	-otccate
-		上櫃股票類別，可使用 ',' 分隔多組代碼，例：04,11
-	-showcatelist
-		顯示上市/上櫃分類表（default: false）
-	-ncpu
-		指定 CPU 數量，預設為實際 CPU 數量
-	-pt
-		計算花費時間
-	-count
-		計算此次查詢的漲跌家數（default: true）
-	-color
-		色彩化（default: true）
-	-nonstop
-		自動重複，單位秒數
-
-範例
-
-	realtime -twse=2618,2329 -otc=8446,2719 -index
-
-回傳內容
-
-	2015/06/11 17:46:28 發行量加權股價指數(t00) $9302.49(-28.50) -0.31% 5440/97357 [2015-06-11 13:33:00 +0800 CST] [20150611 17:46:29]
-	2015/06/11 17:46:28 櫃買指數(o00) $135.34(0.08) 0.06% 1228/24569 [2015-06-11 13:33:00 +0800 CST] [20150611 17:46:29]
-	2015/06/11 17:46:28 寶島股價指數(FRMSA) $10768.05(-29.39) -0.27% 0/0 [2015-06-11 13:33:00 +0800 CST] [20150611 17:46:29]
-	2015/06/11 17:46:28 華研(8446) $140.00(-6.00) -4.11% 29/351 [2015-06-11 14:30:00 +0800 CST] [20150611 17:46:29]
-	2015/06/11 17:46:28 華泰(2329) $13.10(-0.40) -2.96% 217/3993 [2015-06-11 14:30:00 +0800 CST] [20150611 17:46:29]
-	2015/06/11 17:46:28 燦星旅(2719) $24.30(-0.70) -2.80% 7/107 [2015-06-11 14:30:00 +0800 CST] [20150611 17:46:28]
-	2015/06/11 17:46:28 長榮航(2618) $19.30(-0.70) -3.50% 1001/19166 [2015-06-11 14:30:00 +0800 CST] [20150611 17:46:29]
-
-*/
-package main
+package cmd
 
 import (
-	"flag"
 	"fmt"
 	"log"
-	"os"
 	"runtime"
 	"strings"
 	"sync"
 	"time"
 
 	"github.com/fatih/color"
+	"github.com/spf13/cobra"
 	"github.com/toomore/gogrs/realtime"
 	"github.com/toomore/gogrs/tradingdays"
 	"github.com/toomore/gogrs/twse"
 	"github.com/toomore/gogrs/utils"
 )
 
-var cacheTime time.Time
+var (
+	cacheTime time.Time
+	count     *bool
+	cyan      = color.New(color.FgCyan).SprintfFunc()
+	index     *bool
+	nonstop   *int64
+	pt        *bool
+)
 
-func init() {
-	tradingdays.DownloadCSV(false)
-	TaipeiNow()
+// realtimeCmd represents the realtime command
+var realtimeCmd = &cobra.Command{
+	Use:   "realtime",
+	Short: "realtime info",
+	Long:  `盤中即時資訊`,
+	PersistentPreRun: func(cmd *cobra.Command, args []string) {
+		tradingdays.DownloadCSV(false)
+		TaipeiNow()
+	},
+	Run: func(cmd *cobra.Command, args []string) {
+		fmt.Println("realtime called")
+	},
 }
 
 // TaipeiNow show Taipei Now time.
@@ -105,26 +81,7 @@ func TaipeiNow() time.Time {
 	return cacheTime
 }
 
-var (
-	twseNo       = flag.String("twse", "", "上市股票代碼，可使用 ',' 分隔多組代碼，例：2618,2329")
-	twseCate     = flag.String("twsecate", "", "上市股票類別，可使用 ',' 分隔多組代碼，例：11,15")
-	showcatelist = flag.Bool("showcatelist", false, "顯示上市/上櫃分類表")
-	otcNo        = flag.String("otc", "", "上櫃股票代碼，可使用 ',' 分隔多組代碼，例：8446,2719")
-	otcCate      = flag.String("otccate", "", "上櫃股票類別，可使用 ',' 分隔多組代碼，例：04,11")
-	index        = flag.Bool("index", false, "顯示大盤、上櫃、寶島指數（default: false）")
-	ncpu         = flag.Int("ncpu", runtime.NumCPU(), "指定 CPU 數量，預設為實際 CPU 數量")
-	pt           = flag.Bool("pt", false, "計算花費時間")
-	count        = flag.Bool("count", true, "計算此次查詢的漲跌家數")
-	showcolor    = flag.Bool("color", true, "色彩化")
-	nonstop      = flag.Int64("nonstop", 0, "自動重複，單位秒數")
-	white        = color.New(color.FgWhite, color.Bold).SprintfFunc()
-	red          = color.New(color.FgRed, color.Bold).SprintfFunc()
-	green        = color.New(color.FgGreen, color.Bold).SprintfFunc()
-	yellowBold   = color.New(color.FgYellow, color.Bold).SprintfFunc()
-	cyan         = color.New(color.FgCyan).SprintfFunc()
-)
-
-func prettyprint(data realtime.Data) string {
+func rtprettyprint(data realtime.Data) string {
 	var (
 		RangeValue  = data.Price - data.Open
 		outputcolor func(string, ...interface{}) string
@@ -149,12 +106,12 @@ func prettyprint(data realtime.Data) string {
 func fetch(r *realtime.StockRealTime) {
 	limit <- struct{}{}
 	runtime.Gosched()
-	defer wg.Done()
+	defer rtwg.Done()
 	data, _ := r.Get()
 	if data.TradeTime.IsZero() {
 		log.Println("No data")
 	} else {
-		log.Println(prettyprint(data))
+		log.Println(rtprettyprint(data))
 	}
 	if *count {
 		counter++
@@ -172,18 +129,10 @@ var (
 	down      int
 	startTime time.Time
 	up        int
-	wg        sync.WaitGroup
-	limit     chan struct{}
+	rtwg      sync.WaitGroup
 )
 
 func main() {
-	flag.Parse()
-
-	if flag.NFlag() == 0 {
-		flag.PrintDefaults()
-		os.Exit(0)
-	}
-
 	color.NoColor = !*showcolor
 
 	runtime.GOMAXPROCS(*ncpu)
@@ -223,7 +172,7 @@ Start:
 
 	if *twseNo != "" {
 		for _, no := range strings.Split(*twseNo, ",") {
-			wg.Add(1)
+			rtwg.Add(1)
 			go func(no string) {
 				runtime.Gosched()
 				queue <- realtime.NewTWSE(no, TaipeiNow())
@@ -235,7 +184,7 @@ Start:
 		l := twse.NewLists(tradingdays.FindRecentlyOpened(time.Now()))
 		for _, no := range strings.Split(*twseCate, ",") {
 			for _, s := range l.GetCategoryList(no) {
-				wg.Add(1)
+				rtwg.Add(1)
 				go func(s twse.StockInfo) {
 					runtime.Gosched()
 					queue <- realtime.NewTWSE(s.No, TaipeiNow())
@@ -246,7 +195,7 @@ Start:
 
 	if *otcNo != "" {
 		for _, no := range strings.Split(*otcNo, ",") {
-			wg.Add(1)
+			rtwg.Add(1)
 			go func(no string) {
 				runtime.Gosched()
 				queue <- realtime.NewOTC(no, TaipeiNow())
@@ -258,7 +207,7 @@ Start:
 		o := twse.NewOTCLists(tradingdays.FindRecentlyOpened(time.Now()))
 		for _, no := range strings.Split(*otcCate, ",") {
 			for _, s := range o.GetCategoryList(no) {
-				wg.Add(1)
+				rtwg.Add(1)
 				go func(s twse.StockInfo) {
 					runtime.Gosched()
 					queue <- realtime.NewOTC(s.No, TaipeiNow())
@@ -268,7 +217,7 @@ Start:
 	}
 
 	if *index {
-		wg.Add(3)
+		rtwg.Add(3)
 		for _, r := range []*realtime.StockRealTime{realtime.NewWeight(TaipeiNow()), realtime.NewOTCI(TaipeiNow()), realtime.NewFRMSA(TaipeiNow())} {
 			go func(r *realtime.StockRealTime) {
 				runtime.Gosched()
@@ -281,7 +230,7 @@ Start:
 			go fetch(r)
 		}
 	}()
-	wg.Wait()
+	rtwg.Wait()
 	if *count {
 		fmt.Printf("All: %d, Up: %d, Down: %d, Same: %d\n",
 			counter, up, down, counter-up-down)
@@ -294,4 +243,30 @@ Start:
 		counter, up, down = 0, 0, 0
 		goto Start
 	}
+}
+
+func init() {
+	count = realtimeCmd.Flags().BoolP("count", "", true, "計算此次查詢的漲跌家數")
+	index = realtimeCmd.Flags().BoolP("index", "i", false, "顯示大盤、上櫃、寶島指數（default: false）")
+	ncpu = realtimeCmd.Flags().IntP("ncpu", "n", runtime.NumCPU(), "指定 CPU 數量，預設為實際 CPU 數量")
+	nonstop = realtimeCmd.Flags().Int64P("nonstop", "", 0, "自動重複，單位秒數")
+	otcCate = realtimeCmd.Flags().StringP("otccate", "e", "", "上櫃股票類別，可使用 ',' 分隔多組代碼，例：02,14")
+	otcNo = realtimeCmd.Flags().StringP("otc", "o", "", "上櫃股票代碼，可使用 ',' 分隔多組代碼，例：4406,8446")
+	pt = realtimeCmd.Flags().BoolP("pt", "", false, "計算花費時間")
+	showcatelist = realtimeCmd.Flags().BoolP("catelist", "l", false, "顯示上市/上櫃分類表")
+	showcolor = realtimeCmd.Flags().BoolP("color", "", true, "色彩化")
+	twseCate = realtimeCmd.Flags().StringP("twsecate", "c", "", "上市股票類別，可使用 ',' 分隔多組代碼，例：11,15")
+	twseNo = realtimeCmd.Flags().StringP("twse", "t", "", "上市股票代碼，可使用 ',' 分隔多組代碼，例：2618,2329")
+
+	RootCmd.AddCommand(realtimeCmd)
+
+	// Here you will define your flags and configuration settings.
+
+	// Cobra supports Persistent Flags which will work for this command
+	// and all subcommands, e.g.:
+	// realtimeCmd.PersistentFlags().String("foo", "", "A help for foo")
+
+	// Cobra supports local flags which will only run when this command
+	// is called directly, e.g.:
+	// realtimeCmd.Flags().BoolP("toggle", "t", false, "Help message for toggle")
 }
