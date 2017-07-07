@@ -73,6 +73,9 @@ Known Issue
 
 ## Changelog
 
+### v1.3 (2017/07/07)
+* Fixed twse change source link. #4
+
 ### v1.2
 
 #### v1.2.0 (2017/04/25)
