@@ -83,8 +83,6 @@ func (b BFI82U) Get() ([]BaseSellBuy, error) {
 			result[i].Sell, _ = strconv.ParseInt(strings.Replace(v[2], ",", "", -1), 10, 64)
 			result[i].Total, _ = strconv.ParseInt(strings.Replace(v[3], ",", "", -1), 10, 64)
 		}
-	} else {
-		fmt.Println(err)
 	}
 	return result, err
 }
