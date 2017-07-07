@@ -22,7 +22,7 @@ import (
 
 	"github.com/fatih/color"
 	"github.com/spf13/cobra"
-	"github.com/toomore/gogrs/gogrs/cmd/filter"
+	"github.com/toomore/gogrs/cmd/filter"
 	"github.com/toomore/gogrs/tradingdays"
 	"github.com/toomore/gogrs/twse"
 )
