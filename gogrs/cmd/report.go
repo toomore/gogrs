@@ -1,68 +1,41 @@
-// 每日收盤後產生符合選股條件的報告.
+// Copyright © 2017 NAME HERE <EMAIL ADDRESS>
+// Licensed under the Apache License, Version 2.0 (the "License");
+// you may not use this file except in compliance with the License.
+// You may obtain a copy of the License at
 //
-/*
-Install:
+//     http://www.apache.org/licenses/LICENSE-2.0
+//
+// Unless required by applicable law or agreed to in writing, software
+// distributed under the License is distributed on an "AS IS" BASIS,
+// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+// See the License for the specific language governing permissions and
+// limitations under the License.
 
-	go install github.com/toomore/gogrs/cmd/twsereport
-
-Usage:
-
-	twsereport [flags]
-
-The flags are:
-
-	-twse
-		上市股票代碼，可使用 ',' 分隔多組代碼，例：2618,2329
-	-twsecate
-		上市股票類別，可使用 ',' 分隔多組代碼，例：11,15
-	-otc
-		上櫃股票代碼，可使用 ',' 分隔多組代碼，例：4406,8446
-	-otccate
-		上櫃股票類別，可使用 ',' 分隔多組代碼，例：02,14
-	-showcatelist
-		顯示上市/上櫃分類表（default: false）
-	-ncpu
-		指定 CPU 數量，預設為實際 CPU 數量
-	-color
-		色彩化（default: true）
-
-可以重新調整自己的條件組合，目前預設的為：
-
-	1. MA 3 > 6 > 18
-	2. 量大於前三天 K 線收紅
-	3. 量或價走平 45 天
-	4. (MA3 < MA6) > MA18 and MA3UP(1)
-	5. 三日內最大量 K 線收紅 收在 MA18 之上
-	6. 漲幅 7% 以上
-	7. 多方力道 > 0.75
-
-*/
-package main
+package cmd
 
 import (
-	"flag"
 	"fmt"
-	"os"
 	"runtime"
 	"strings"
 	"sync"
 	"time"
 
 	"github.com/fatih/color"
-	"github.com/toomore/gogrs/cmd/twsereport/filter"
+	"github.com/spf13/cobra"
+	"github.com/toomore/gogrs/gogrs/cmd/filter"
 	"github.com/toomore/gogrs/tradingdays"
 	"github.com/toomore/gogrs/twse"
 )
 
 var (
 	wg           sync.WaitGroup
-	twseNo       = flag.String("twse", "", "上市股票代碼，可使用 ',' 分隔多組代碼，例：2618,2329")
-	twseCate     = flag.String("twsecate", "", "上市股票類別，可使用 ',' 分隔多組代碼，例：11,15")
-	otcNo        = flag.String("otc", "", "上櫃股票代碼，可使用 ',' 分隔多組代碼，例：4406,8446")
-	otcCate      = flag.String("otccate", "", "上櫃股票類別，可使用 ',' 分隔多組代碼，例：02,14")
-	showcatelist = flag.Bool("showcatelist", false, "顯示上市/上櫃分類表")
-	showcolor    = flag.Bool("color", true, "色彩化")
-	ncpu         = flag.Int("ncpu", runtime.NumCPU(), "指定 CPU 數量，預設為實際 CPU 數量")
+	twseNo       *string
+	twseCate     *string
+	otcNo        *string
+	otcCate      *string
+	showcatelist *bool
+	showcolor    *bool
+	ncpu         *int
 	white        = color.New(color.FgWhite, color.Bold).SprintfFunc()
 	red          = color.New(color.FgRed, color.Bold).SprintfFunc()
 	green        = color.New(color.FgGreen, color.Bold).SprintfFunc()
@@ -71,10 +44,6 @@ var (
 	blue         = color.New(color.FgBlue).SprintfFunc()
 	limit        = make(chan struct{}, 1)
 )
-
-func init() {
-	tradingdays.DownloadCSV(true)
-}
 
 func prettyprint(stock *twse.Data, check filter.CheckGroup) string {
 	var (
@@ -104,6 +73,7 @@ func prettyprint(stock *twse.Data, check filter.CheckGroup) string {
 		outputcolor("%d", Volume),
 	)
 }
+
 func gocheck(check filter.CheckGroup, stock *twse.Data) {
 	defer wg.Done()
 	if check.CheckFunc(stock) {
@@ -112,14 +82,7 @@ func gocheck(check filter.CheckGroup, stock *twse.Data) {
 	<-limit
 }
 
-func main() {
-	flag.Parse()
-
-	if flag.NFlag() == 0 {
-		flag.PrintDefaults()
-		os.Exit(0)
-	}
-
+func run() {
 	var (
 		datalist     []*twse.Data
 		l            *twse.Lists
@@ -201,4 +164,39 @@ func main() {
 			wg.Wait()
 		}
 	}
+}
+
+// reportCmd represents the report command
+var reportCmd = &cobra.Command{
+	Use:   "report",
+	Short: "daily report",
+	Long:  `show daily report`,
+	PersistentPreRun: func(cmd *cobra.Command, args []string) {
+		tradingdays.DownloadCSV(true)
+	},
+	Run: func(cmd *cobra.Command, args []string) {
+		run()
+	},
+}
+
+func init() {
+	ncpu = reportCmd.Flags().IntP("ncpu", "n", runtime.NumCPU(), "指定 CPU 數量，預設為實際 CPU 數量")
+	otcCate = reportCmd.Flags().StringP("otccate", "e", "", "上櫃股票類別，可使用 ',' 分隔多組代碼，例：02,14")
+	otcNo = reportCmd.Flags().StringP("otc", "o", "", "上櫃股票代碼，可使用 ',' 分隔多組代碼，例：4406,8446")
+	showcatelist = reportCmd.Flags().BoolP("catelist", "l", false, "顯示上市/上櫃分類表")
+	showcolor = reportCmd.Flags().BoolP("color", "", true, "色彩化")
+	twseCate = reportCmd.Flags().StringP("twsecate", "c", "", "上市股票類別，可使用 ',' 分隔多組代碼，例：11,15")
+	twseNo = reportCmd.Flags().StringP("twse", "t", "", "上市股票代碼，可使用 ',' 分隔多組代碼，例：2618,2329")
+
+	RootCmd.AddCommand(reportCmd)
+
+	// Here you will define your flags and configuration settings.
+
+	// Cobra supports Persistent Flags which will work for this command
+	// and all subcommands, e.g.:
+	// reportCmd.PersistentFlags().String("foo", "", "A help for foo")
+
+	// Cobra supports local flags which will only run when this command
+	// is called directly, e.g.:
+	// reportCmd.Flags().BoolP("toggle", "t", false, "Help message for toggle")
 }
