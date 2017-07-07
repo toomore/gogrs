@@ -82,7 +82,7 @@ func gocheck(check filter.CheckGroup, stock *twse.Data) {
 	<-limit
 }
 
-func run() {
+func run() int {
 	var (
 		datalist     []*twse.Data
 		l            *twse.Lists
@@ -164,6 +164,7 @@ func run() {
 			wg.Wait()
 		}
 	}
+	return len(datalist)
 }
 
 // reportCmd represents the report command
@@ -175,7 +176,9 @@ var reportCmd = &cobra.Command{
 		tradingdays.DownloadCSV(true)
 	},
 	Run: func(cmd *cobra.Command, args []string) {
-		run()
+		if run() == 0 {
+			cmd.Help()
+		}
 	},
 }
 
