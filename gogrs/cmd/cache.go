@@ -21,56 +21,58 @@
 package cmd
 
 import (
-	"fmt"
-	"time"
+	"log"
 
+	"github.com/fatih/color"
 	"github.com/spf13/cobra"
-	"github.com/toomore/gogrs/tradingdays"
-	"github.com/toomore/gogrs/twse"
 	"github.com/toomore/gogrs/utils"
 )
 
-// exampleCmd represents the example command
-var exampleCmd = &cobra.Command{
-	Use:   "example",
-	Short: "Show example",
-	Long:  `Show gogrs example.`,
+func outputNote(note ...interface{}) {
+	color.Set(color.FgBlue, color.Bold)
+	log.Println(note...)
+	color.Unset()
+}
+
+func outputDone(note ...interface{}) {
+	color.Set(color.FgGreen, color.Bold)
+	log.Println(note...)
+	color.Unset()
+}
+
+// cacheCmd represents the cache command
+var cacheCmd = &cobra.Command{
+	Use:   "cache",
+	Short: "cache system",
+	Long:  `快取機制`,
 	Run: func(cmd *cobra.Command, args []string) {
-		var stock = twse.NewTWSE("2618", time.Date(2015, 3, 20, 0, 0, 0, 0, time.Local))
-		stock.Get()
-		showAll(stock)
-		fmt.Println("-----------------------------")
-		stock.PlusData()
-		showAll(stock)
-		fmt.Println("-----------------------------")
-		fmt.Println(tradingdays.IsOpen(2015, 5, 1))
+		cmd.Help()
 	},
 }
 
-func showAll(stock *twse.Data) {
-	fmt.Println(stock.RawData)
-	fmt.Println(stock.MA(6))
-	fmt.Println(stock.MAV(6))
-	fmt.Println(stock.GetPriceList())
-	fmt.Println(utils.ThanPastFloat64(stock.GetPriceList(), 3, true))
-	fmt.Println(utils.ThanPastFloat64(stock.GetPriceList(), 3, false))
-	fmt.Println(stock.GetVolumeList())
-	fmt.Println(utils.ThanPastUint64(stock.GetVolumeList(), 3, true))
-	fmt.Println(utils.ThanPastUint64(stock.GetVolumeList(), 3, false))
-	fmt.Println(stock.GetRangeList())
-	fmt.Println(stock.IsRed())
+var cacheFlushAllCmd = &cobra.Command{
+	Use:   "flushall",
+	Short: "flushall cache",
+	Long:  `清除所有快取`,
+	Run: func(cmd *cobra.Command, args []string) {
+		var hCache = utils.NewHTTPCache(utils.GetOSRamdiskPath(""), "utf8")
+		outputNote("Clear Cache:", hCache.Dir, utils.TempFolderName)
+		hCache.FlushAll()
+		outputDone("Done!")
+	},
 }
 
 func init() {
-	RootCmd.AddCommand(exampleCmd)
+	RootCmd.AddCommand(cacheCmd)
+	cacheCmd.AddCommand(cacheFlushAllCmd)
 
 	// Here you will define your flags and configuration settings.
 
 	// Cobra supports Persistent Flags which will work for this command
 	// and all subcommands, e.g.:
-	// exampleCmd.PersistentFlags().String("foo", "", "A help for foo")
+	// cacheCmd.PersistentFlags().String("foo", "", "A help for foo")
 
 	// Cobra supports local flags which will only run when this command
 	// is called directly, e.g.:
-	// exampleCmd.Flags().BoolP("toggle", "t", false, "Help message for toggle")
+	// cacheCmd.Flags().BoolP("toggle", "t", false, "Help message for toggle")
 }
