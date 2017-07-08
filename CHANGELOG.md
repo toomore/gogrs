@@ -1,5 +1,8 @@
 # Changelog
 
+### v1.4 (2017/07/08)
+* cmd using spf13/cobra
+
 ### v1.3 (2017/07/07)
 * Fixed twse change source link. #4
 
