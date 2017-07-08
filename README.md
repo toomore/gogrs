@@ -18,11 +18,13 @@ Cmd
 
 ![gogrs cmd demo](https://s3-ap-northeast-1.amazonaws.com/toomore/gogrs/gogrs_cmd_demo_20150615.png "gogrs cmd demo")
 
-1. gogrs_example - [簡單範例測試](https://godoc.org/github.com/toomore/gogrs/cmd/gogrs_example)
-2. realtime - [擷取盤中即時資訊與大盤、上櫃、寶島指數](https://godoc.org/github.com/toomore/gogrs/cmd/realtime)
-3. twsereport - [每日收盤後產生符合選股條件的報告](https://godoc.org/github.com/toomore/gogrs/cmd/twsereport)
-4. twsecache - [清除 twse cache](https://godoc.org/github.com/toomore/gogrs/cmd/twsecache)
-5. tradingdays_server - [提供簡單的日期查詢 API Server](https://godoc.org/github.com/toomore/gogrs/cmd/tradingdays_server)
+1. example - [簡單範例測試](cmd/docs/gogrs_example.md)
+2. realtime - [擷取盤中即時資訊與大盤、上櫃、寶島指數](cmd/docs/gogrs_realtime.md)
+3. report - [每日收盤後產生符合選股條件的報告](cmd/docs/gogrs_report.md)
+4. cache - [清除 twse cache](cmd/docs/gogrs_cache.md)
+5. server - [提供簡單的日期查詢 API Server](cmd/docs/gogrs_server.md)
+
+相關的操作請參考 `-h` 的說明，或 [cmd/docs](cmd/docs/gogrs.md)
 
 Docker
 -------
@@ -37,23 +39,23 @@ Or ...
 
 Build minify gogrs docker(`toomore/gogrs:mini`)
 
-    cd ./docker-mini; sh ./make.sh
+    cd ./build-mini.sh
 
-Run `tradingdays_server`.
+Run `tradingdays server`.
 
-    docker run -d -p 80:59123 toomore/gogrs tradingdays_server
+    docker run -d -p 80:59123 toomore/gogrs:mini gogrs server
 
 Or login run other cmd
 
-    docker run -it toomore/gogrs
+    docker run -it toomore/gogrs:mini
 
 Create a ramdisk volume
 
-    docker create -v /run/shm/:/run/shm --name ramdisk toomore/gogrs-mini
+    docker create -v /run/shm/:/run/shm --name ramdisk toomore/gogrs:mini
 
 Run with ramdisk volume
 
-    docker run -it --volumes-from ramdisk toomore/gogrs
+    docker run -it --volumes-from ramdisk toomore/gogrs:mini
 
 TODO
 -----

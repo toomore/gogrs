@@ -15,6 +15,7 @@ package cmd
 
 import (
 	"github.com/spf13/cobra"
+	"github.com/spf13/cobra/doc"
 )
 
 var genbash *bool
@@ -28,6 +29,9 @@ var gendocCmd = &cobra.Command{
 		if *genbash {
 			RootCmd.GenBashCompletionFile("./gogrs")
 			cmd.Println("Gen Bash Completion File ...")
+		} else {
+			doc.GenMarkdownTree(RootCmd, "./")
+			cmd.Println("Gen Markdown Tree ...")
 		}
 	},
 	Hidden: true,
