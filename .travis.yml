@@ -27,4 +27,4 @@ script:
     - sh ./build-base.sh
     - sh ./build-mini.sh
     - docker images
-    - docker run -it --rm toomore/gogrs:mini sh -c "gogrs example; gogrs realtime; gogrs server; gogrs cache; gogrs report;"
+    - docker run -it --rm toomore/gogrs:mini sh -c "gogrs example; gogrs realtime; gogrs server -h; gogrs cache; gogrs report;"
