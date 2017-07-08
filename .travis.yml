@@ -24,6 +24,6 @@ script:
     - go test -bench=. -benchmem ./twse
     - go test -bench=. -benchmem ./utils
     - sh ./install_all_cmd.sh
-    - docker build -t toomore/gogrs:latest ./ ; cd ./docker-mini; sh ./make.sh
+    - sh ./make.sh; sh ./make_mini.sh;
     - docker images
-    - docker run -it --rm toomore/gogrs:mini sh -c "gogrs_example; realtime; tradingdays_server -h; twsecache; twsereport;"
+    - docker run -it --rm toomore/gogrs:mini sh -c "gogrs example; gogrs realtime; gogrs server; gogrs cache; gogrs report;"
